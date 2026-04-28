@@ -1,0 +1,23 @@
+package com.example.proyectobancosol.entity;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "incidencias")
+public class Incidencia {
+    @Id
+    @Column(name = "id_incidencia", nullable = false)
+    private Integer id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_asignacion", nullable = false)
+    private AsignacionTurno idAsignacion;
+
+    @Column(name = "descripcion", nullable = false, length = 2000)
+    private String descripcion;
+
+}
