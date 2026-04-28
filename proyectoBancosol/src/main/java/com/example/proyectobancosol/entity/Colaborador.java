@@ -28,4 +28,10 @@ public class Colaborador {
     @Column(name = "contacto_tlf", length = 20)
     private String contactoTlf;
 
+    @Column(name = "domicilio")
+    private String domicilio;
+
+    @Column(name = "localidad")
+    private String localidad;
+
 }

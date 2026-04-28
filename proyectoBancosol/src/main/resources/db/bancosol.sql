@@ -42,7 +42,9 @@ CREATE TABLE COLABORADOR (
   nombre_entidad varchar(150) NOT NULL, 
   email          varchar(100) NOT NULL, 
   contacto_nom   varchar(255), 
-  contacto_tlf   varchar(20), 
+  contacto_tlf   varchar(20),
+  domicilio      varchar(255),
+  localidad      varchar(255),
   CONSTRAINT id_colaborador 
     PRIMARY KEY (id_colaborador));
 CREATE TABLE VOLUNTARIO (
