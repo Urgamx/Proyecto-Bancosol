@@ -1,5 +1,7 @@
 CREATE DATABASE IF NOT EXISTS BANCOSOL_DB;
 
+
+
 USE BANCOSOL_DB;
 
 CREATE TABLE CAMPANA (
@@ -16,6 +18,8 @@ CREATE TABLE CADENAS (
   telefono_contacto varchar(20), 
   CONSTRAINT id_cadena 
     PRIMARY KEY (id_cadena));
+
+
 CREATE TABLE TIENDA (
   id_tienda  int(10) NOT NULL AUTO_INCREMENT, 
   id_cadena  int(10) NOT NULL, 
