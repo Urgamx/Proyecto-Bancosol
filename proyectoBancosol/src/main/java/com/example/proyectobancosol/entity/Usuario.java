@@ -27,4 +27,8 @@ public class Usuario {
 
     @Column(name = "activo")
     private Integer activo;
+
+    public Integer getIdRol() {
+        return idRol;
+    }
 }
