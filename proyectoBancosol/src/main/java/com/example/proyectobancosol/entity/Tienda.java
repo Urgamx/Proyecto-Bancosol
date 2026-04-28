@@ -1,4 +1,4 @@
-package com.example.proyectobancosol.responsabletienda.entity;
+package com.example.proyectobancosol.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
