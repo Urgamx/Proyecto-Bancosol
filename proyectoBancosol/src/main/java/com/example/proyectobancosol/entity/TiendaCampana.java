@@ -12,14 +12,14 @@ public class TiendaCampana {
     @EmbeddedId
     private TiendaCampanaId id;
 
-    @MapsId("tiendaidTienda")
+    @MapsId("idTienda")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "TIENDAid_tienda", nullable = false)
-    private Tienda tiendaidTienda;
+    @JoinColumn(name = "id_tienda", nullable = false)
+    private Tienda tienda;
 
     @MapsId("idCampana")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_campana", nullable = false)
-    private Campana idCampana;
+    private Campana campana;
 
 }

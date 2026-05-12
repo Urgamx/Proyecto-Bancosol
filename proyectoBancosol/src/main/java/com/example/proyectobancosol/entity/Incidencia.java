@@ -15,7 +15,7 @@ public class Incidencia {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_asignacion", nullable = false)
-    private AsignacionTurno idAsignacion;
+    private AsignacionTurno asignacion;
 
     @Column(name = "descripcion", nullable = false, length = 2000)
     private String descripcion;
