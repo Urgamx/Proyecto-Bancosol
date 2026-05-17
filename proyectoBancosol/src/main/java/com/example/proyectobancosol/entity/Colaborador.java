@@ -34,4 +34,10 @@ public class Colaborador {
     @Column(name = "localidad")
     private String localidad;
 
+    @Column(name = "colabora_en")
+    private String colaboraEn;
+
+    @Column(name = "observaciones", length = 1000)
+    private String observaciones;
+
 }

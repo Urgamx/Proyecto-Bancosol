@@ -45,6 +45,8 @@ CREATE TABLE COLABORADOR (
   contacto_tlf   varchar(20),
   domicilio      varchar(255),
   localidad      varchar(255),
+  colabora_en  varchar(255),
+  observaciones varchar(255),
   CONSTRAINT id_colaborador 
     PRIMARY KEY (id_colaborador));
 CREATE TABLE VOLUNTARIO (
