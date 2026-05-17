@@ -2,7 +2,9 @@ package com.example.proyectobancosol.controller.coordinador;
 
 import com.example.proyectobancosol.entity.Colaborador;
 import com.example.proyectobancosol.entity.Usuario;
+import com.example.proyectobancosol.entity.UsuarioColaborador;
 import com.example.proyectobancosol.service.coordinador.ColaboradorService;
+import com.example.proyectobancosol.service.coordinador.UsuarioColaboradorService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,8 @@ public class CoordinadorController {
 
     @Autowired
     ColaboradorService colaboradorService;
+    @Autowired
+    UsuarioColaboradorService usuarioColaboradorService;
 
     @GetMapping("/")
     public String home(@SessionAttribute(name = "usuario",required = false) Usuario user,
@@ -33,8 +37,10 @@ public class CoordinadorController {
     @GetMapping("/colaborador")
     public String listar(Model model, HttpSession session) {
 
-        List<Colaborador> lista = this.colaboradorService.findAll();
-        model.addAttribute("lista",lista);
+        List<Colaborador> colaboradores = this.colaboradorService.findAll();
+        List<UsuarioColaborador> usuarios = this.usuarioColaboradorService.findAll();
+        model.addAttribute("colaboradores",colaboradores);
+        model.addAttribute("usuarios", usuarios);
         return "coordinador/colaborador";
     }
 

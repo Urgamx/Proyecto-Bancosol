@@ -1,6 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.proyectobancosol.entity.Colaborador" %>
-<%@ page import="com.example.proyectobancosol.entity.Usuario" %><%--
+<%@ page import="com.example.proyectobancosol.entity.Usuario" %>
+<%@ page import="com.example.proyectobancosol.entity.UsuarioColaborador" %><%--
   Created by IntelliJ IDEA.
   User: USUARIO
   Date: 17/05/2026
@@ -10,7 +11,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <%
-    List<Colaborador> lista = (List<Colaborador>) request.getAttribute("lista");
+    List<Colaborador> colaboradores = (List<Colaborador>) request.getAttribute("colaboradores");
+    List<UsuarioColaborador> usuarios = (List<UsuarioColaborador>) request.getAttribute("usuarios");
     Usuario user = (Usuario) session.getAttribute("usuario");
 %>
 <head>
@@ -31,14 +33,19 @@
     </tr>
 
     <%
-        for (Colaborador colaborador : lista) {
+        for (Colaborador colaborador : colaboradores) {
     %>
     <tr>
         <td><%=colaborador.getNombreEntidad()%></td>
         <td><%=colaborador.getDomicilio()%></td>
         <td><%=colaborador.getLocalidad()%></td>
         <td><%=colaborador.getColaboraEn()%></td>
-        <td>Coordinador</td>
+        <%
+            for (UsuarioColaborador usuario : usuarios) {
+                if (colaborador.getId().equals(usuario.getColaborador().getId())) {
+        %>
+        <td><%=usuario.getUsuario().getNombreCompleto()%></td>
+        <%}}%>
         <td><%=colaborador.getContactoNom()%> (<%=colaborador.getContactoTlf()%>)</td>
         <td><%=colaborador.getObservaciones()%></td>
     </tr>

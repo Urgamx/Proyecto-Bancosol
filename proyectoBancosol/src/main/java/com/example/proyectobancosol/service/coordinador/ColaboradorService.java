@@ -10,7 +10,8 @@ import java.util.List;
 @Service
 public class ColaboradorService {
 
-    @Autowired ColaboradorRepository colaboradorRepository;
+    @Autowired
+    ColaboradorRepository colaboradorRepository;
 
     public List<Colaborador> findAll() {
         return this.colaboradorRepository.findAll();
