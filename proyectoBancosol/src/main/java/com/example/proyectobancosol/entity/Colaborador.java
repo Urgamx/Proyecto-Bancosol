@@ -34,10 +34,16 @@ public class Colaborador {
     @Column(name = "localidad")
     private String localidad;
 
-    @Column(name = "colabora_en")
-    private String colaboraEn;
+    @Column(name = "zona_geografica")
+    private String zonaGeografica;
 
     @Column(name = "observaciones", length = 1000)
     private String observaciones;
+
+    @Column(name = "cod_postal")
+    private String codPostal;
+
+    @Column(name = "estado", nullable = false)
+    private Integer estado;
 
 }

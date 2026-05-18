@@ -16,10 +16,13 @@
     Usuario user = (Usuario) session.getAttribute("usuario");
 %>
 <head>
-    <title>Title</title>
+    <title>Listado de colaboradores</title>
 </head>
 <body>
 <h1>Listado de colaboradores:</h1>
+
+<label>Usuario : <%=user.getNombreCompleto()%> (<%=user.getIdRol().getNombre()%>)</label>
+<br><br>
 
 <table border="2">
     <tr>
@@ -36,10 +39,10 @@
         for (Colaborador colaborador : colaboradores) {
     %>
     <tr>
-        <td><%=colaborador.getNombreEntidad()%></td>
+        <td><a href="/coordinador/editarColaborador?id=<%=colaborador.getId()%>"><%=colaborador.getNombreEntidad()%></a></td>
         <td><%=colaborador.getDomicilio()%></td>
         <td><%=colaborador.getLocalidad()%></td>
-        <td><%=colaborador.getColaboraEn()%></td>
+        <td><%=colaborador.getZonaGeografica()%></td>
         <%
             for (UsuarioColaborador usuario : usuarios) {
                 if (colaborador.getId().equals(usuario.getColaborador().getId())) {
