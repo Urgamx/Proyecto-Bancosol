@@ -17,4 +17,6 @@ public class UsuarioColaboradorService {
     public List<UsuarioColaborador> findAll() {
         return this.usuarioColaboradorRepository.findAll();
     }
+
+    public void save(UsuarioColaborador usuarioColaborador) { this.usuarioColaboradorRepository.save(usuarioColaborador); }
 }

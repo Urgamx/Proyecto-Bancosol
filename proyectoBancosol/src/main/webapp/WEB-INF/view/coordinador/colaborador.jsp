@@ -55,6 +55,8 @@
     <%}%>
 </table>
 <br>
+<a href="/coordinador/nuevoColaborador">Añadir</a>
+<br><br>
 <a href="/coordinador/">Volver</a>
 </body>
 </html>

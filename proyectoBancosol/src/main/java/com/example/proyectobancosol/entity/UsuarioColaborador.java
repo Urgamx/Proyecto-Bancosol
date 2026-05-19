@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "usuario_colaborador")
 public class UsuarioColaborador {
     @EmbeddedId
-    private UsuarioColaboradorId id;
+    private UsuarioColaboradorId id = new UsuarioColaboradorId();
 
     @MapsId("idUsuario")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
