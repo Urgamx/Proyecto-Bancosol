@@ -69,5 +69,6 @@
     </table>
     <button type="submit">Guardar</button>
 </form>
+<a href="/coordinador/colaborador">Cancelar</a>
 </body>
 </html>

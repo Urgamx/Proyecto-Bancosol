@@ -12,17 +12,36 @@
 <html>
 <%
     List<Colaborador> colaboradores = (List<Colaborador>) request.getAttribute("colaboradores");
-    List<UsuarioColaborador> usuarios = (List<UsuarioColaborador>) request.getAttribute("usuarios");
+    List<UsuarioColaborador> relaciones = (List<UsuarioColaborador>) request.getAttribute("relaciones");
+    List<Usuario> coordinadores = (List<Usuario>) request.getAttribute("coordinadores");
     Usuario user = (Usuario) session.getAttribute("usuario");
+    String zonaGeo = (String) request.getAttribute("zonaGeo");
+    String localidad = (String) request.getAttribute("localidad");
+    Integer coordinadorFiltro = (Integer) request.getAttribute("coordinadorSelected");
 %>
 <head>
     <title>Listado de colaboradores</title>
 </head>
 <body>
 <h1>Listado de colaboradores:</h1>
-
-<label>Usuario : <%=user.getNombreCompleto()%> (<%=user.getIdRol().getNombre()%>)</label>
-<br><br>
+<form action="/coordinador/filtrarColaborador" method="post">
+    <label>Usuario : <%=user.getNombreCompleto()%> (<%=user.getIdRol().getNombre()%>)</label><br>
+    <label>ZONA GEOGRAFICA:</label>
+    <input type="text" name="zonaGeografica" value="<%=zonaGeo != null ? zonaGeo : ""%>"><br>
+    <label>LOCALIDAD:</label>
+    <input type="text" name="localidad" value="<%=localidad != null ? localidad : ""%>"><br>
+    <label>COORDINADOR:</label>
+    <select name="coordinador">
+        <option value=""></option>
+        <%
+            for (Usuario coordinador : coordinadores) {
+        %>
+        <option value="<%=coordinador.getId()%>" <%=coordinador.getId().equals(coordinadorFiltro) ? "selected" : ""%>><%=coordinador.getNombreCompleto()%></option>
+        <%}%>
+    </select> <br>
+    <button type="submit">Filtrar</button><br>
+    <a href="/coordinador/colaborador">Limpiar Filtro</a>
+</form>
 
 <table border="2">
     <tr>
@@ -44,10 +63,10 @@
         <td><%=colaborador.getLocalidad()%></td>
         <td><%=colaborador.getZonaGeografica()%></td>
         <%
-            for (UsuarioColaborador usuario : usuarios) {
-                if (colaborador.getId().equals(usuario.getColaborador().getId())) {
+            for (UsuarioColaborador relacion : relaciones) {
+                if (colaborador.getId().equals(relacion.getColaborador().getId())) {
         %>
-        <td><%=usuario.getUsuario().getNombreCompleto()%></td>
+        <td><%=relacion.getUsuario().getNombreCompleto()%></td>
         <%}}%>
         <td><%=colaborador.getContactoNom()%> (<%=colaborador.getContactoTlf()%>)</td>
         <td><%=colaborador.getObservaciones()%></td>

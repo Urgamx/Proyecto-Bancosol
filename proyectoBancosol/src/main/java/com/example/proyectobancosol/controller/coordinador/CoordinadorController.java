@@ -5,6 +5,7 @@ import com.example.proyectobancosol.entity.Usuario;
 import com.example.proyectobancosol.entity.UsuarioColaborador;
 import com.example.proyectobancosol.service.coordinador.ColaboradorService;
 import com.example.proyectobancosol.service.coordinador.UsuarioColaboradorService;
+import com.example.proyectobancosol.service.coordinador.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ public class CoordinadorController {
 
     private final ColaboradorService colaboradorService;
     private final UsuarioColaboradorService usuarioColaboradorService;
+    private final UsuarioService usuarioService;
 
     @GetMapping("/")
     public String home(@SessionAttribute(name = "usuario",required = false) Usuario user,
@@ -43,10 +45,42 @@ public class CoordinadorController {
         }
 
         List<Colaborador> colaboradores = this.colaboradorService.findAllActivos();
-        List<UsuarioColaborador> usuarios = this.usuarioColaboradorService.findAll();
+        List<UsuarioColaborador> relaciones = this.usuarioColaboradorService.findAll();
+        List<Usuario> coordinadores = this.usuarioService.findCoordinador();
         model.addAttribute("colaboradores",colaboradores);
-        model.addAttribute("usuarios", usuarios);
+        model.addAttribute("relaciones", relaciones);
+        model.addAttribute("coordinadores", coordinadores);
         return "coordinador/colaborador";
+    }
+
+    @PostMapping("/filtrarColaborador")
+    public String filtrarColaborador(@SessionAttribute(name = "usuario",required = false) Usuario user,
+                                     @RequestParam(value = "zonaGeografica", defaultValue = "") String zonaGeo,
+                                     @RequestParam(value = "localidad", defaultValue = "") String localidad,
+                                     @RequestParam(value = "coordinador", required = false) Integer coordinadorId,
+                                     Model model, HttpSession session)
+    {
+        if (user == null){
+            return "redirect:/login";
+        }
+
+        List<Colaborador> colaboradores = null;
+        if (coordinadorId == null) {
+            colaboradores = this.usuarioColaboradorService.findByZonaLocalidad(zonaGeo,localidad);
+        } else {
+            colaboradores = this.usuarioColaboradorService.findByZonaLocalidadCoorId(zonaGeo,localidad,coordinadorId);
+        }
+        List<UsuarioColaborador> relaciones = this.usuarioColaboradorService.findAll();
+        List<Usuario> coordinadores = this.usuarioService.findCoordinador();
+        model.addAttribute("colaboradores",colaboradores);
+        model.addAttribute("relaciones", relaciones);
+        model.addAttribute("coordinadores", coordinadores);
+        model.addAttribute("zonaGeo",zonaGeo);
+        model.addAttribute("localidad",localidad);
+        model.addAttribute("coordinadorSelected", coordinadorId);
+
+
+        return "/coordinador/colaborador";
     }
 
     @GetMapping("/editarColaborador")
@@ -123,7 +157,7 @@ public class CoordinadorController {
     }
 
     @GetMapping("/asignacionVoluntarios")
-    public String listarTurnosVoluntarios(@SessionAttribute(name = "usuario",required = false) Usuario user,
+    public String listarAsignacionTurnos(@SessionAttribute(name = "usuario",required = false) Usuario user,
                                           Model model, HttpSession session)
     {
         if (user == null){
