@@ -13,7 +13,7 @@ public class Incidencia {
     @Column(name = "id_incidencia", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_asignacion", nullable = false)
     private AsignacionTurno asignacion;
 
