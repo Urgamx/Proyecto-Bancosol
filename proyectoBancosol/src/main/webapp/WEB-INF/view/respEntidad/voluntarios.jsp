@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Detalles de Tienda - Bancosol</title>
+    <title>Voluntarios - Bancosol</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,24 +25,16 @@
             border-bottom: 3px solid #0066cc;
             padding-bottom: 10px;
         }
-        h2 {
-            color: #0066cc;
-            margin-top: 30px;
-        }
         .tienda-info {
             background-color: #e8f4f8;
-            padding: 15px;
+            padding: 10px;
             margin-bottom: 20px;
             border-left: 4px solid #0066cc;
-            border-radius: 3px;
-        }
-        .tienda-info p {
-            margin: 8px 0;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 20px;
         }
         th, td {
             border: 1px solid #ddd;
@@ -60,25 +52,6 @@
         tr:hover {
             background-color: #f0f0f0;
         }
-        textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            resize: vertical;
-        }
-        button {
-            background-color: #0066cc;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #0052a3;
-        }
         a {
             color: #0066cc;
             text-decoration: none;
@@ -92,13 +65,6 @@
         .back-link {
             margin-bottom: 20px;
         }
-        .incident-form {
-            background-color: #fff3cd;
-            padding: 15px;
-            margin-top: 15px;
-            border-left: 4px solid #ff9800;
-            border-radius: 3px;
-        }
     </style>
 </head>
 <body>
@@ -110,60 +76,53 @@
 
 <div class="container">
     <div class="back-link">
-        <a href="/resp-tienda/">Volver al Panel</a>
+        <a href="/resp-entidad/">Volver al Panel</a>
     </div>
     
-    <h1>Detalles de Tienda</h1>
+    <h1>Voluntarios Asignados - <%=tienda.getNombre()%></h1>
     
     <div class="tienda-info">
-        <p><strong>Tienda:</strong> <%=tienda.getNombre()%></p>
-        <p><strong>Direccion:</strong> <%=tienda.getDireccion()%></p>
-        <p><strong>Codigo Postal:</strong> <%=tienda.getCodPostal()%></p>
-        <p><strong>Cadena:</strong> <%=tienda.getIdCadena().getNombre()%></p>
+        <strong>Tienda:</strong> <%=tienda.getNombre()%> | 
+        <strong>Direccion:</strong> <%=tienda.getDireccion()%>
     </div>
 
-    <h2>Voluntarios Asignados y Turnos</h2>
-    
     <%if(turnos != null && turnos.size() > 0){%>
         <table border="1">
             <tr>
                 <th>VOLUNTARIO</th>
-                <th>CAMPANA</th>
-                <th>DIA</th>
+                <th>CAMPAÑA</th>
+                <th>DÍA</th>
                 <th>FRANJA</th>
                 <th>HORARIO</th>
-                <th>INCIDENCIA</th>
-                <th>ACCIONES</th>
+                <th>ESTADO</th>
             </tr>
 
             <%for(AsignacionTurno turno : turnos){%>
             <tr>
-                <td><%=turno.getIdVoluntario().getNombre()%></td>
+                <td>
+                    <strong><%=turno.getIdVoluntario().getNombre()%></strong>
+                </td>
                 <td><%=turno.getIdCampana().getTipoDeCampana().getNombre()%></td>
                 <td><%=turno.getDia()%></td>
                 <td><%=turno.getFranja()%></td>
                 <td><%=turno.getHoraInicio()%> - <%=turno.getHoraFin()%></td>
                 <td>
                     <%if(turno.getIncidencia() != null){%>
-                        <span style="color: red; font-weight: bold;">Si</span><br>
-                        <small><%=turno.getIncidencia().getDescripcion()%></small>
+                        <span style="color: red; font-weight: bold;">INCIDENCIA REGISTRADA</span>
                     <%}else{%>
-                        <span style="color: green;">Sin incidencias</span>
-                    <%}%>
-                </td>
-                <td>
-                    <%if(turno.getIncidencia() == null){%>
-                        <small>No hay incidencias registradas</small>
-                    <%}else{%>
-                        <small>Incidencia registrada</small>
+                        <span style="color: green; font-weight: bold;">SIN INCIDENCIAS</span>
                     <%}%>
                 </td>
             </tr>
             <%}%>
         </table>
     <%}else{%>
-        <p style="color: #ff9800;"><strong>No hay voluntarios asignados a esta tienda.</strong></p>
+        <p style="color: #ff9800; font-size: 16px;"><strong>No hay voluntarios asignados a esta tienda.</strong></p>
     <%}%>
+
+    <div style="margin-top: 30px;">
+        <a href="/resp-entidad/tienda?id=<%=tienda.getId()%>">Ver Detalles de Turnos</a>
+    </div>
 </div>
 
 </body>

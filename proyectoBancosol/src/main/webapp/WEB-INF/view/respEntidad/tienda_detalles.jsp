@@ -110,7 +110,7 @@
 
 <div class="container">
     <div class="back-link">
-        <a href="/resp-tienda/">Volver al Panel</a>
+        <a href="/resp-entidad/">Volver al Panel</a>
     </div>
     
     <h1>Detalles de Tienda</h1>
@@ -153,7 +153,7 @@
                 </td>
                 <td>
                     <%if(turno.getIncidencia() == null){%>
-                        <small>No hay incidencias registradas</small>
+                        <a href="/resp-entidad/registrar-incidencia?id=<%=turno.getId()%>&tienda=<%=tienda.getId()%>">Reportar</a>
                     <%}else{%>
                         <small>Incidencia registrada</small>
                     <%}%>
