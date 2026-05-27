@@ -39,4 +39,6 @@ public class AsignacionTurno {
     @Column(name = "hora_fin", nullable = false)
     private LocalTime horaFin;
 
+    @OneToOne(mappedBy = "asignacion", fetch = FetchType.LAZY)
+    private Incidencia incidencia;
 }
