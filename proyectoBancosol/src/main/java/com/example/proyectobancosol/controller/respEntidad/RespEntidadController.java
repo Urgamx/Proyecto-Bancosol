@@ -3,6 +3,7 @@ package com.example.proyectobancosol.controller.respEntidad;
 import com.example.proyectobancosol.entity.AsignacionTurno;
 import com.example.proyectobancosol.entity.Tienda;
 import com.example.proyectobancosol.entity.Usuario;
+import com.example.proyectobancosol.entity.Voluntario;
 import com.example.proyectobancosol.service.capitan.AsignacionTurnoService;
 import com.example.proyectobancosol.service.capitan.TiendaService;
 import com.example.proyectobancosol.service.respEntidad.RespEntidadService;
@@ -110,6 +111,24 @@ public class RespEntidadController {
         model.addAttribute("usuario", user);
 
         return "respEntidad/voluntarios";
+    }
+
+    @GetMapping("/detalles-voluntario")
+    public String verDetallesVoluntario(@SessionAttribute(name = "usuario", required = false) Usuario user,
+                                        @RequestParam("id") Integer idVoluntario,
+                                        @RequestParam(value = "tienda", required = false) Integer idTienda,
+                                        Model model, HttpSession session) {
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        // Obtener voluntario por ID
+        Voluntario voluntario = respEntidadService.obtenerVoluntarioPorId(idVoluntario);
+        model.addAttribute("voluntario", voluntario);
+        model.addAttribute("idTienda", idTienda);
+        model.addAttribute("usuario", user);
+
+        return "respEntidad/detalles_voluntario";
     }
 
 }

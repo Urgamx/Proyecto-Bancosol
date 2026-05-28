@@ -4,9 +4,11 @@ import com.example.proyectobancosol.dao.AsignacionTurnoRepository;
 import com.example.proyectobancosol.dao.IncidenciaRepository;
 import com.example.proyectobancosol.dao.TiendaRepository;
 import com.example.proyectobancosol.dao.UsuarioTiendaRepository;
+import com.example.proyectobancosol.dao.VoluntarioRepository;
 import com.example.proyectobancosol.entity.AsignacionTurno;
 import com.example.proyectobancosol.entity.Incidencia;
 import com.example.proyectobancosol.entity.Tienda;
+import com.example.proyectobancosol.entity.Voluntario;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ public class RespEntidadService {
     private UsuarioTiendaRepository usuarioTiendaRepository;
     private AsignacionTurnoRepository asignacionTurnoRepository;
     private IncidenciaRepository incidenciaRepository;
+    private VoluntarioRepository voluntarioRepository;
 
     public Tienda obtenerTiendaDelUsuario(Integer idUsuario) {
         return usuarioTiendaRepository.findByUsuarioId(idUsuario)
@@ -60,5 +63,9 @@ public class RespEntidadService {
 
     public Tienda obtenerTiendaPorId(Integer idTienda) {
         return tiendaRepository.findById(idTienda).orElse(null);
+    }
+
+    public Voluntario obtenerVoluntarioPorId(Integer idVoluntario) {
+        return voluntarioRepository.findById(idVoluntario).orElse(null);
     }
 }

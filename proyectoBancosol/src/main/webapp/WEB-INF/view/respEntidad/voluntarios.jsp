@@ -100,7 +100,7 @@
             <%for(AsignacionTurno turno : turnos){%>
             <tr>
                 <td>
-                    <strong><%=turno.getIdVoluntario().getNombre()%></strong>
+                    <strong><a href="/resp-entidad/detalles-voluntario?id=<%=turno.getIdVoluntario().getId()%>&tienda=<%=tienda.getId()%>" style="color: #0066cc; text-decoration: underline;"><%=turno.getIdVoluntario().getNombre()%></a></strong>
                 </td>
                 <td><%=turno.getIdCampana().getTipoDeCampana().getNombre()%></td>
                 <td><%=turno.getDia()%></td>

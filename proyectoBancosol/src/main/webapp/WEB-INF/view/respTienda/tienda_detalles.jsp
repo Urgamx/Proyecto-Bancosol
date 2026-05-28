@@ -138,7 +138,7 @@
 
             <%for(AsignacionTurno turno : turnos){%>
             <tr>
-                <td><%=turno.getIdVoluntario().getNombre()%></td>
+                <td><a href="/resp-tienda/detalles-voluntario?id=<%=turno.getIdVoluntario().getId()%>&tienda=<%=tienda.getId()%>" style="color: #0066cc; text-decoration: underline;"><%=turno.getIdVoluntario().getNombre()%></a></td>
                 <td><%=turno.getIdCampana().getTipoDeCampana().getNombre()%></td>
                 <td><%=turno.getDia()%></td>
                 <td><%=turno.getFranja()%></td>
@@ -152,6 +152,7 @@
                     <%}%>
                 </td>
                 <td>
+                    <a href="/resp-tienda/detalles-voluntario?id=<%=turno.getIdVoluntario().getId()%>&tienda=<%=tienda.getId()%>">Ver Detalles</a>
                     <%if(turno.getIncidencia() == null){%>
                         <small>No hay incidencias registradas</small>
                     <%}else{%>
