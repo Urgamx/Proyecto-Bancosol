@@ -90,8 +90,8 @@
         <table border="1">
             <tr>
                 <th>VOLUNTARIO</th>
-                <th>CAMPAÑA</th>
-                <th>DÍA</th>
+                <th>CAMPANA</th>
+                <th>DIA</th>
                 <th>FRANJA</th>
                 <th>HORARIO</th>
                 <th>ESTADO</th>

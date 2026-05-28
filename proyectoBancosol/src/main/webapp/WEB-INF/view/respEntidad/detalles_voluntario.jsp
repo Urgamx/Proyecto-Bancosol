@@ -116,7 +116,7 @@
         <%if(idTienda != null){%>
             <a href="/resp-entidad/tienda?id=<%=idTienda%>">Volver a Detalles de Tienda</a>
         <%}else{%>
-            <a href="/resp-entidad/">← Volver al Panel</a>
+            <a href="/resp-entidad/">Volver al Panel</a>
         <%}%>
     </div>
     
@@ -126,9 +126,9 @@
         <div class="info-section">
             <h2>Datos Personales</h2>
             
-            <div class="info-field">
+            <!-- <div class="info-field">
                 <strong>ID:</strong> <span class="info-value"><%=voluntario.getId()%></span>
-            </div>
+            </div> -->
             
             <div class="info-field">
                 <strong>Nombre:</strong> <span class="info-value"><%=voluntario.getNombre()%></span>
@@ -176,7 +176,7 @@
         </div>
     <%}else{%>
         <div style="color: red; font-size: 16px; text-align: center;">
-            <strong>⚠ El voluntario no fue encontrado.</strong>
+            <strong>El voluntario no fue encontrado.</strong>
         </div>
         <div class="button-group">
             <a href="/resp-entidad/" class="btn btn-secondary">Volver al Panel</a>
