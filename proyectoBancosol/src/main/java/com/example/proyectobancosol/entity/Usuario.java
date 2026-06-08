@@ -17,7 +17,7 @@ public class Usuario {
     @JoinColumn(name = "id_rol", nullable = false)
     private Rol idRol;
 
-    @Column(name = "email", nullable = false, length = 150)
+    @Column(name = "email", nullable = false, length = 150, unique = true)
     private String email;
 
     @Column(name = "password", nullable = false)
