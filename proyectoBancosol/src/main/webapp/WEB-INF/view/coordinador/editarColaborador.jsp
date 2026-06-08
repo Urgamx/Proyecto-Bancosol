@@ -6,69 +6,70 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <%
     Colaborador colaborador = (Colaborador) request.getAttribute("colaborador");
 %>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Colaborador</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-<h1>Colaborador Seleccionado:</h1>
-<form method="post" action="/coordinador/guardarColaborador">
-    <input type="hidden" name="id" value="<%=colaborador.getId()%>">
-    <input type="hidden" name="nombreEntidad" value="<%=colaborador.getNombreEntidad()%>">
-    <input type="hidden" name="domicilio" value="<%=colaborador.getDomicilio()%>">
-    <input type="hidden" name="localidad" value="<%=colaborador.getLocalidad()%>">
-    <input type="hidden" name="zonaGeografica" value="<%=colaborador.getZonaGeografica()%>">
-    <input type="hidden" name="observaciones" value="<%=colaborador.getObservaciones()%>">
-    <input type="hidden" name="codPostal" value="<%=colaborador.getCodPostal()%>">
-
-    <table>
-        <tr>
-            <th>COLABORADOR</th>
-            <td><%=colaborador.getNombreEntidad()%></td>
-        </tr>
-        <tr>
-            <th>DOMICILIO</th>
-            <td><%=colaborador.getDomicilio()%></td>
-        </tr>
-        <tr>
-            <th>CP - LOCALIDAD</th>
-            <td><%=colaborador.getCodPostal()%> - <%=colaborador.getLocalidad()%></td>
-        </tr>
-        <tr>
-            <th>COLABORA EN</th>
-            <td><%=colaborador.getZonaGeografica()%></td>
-        </tr>
-        <tr>
-            <th>CONTACTO</th>
-            <td>
-                <table>
-                    <tr>
-                        <th>Nombre:</th>
-                        <td>
-                            <input type="text" name="contactoNom" value="<%=colaborador.getContactoNom() != null ? colaborador.getContactoNom() : ""%>">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Teléfono:</th>
-                        <td>
-                            <input type="text" name="contactoTlf" value="<%=colaborador.getContactoTlf() != null ? colaborador.getContactoTlf() : ""%>">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Email:</th>
-                        <td>
-                            <input type="email" name="email" value="<%=colaborador.getEmail() != null ? colaborador.getEmail() : ""%>" required>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-    <button type="submit">Guardar</button>
-</form>
-<a href="/coordinador/colaborador">Cancelar</a>
+<div class="container">
+    <header>
+        <h1>Editar Colaborador</h1>
+    </header>
+    
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title"><%=colaborador.getNombreEntidad()%></h2>
+        </div>
+        <div class="card-body">
+            <form method="post" action="/coordinador/guardarColaborador">
+                <input type="hidden" name="id" value="<%=colaborador.getId()%>">
+                
+                <div class="form-group">
+                    <label><strong>Domicilio:</strong></label>
+                    <p><%=colaborador.getDomicilio()%></p>
+                </div>
+                
+                <div class="form-group">
+                    <label><strong>Código Postal - Localidad:</strong></label>
+                    <p><%=colaborador.getCodPostal()%> - <%=colaborador.getLocalidad()%></p>
+                </div>
+                
+                <div class="form-group">
+                    <label><strong>Colabora en:</strong></label>
+                    <p><%=colaborador.getZonaGeografica()%></p>
+                </div>
+                
+                <h3 class="mt-3">Datos de Contacto</h3>
+                
+                <div class="form-group">
+                    <label for="contactoNom">Nombre:</label>
+                    <input type="text" id="contactoNom" name="contactoNom" value="<%=colaborador.getContactoNom() != null ? colaborador.getContactoNom() : ""%>" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactoTlf">Teléfono:</label>
+                    <input type="text" id="contactoTlf" name="contactoTlf" value="<%=colaborador.getContactoTlf() != null ? colaborador.getContactoTlf() : ""%>" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="<%=colaborador.getEmail() != null ? colaborador.getEmail() : ""%>" required>
+                </div>
+                
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    <a href="/coordinador/colaborador" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

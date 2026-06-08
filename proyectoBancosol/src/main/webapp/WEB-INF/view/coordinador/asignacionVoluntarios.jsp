@@ -6,30 +6,28 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<%
-    Usuario user = (Usuario) session.getAttribute("usuario");
-%>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <title>Asignacion Voluntarios</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignación de Voluntarios</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-
-<h1>Asignacion de voluntarios</h1>
-<label>Usuario: <%=user.getNombreCompleto()%></label>
-<br>
-<table border="2">
-    <tr>
-        <th>TIENDA</th>
-        <th>DOMICILIO</th>
-        <th>LOCALIDAD</th>
-        <th>CAPITAN</th>
-        <th>VIERNES MAÑANA</th>
-        <th>VIERNES TARDE</th>
-        <th>SABADO MAÑANA</th>
-        <th>SABADO TARDE</th>
-        <th>OBSERVACION</th>
-    </tr>
-</table>
+<div class="container">
+    <header>
+        <h1>Asignación de Voluntarios</h1>
+    </header>
+    
+    <div class="card">
+        <div class="card-body">
+            <p>Módulo de asignación de voluntarios en desarrollo.</p>
+        </div>
+        <div class="card-footer">
+            <a href="/coordinador/" class="btn btn-secondary">Volver</a>
+        </div>
+    </div>
+</div>
 </body>
 </html>

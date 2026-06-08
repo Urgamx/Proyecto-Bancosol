@@ -9,7 +9,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <%
     List<Colaborador> colaboradores = (List<Colaborador>) request.getAttribute("colaboradores");
     List<UsuarioColaborador> relaciones = (List<UsuarioColaborador>) request.getAttribute("relaciones");
@@ -20,39 +21,38 @@
     Integer coordinadorFiltro = (Integer) request.getAttribute("coordinadorSelected");
 %>
 <head>
-    <title>Listado de colaboradores</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Colaboradores</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-<h1>Listado de colaboradores:</h1>
-<form action="/coordinador/filtrarColaborador" method="post">
-    <label>Usuario : <%=user.getNombreCompleto()%> (<%=user.getIdRol().getNombre()%>)</label><br>
-    <label>ZONA GEOGRAFICA:</label>
-    <input type="text" name="zonaGeografica" value="<%=zonaGeo != null ? zonaGeo : ""%>"><br>
-    <label>LOCALIDAD:</label>
-    <input type="text" name="localidad" value="<%=localidad != null ? localidad : ""%>"><br>
-    <label>COORDINADOR:</label>
-    <select name="coordinador">
-        <option value=""></option>
-        <%
-            for (Usuario coordinador : coordinadores) {
-        %>
-        <option value="<%=coordinador.getId()%>" <%=coordinador.getId().equals(coordinadorFiltro) ? "selected" : ""%>><%=coordinador.getNombreCompleto()%></option>
-        <%}%>
-    </select> <br>
-    <button type="submit">Filtrar</button><br>
-    <a href="/coordinador/colaborador">Limpiar Filtro</a>
-</form>
+<div class="container">
+    <header>
+        <h1>Listado de Colaboradores</h1>
+    </header>
+    
+    <div class="user-info">
+        <div class="user-avatar"><%=user.getNombreCompleto().charAt(0)%></div>
+        <div class="user-details">
+            <h3><%=user.getNombreCompleto()%></h3>
+            <p><%=user.getIdRol().getNombre()%></p>
+        </div>
+    </div>
 
-<table border="2">
-    <tr>
-        <th>COLABORADOR</th>
-        <th>DOMICILIO</th>
-        <th>LOCALIDAD</th>
-        <th>COLABORADORA EN</th>
-        <th>COORDINADOR</th>
-        <th>CONTACTO PRINCIPAL</th>
-        <th>OBSERVACIONES</th>
-    </tr>
+<table class="table-striped">
+    <thead>
+        <tr>
+            <th>COLABORADOR</th>
+            <th>DOMICILIO</th>
+            <th>LOCALIDAD</th>
+            <th>COLABORADORA EN</th>
+            <th>COORDINADOR</th>
+            <th>CONTACTO PRINCIPAL</th>
+            <th>OBSERVACIONES</th>
+        </tr>
+    </thead>
+    <tbody>
 
     <%
         for (Colaborador colaborador : colaboradores) {
@@ -72,10 +72,12 @@
         <td><%=colaborador.getObservaciones()%></td>
     </tr>
     <%}%>
+    </tbody>
 </table>
-<br>
-<a href="/coordinador/nuevoColaborador">Añadir</a>
-<br><br>
-<a href="/coordinador/">Volver</a>
+
+    <div class="mt-3">
+        <a href="/coordinador/" class="btn btn-secondary">Volver</a>
+    </div>
+</div>
 </body>
 </html>
