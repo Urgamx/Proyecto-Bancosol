@@ -47,7 +47,7 @@ public class AuthController {
         return switch (rol) {
             case "ADMIN" -> "redirect:/admin";
             case "RESP_ENTIDAD" -> "redirect:/resp-entidad";
-            case "COORDINADOR" -> "redirect:/coordinador";
+            case "COORDINADOR" -> "redirect:/coordinador/";
             case "RESP_TIENDA" -> "redirect:/resp-tienda";
             default -> "redirect:/login";
         };

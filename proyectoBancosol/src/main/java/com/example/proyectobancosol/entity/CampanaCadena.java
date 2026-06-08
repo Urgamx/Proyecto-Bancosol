@@ -12,14 +12,14 @@ public class CampanaCadena {
     @EmbeddedId
     private CampanaCadenaId id;
 
-    @MapsId("campañaidCampana")
+    @MapsId("idCampana")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "`CAMPAÑAid_campana`", nullable = false)
-    private Campana campañaidCampana;
+    @JoinColumn(name = "id_campana", nullable = false)
+    private Campana campana;
 
-    @MapsId("cadenasidCadena")
+    @MapsId("idCadena")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "CADENASid_cadena", nullable = false)
-    private Cadena cadenasidCadena;
+    @JoinColumn(name = "id_cadena", nullable = false)
+    private Cadena cadena;
 
 }

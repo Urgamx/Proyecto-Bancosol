@@ -10,12 +10,13 @@ import lombok.Setter;
 @Table(name = "incidencias")
 public class Incidencia {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_incidencia", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_asignacion", nullable = false)
-    private AsignacionTurno idAsignacion;
+    private AsignacionTurno asignacion;
 
     @Column(name = "descripcion", nullable = false, length = 2000)
     private String descripcion;

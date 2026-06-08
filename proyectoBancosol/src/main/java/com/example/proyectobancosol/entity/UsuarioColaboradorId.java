@@ -14,8 +14,8 @@ import java.util.Objects;
 @Embeddable
 public class UsuarioColaboradorId implements Serializable {
     private static final long serialVersionUID = -6411622268755404661L;
-    @Column(name = "USUARIOid_usuario", nullable = false)
-    private Integer usuarioidUsuario;
+    @Column(name = "id_usuario", nullable = false)
+    private Integer idUsuario;
 
     @Column(name = "id_colaborador", nullable = false)
     private Integer idColaborador;
@@ -25,13 +25,13 @@ public class UsuarioColaboradorId implements Serializable {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         UsuarioColaboradorId entity = (UsuarioColaboradorId) o;
-        return Objects.equals(this.usuarioidUsuario, entity.usuarioidUsuario) &&
+        return Objects.equals(this.idUsuario, entity.idUsuario) &&
                 Objects.equals(this.idColaborador, entity.idColaborador);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(usuarioidUsuario, idColaborador);
+        return Objects.hash(idUsuario, idColaborador);
     }
 
 }
