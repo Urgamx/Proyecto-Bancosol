@@ -40,6 +40,24 @@
         </div>
     </div>
 
+    <form action="/coordinador/filtrarColaborador" method="post">
+        <label>ZONA GEOGRAFICA:</label>
+        <input type="text" name="zonaGeografica" value="<%=zonaGeo != null ? zonaGeo : ""%>"><br>
+        <label>LOCALIDAD:</label>
+        <input type="text" name="localidad" value="<%=localidad != null ? localidad : ""%>"><br>
+        <label>COORDINADOR:</label>
+        <select name="coordinador">
+            <option value=""></option>
+            <%
+                for (Usuario coordinador : coordinadores) {
+            %>
+            <option value="<%=coordinador.getId()%>" <%=coordinador.getId().equals(coordinadorFiltro) ? "selected" : ""%>><%=coordinador.getNombreCompleto()%></option>
+            <%}%>
+        </select> <br>
+        <button type="submit">Filtrar</button><br>
+        <a href="/coordinador/colaborador">Limpiar Filtro</a>
+    </form>
+
 <table class="table-striped">
     <thead>
         <tr>
@@ -75,6 +93,9 @@
     </tbody>
 </table>
 
+    <div class="mt-3">
+        <a href="/coordinador/nuevoColaborador" class="btn btn-primary">Añadir Colaborador</a>
+    </div>
     <div class="mt-3">
         <a href="/coordinador/" class="btn btn-secondary">Volver</a>
     </div>

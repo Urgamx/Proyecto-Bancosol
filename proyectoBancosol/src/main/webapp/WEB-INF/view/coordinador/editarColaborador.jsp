@@ -30,6 +30,13 @@
         <div class="card-body">
             <form method="post" action="/coordinador/guardarColaborador">
                 <input type="hidden" name="id" value="<%=colaborador.getId()%>">
+
+                <input type="hidden" name="nombreEntidad" value="<%=colaborador.getNombreEntidad()%>">
+                <input type="hidden" name="domicilio" value="<%=colaborador.getDomicilio()%>">
+                <input type="hidden" name="localidad" value="<%=colaborador.getLocalidad()%>">
+                <input type="hidden" name="zonaGeografica" value="<%=colaborador.getZonaGeografica()%>">
+                <input type="hidden" name="observaciones" value="<%=colaborador.getObservaciones()%>">
+                <input type="hidden" name="codPostal" value="<%=colaborador.getCodPostal()%>">
                 
                 <div class="form-group">
                     <label><strong>Domicilio:</strong></label>

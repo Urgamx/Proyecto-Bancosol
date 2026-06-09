@@ -58,5 +58,8 @@
     </tr>
     <%}%>
 </table>
+<div class="mt-3">
+    <a href="/coordinador/" class="btn btn-secondary">Volver</a>
+</div>
 </body>
 </html>
