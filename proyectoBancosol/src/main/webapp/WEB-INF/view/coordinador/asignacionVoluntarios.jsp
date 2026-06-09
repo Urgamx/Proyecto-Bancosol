@@ -59,6 +59,9 @@
     <%}%>
 </table>
 <div class="mt-3">
+    <a href="/coordinador/nuevoTurno" class="btn btn-primary">Añadir Turno</a>
+</div>
+<div class="mt-3">
     <a href="/coordinador/" class="btn btn-secondary">Volver</a>
 </div>
 </body>

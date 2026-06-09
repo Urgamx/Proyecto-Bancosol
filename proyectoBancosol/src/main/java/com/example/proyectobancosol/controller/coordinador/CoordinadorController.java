@@ -2,6 +2,7 @@ package com.example.proyectobancosol.controller.coordinador;
 
 import com.example.proyectobancosol.entity.*;
 import com.example.proyectobancosol.service.capitan.AsignacionTurnoService;
+import com.example.proyectobancosol.service.capitan.TiendaService;
 import com.example.proyectobancosol.service.coordinador.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class CoordinadorController {
     private final UsuarioTiendaService usuarioTiendaService;
     private final AsignacionTurnoService asignacionTurnoService;
     private final VoluntarioService voluntarioService;
+    private final TiendaService tiendaService;
 
     @GetMapping("/")
     public String home(@SessionAttribute(name = "usuario",required = false) Usuario user,
@@ -251,5 +253,92 @@ public class CoordinadorController {
         return "redirect:/coordinador/asignacionVoluntarios";
     }
 
+
+    @GetMapping("/nuevoTurno")
+    public String crearAsignacionTurnos(@SessionAttribute(name = "usuario",required = false) Usuario user,
+                                              Model model, HttpSession session)
+    {
+        if (user == null){
+            return "redirect:/";
+        }
+
+
+        List<Colaborador> colaboradores = this.colaboradorService.findAll();
+        List<Tienda> tiendas = this.tiendaService.ListarTiendas();
+
+        model.addAttribute("colaboradores",colaboradores);
+        model.addAttribute("tiendas",tiendas);
+
+        return "coordinador/nuevoTurno";
+    }
+
+    @PostMapping("/seleccionarNuevo")
+    public String seleccionarNuevaAsignacionTurnos(@RequestParam(value = "colaborador") Integer colaboradorId,
+                                                   @RequestParam(value = "tienda") Integer tiendaId,
+                                                   @SessionAttribute(name = "usuario",required = false) Usuario user,
+                                        Model model, HttpSession session)
+    {
+        if (user == null){
+            return "redirect:/";
+        }
+
+        Colaborador colaboradorSelected = this.colaboradorService.findById(colaboradorId);
+        Tienda tiendaSelected = this.tiendaService.findTiendaById(tiendaId);
+        List<Colaborador> colaboradores = this.colaboradorService.findAll();
+        List<Tienda> tiendas = this.tiendaService.ListarTiendas();
+        List<Voluntario> voluntarios = this.voluntarioService.findAllByColaborador(colaboradorId);
+        List<Usuario> capitanes = this.usuarioService.findCapitan();
+
+        model.addAttribute("colaboradores",colaboradores);
+        model.addAttribute("tiendas",tiendas);
+        model.addAttribute("colaboradorSelected",colaboradorSelected);
+        model.addAttribute("voluntarios",voluntarios);
+        model.addAttribute("tiendaSelected",tiendaSelected);
+        model.addAttribute("capitanes",capitanes);
+
+        return "coordinador/nuevoTurno";
+    }
+
+
+
+    @PostMapping("/guardarTurnoNuevo")
+    public String guardarNuevaAsignacionTurnos(@RequestParam(value = "tiendaId") Integer tiendaId,
+                                               @RequestParam(value = "colaboradorId") Integer colaboradorId,
+                                               @RequestParam(value = "capitan") Integer capitanId,
+                                               @RequestParam(value = "voluntario") Integer voluntarioId,
+                                               @RequestParam(value = "comienzo") LocalTime comienzo,
+                                               @RequestParam(value = "fin") LocalTime fin,
+                                               @RequestParam(value = "dia") String dia,
+                                               @RequestParam(value = "franja") String franja,
+                                               @SessionAttribute(name = "usuario",required = false) Usuario user,
+                                               Model model, HttpSession session)
+    {
+        if (user == null){
+            return "redirect:/";
+        }
+
+        Tienda tienda = this.tiendaService.findTiendaById(tiendaId);
+        Voluntario voluntario = this.voluntarioService.findById(voluntarioId);
+        Colaborador colaborador = this.colaboradorService.findById(colaboradorId);
+        Usuario capitan = this.usuarioService.findById(capitanId);
+
+        AsignacionTurno turno = new AsignacionTurno();
+        UsuarioTienda relacion = new UsuarioTienda();
+
+        turno.setIdColaborador(colaborador);
+        turno.setIdVoluntario(voluntario);
+        turno.setIdTienda(tienda);
+        turno.setHoraInicio(comienzo);
+        turno.setHoraFin(fin);
+        turno.setDia(dia);
+        turno.setFranja(franja);
+
+        relacion.setUsuario(capitan);
+        relacion.setTienda(tienda);
+
+        this.asignacionTurnoService.save(turno);
+
+        return "redirect:/coordinador/asignacionVoluntarios";
+    }
 
 }
