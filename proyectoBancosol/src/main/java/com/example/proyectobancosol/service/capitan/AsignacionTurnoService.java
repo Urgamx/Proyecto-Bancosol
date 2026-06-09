@@ -33,4 +33,6 @@ public class AsignacionTurnoService {
 
     public void save(AsignacionTurno au) { this.asignacionTurnoRepository.save(au); }
 
+    public List<AsignacionTurno> findByCadenaLocalidad(Integer cadenaId, String localidad) { return this.asignacionTurnoRepository.findByCadenaLocalidad(cadenaId,localidad); }
+
 }
