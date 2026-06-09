@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AsignacionTurnoService {
 
-    private AsignacionTurnoRepository asignacionTurnoRepository;
+    private final AsignacionTurnoRepository asignacionTurnoRepository;
 
     public List<AsignacionTurno> ListarAsignacionTurnos(){
         return this.ListarAsignacionTurnos(null);
@@ -29,6 +29,8 @@ public class AsignacionTurnoService {
         return turnos;
     }
 
+    public AsignacionTurno findById(Integer id) { return this.asignacionTurnoRepository.findById(id).get();}
 
+    public void save(AsignacionTurno au) { this.asignacionTurnoRepository.save(au); }
 
 }

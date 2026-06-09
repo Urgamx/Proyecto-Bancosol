@@ -1,4 +1,5 @@
-<%@ page import="com.example.proyectobancosol.entity.Usuario" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.proyectobancosol.entity.*" %><%--
   Created by IntelliJ IDEA.
   User: USUARIO
   Date: 18/05/2026
@@ -9,6 +10,8 @@
 <html>
 <%
     Usuario user = (Usuario) session.getAttribute("usuario");
+    List<AsignacionTurno> turnos = (List<AsignacionTurno>) request.getAttribute("turnos");
+    List<UsuarioTienda> relaciones = (List<UsuarioTienda>) request.getAttribute("relaciones");
 %>
 <head>
     <title>Asignacion Voluntarios</title>
@@ -22,14 +25,34 @@
     <tr>
         <th>TIENDA</th>
         <th>DOMICILIO</th>
-        <th>LOCALIDAD</th>
         <th>CAPITAN</th>
-        <th>VIERNES MAÑANA</th>
-        <th>VIERNES TARDE</th>
-        <th>SABADO MAÑANA</th>
-        <th>SABADO TARDE</th>
+        <th>HORARIO / DIA / FRANJA</th>
+        <th>COLABORADOR</th>
+        <th>VOLUNTARIO</th>
         <th>OBSERVACION</th>
+        <th></th>
     </tr>
+
+    <%
+        for (AsignacionTurno turno : turnos) {
+    %>
+    <tr>
+        <td><%=turno.getIdTienda().getNombre()%></td>
+        <td><%=turno.getIdTienda().getDireccion()%></td>
+        <%
+            for (UsuarioTienda relacion : relaciones) {
+                if (relacion.getTienda().getId().equals(turno.getIdTienda().getId())) {
+        %>
+        <td><%=relacion.getUsuario().getNombreCompleto()%></td>
+        <%}}%>
+
+        <td><%=turno.getHoraInicio()%>-<%=turno.getHoraFin()%> / <%=turno.getDia()%> / <%=turno.getFranja()%></td>
+        <td><%=turno.getIdColaborador().getNombreEntidad()%> - <%=turno.getIdColaborador().getContactoNom()%> (<%=turno.getIdColaborador().getContactoTlf()%>)</td>
+        <td><%=turno.getIdVoluntario().getNombre()%> (<%=turno.getIdVoluntario().getTelefono()%>)</td>
+        <td><%=turno.getIdColaborador().getObservaciones()%></td>
+        <td><a href="/coordinador/asignacionSeleccion?id=<%=turno.getId()%>">Editar</a></td>
+    </tr>
+    <%}%>
 </table>
 </body>
 </html>

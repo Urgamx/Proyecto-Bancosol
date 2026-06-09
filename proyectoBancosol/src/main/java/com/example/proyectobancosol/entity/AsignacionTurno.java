@@ -27,6 +27,10 @@ public class AsignacionTurno {
     @JoinColumn(name = "id_voluntario", nullable = false)
     private Voluntario idVoluntario;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_colaborador", nullable = false)
+    private Colaborador idColaborador;
+
     @Column(name = "dia", nullable = false, length = 20)
     private String dia;
 
