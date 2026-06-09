@@ -16,7 +16,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @GetMapping("/login")
+    @GetMapping("/")
     public String login(){
         return "auth/login";
     }
@@ -37,7 +37,7 @@ public class AuthController {
     @GetMapping("/logout")
     public String logout(HttpSession session){
         session.invalidate();
-        return "redirect:/login";
+        return "redirect:/";
     }
 
     private String iniciarSesion(Usuario usuario, HttpSession session) {
@@ -51,7 +51,7 @@ public class AuthController {
             case "RESP_TIENDA" -> "redirect:/resp-tienda";
             case "COLABORADOR" -> "redirect:/coordinador/";
             case "CAPITAN" -> "redirect:/capitan";
-            default -> "redirect:/login";
+            default -> "redirect:/";
         };
     }
 }

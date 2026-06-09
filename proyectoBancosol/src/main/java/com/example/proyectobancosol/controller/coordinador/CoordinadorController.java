@@ -1,17 +1,15 @@
 package com.example.proyectobancosol.controller.coordinador;
 
-import com.example.proyectobancosol.entity.Colaborador;
-import com.example.proyectobancosol.entity.Usuario;
-import com.example.proyectobancosol.entity.UsuarioColaborador;
-import com.example.proyectobancosol.service.coordinador.ColaboradorService;
-import com.example.proyectobancosol.service.coordinador.UsuarioColaboradorService;
-import com.example.proyectobancosol.service.coordinador.UsuarioService;
+import com.example.proyectobancosol.entity.*;
+import com.example.proyectobancosol.service.capitan.AsignacionTurnoService;
+import com.example.proyectobancosol.service.coordinador.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Controller
@@ -22,13 +20,16 @@ public class CoordinadorController {
     private final ColaboradorService colaboradorService;
     private final UsuarioColaboradorService usuarioColaboradorService;
     private final UsuarioService usuarioService;
+    private final UsuarioTiendaService usuarioTiendaService;
+    private final AsignacionTurnoService asignacionTurnoService;
+    private final VoluntarioService voluntarioService;
 
     @GetMapping("/")
     public String home(@SessionAttribute(name = "usuario",required = false) Usuario user,
                        HttpSession session)
     {
         if (user == null){
-            return "redirect:/login";
+            return "redirect:/";
         }
 
         return "coordinador/homeCoordinador";
@@ -41,7 +42,7 @@ public class CoordinadorController {
     {
 
         if (user == null){
-            return "redirect:/login";
+            return "redirect:/";
         }
 
         List<Colaborador> colaboradores = this.colaboradorService.findAllActivos();
@@ -61,7 +62,7 @@ public class CoordinadorController {
                                      Model model, HttpSession session)
     {
         if (user == null){
-            return "redirect:/login";
+            return "redirect:/";
         }
 
         List<Colaborador> colaboradores = null;
@@ -89,7 +90,7 @@ public class CoordinadorController {
                                     Model model, HttpSession session)
     {
         if (user == null){
-            return "redirect:/login";
+            return "redirect:/";
         }
 
         Colaborador colaborador = this.colaboradorService.findById(id);
@@ -102,7 +103,7 @@ public class CoordinadorController {
                                    HttpSession session)
     {
         if (user == null){
-            return "redirect:/login";
+            return "redirect:/";
         }
 
         return "coordinador/nuevoColaborador";
@@ -123,7 +124,7 @@ public class CoordinadorController {
                                      HttpSession session)
     {
         if (user == null){
-            return "redirect:/login";
+            return "redirect:/";
         }
 
         Colaborador colaborador = null;
@@ -161,10 +162,94 @@ public class CoordinadorController {
                                           Model model, HttpSession session)
     {
         if (user == null){
-            return "redirect:/login";
+            return "redirect:/";
         }
+
+        List<UsuarioTienda> relaciones = this.usuarioTiendaService.findAll();
+        List<AsignacionTurno> turnos = this.asignacionTurnoService.ListarAsignacionTurnos();
+
+        model.addAttribute("turnos",turnos);
+        model.addAttribute("relaciones",relaciones);
 
         return "coordinador/asignacionVoluntarios";
     }
+
+    @GetMapping("/asignacionSeleccion")
+    public String seleccionarAsignacionTurnos(@RequestParam(value = "id") Integer id,
+                                         @SessionAttribute(name = "usuario",required = false) Usuario user,
+                                         Model model, HttpSession session)
+    {
+        if (user == null){
+            return "redirect:/";
+        }
+
+
+        AsignacionTurno turno = this.asignacionTurnoService.findById(id);
+        List<Colaborador> colaboradores = this.colaboradorService.findAll();
+
+        model.addAttribute("turno",turno);
+        model.addAttribute("colaboradores",colaboradores);
+
+        return "coordinador/asignacionEditar";
+    }
+
+    @PostMapping("/seleccionar")
+    public String editarAsignacionTurnos(@RequestParam(value = "id") Integer id,
+                                         @RequestParam(value = "colaborador") Integer colaboradorId,
+                                         @SessionAttribute(name = "usuario",required = false) Usuario user,
+                                         Model model, HttpSession session)
+    {
+        if (user == null){
+            return "redirect:/";
+        }
+
+
+        AsignacionTurno turno = this.asignacionTurnoService.findById(id);
+        Colaborador colaborador = this.colaboradorService.findById(colaboradorId);
+        List<Colaborador> colaboradores = this.colaboradorService.findAll();
+        List<Voluntario> voluntarios = this.voluntarioService.findAllByColaborador(colaboradorId);
+
+
+        model.addAttribute("turno",turno);
+        model.addAttribute("colaboradorSelected",colaborador);
+        model.addAttribute("colaboradores",colaboradores);
+        model.addAttribute("voluntarios",voluntarios);
+
+
+        return "coordinador/asignacionEditar";
+    }
+
+    @PostMapping("/guardarEditar")
+    public String guardarEditarAsignacionTurnos(@RequestParam(value = "id") Integer id,
+                                                @RequestParam(value = "colaboradorId") Integer colaboradorId,
+                                                @RequestParam(value = "voluntario") Integer voluntarioId,
+                                                @RequestParam(value = "comienzo") LocalTime comienzo,
+                                                @RequestParam(value = "fin") LocalTime fin,
+                                                @RequestParam(value = "dia") String dia,
+                                                @RequestParam(value = "franja") String franja,
+                                                @SessionAttribute(name = "usuario",required = false) Usuario user,
+                                                Model model, HttpSession session)
+    {
+        if (user == null){
+            return "redirect:/";
+        }
+
+
+        AsignacionTurno turno = this.asignacionTurnoService.findById(id);
+        Voluntario voluntario = this.voluntarioService.findById(voluntarioId);
+        Colaborador colaborador = this.colaboradorService.findById(colaboradorId);
+
+        turno.setIdColaborador(colaborador);
+        turno.setIdVoluntario(voluntario);
+        turno.setHoraInicio(comienzo);
+        turno.setHoraFin(fin);
+        turno.setDia(dia);
+        turno.setFranja(franja);
+
+        this.asignacionTurnoService.save(turno);
+
+        return "redirect:/coordinador/asignacionVoluntarios";
+    }
+
 
 }

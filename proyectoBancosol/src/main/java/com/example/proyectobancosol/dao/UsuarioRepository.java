@@ -12,4 +12,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario,Integer> {
 
     @Query("select u from Usuario u join u.idRol r where r.id= 3")
     public List<Usuario> findCoordinador();
+
+    @Query("select u from Usuario u join u.idRol r where r.id= 5")
+    public List<Usuario> findCapitan();
 }
