@@ -49,6 +49,8 @@ public class AuthController {
             case "RESP_ENTIDAD" -> "redirect:/resp-entidad";
             case "COORDINADOR" -> "redirect:/coordinador/";
             case "RESP_TIENDA" -> "redirect:/resp-tienda";
+            case "COLABORADOR" -> "redirect:/coordinador/";
+            case "CAPITAN" -> "redirect:/capitan";
             default -> "redirect:/";
         };
     }
