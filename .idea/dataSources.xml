@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="bancosol_db@localhost" uuid="0650590f-89de-4ce7-b45f-6cc548818b41">
+    <data-source source="LOCAL" name="@localhost" uuid="2f68df6a-8ba7-46e7-9fc4-69f0940caafb">
       <driver-ref>mariadb</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mariadb://localhost:3306/bancosol_db</jdbc-url>
+      <jdbc-url>jdbc:mariadb://localhost:3306</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
