@@ -18,4 +18,6 @@ public class UsuarioTiendaService {
     public List<UsuarioTienda> findAll() { return this.usuarioTiendaRepository.findAll();}
 
     public Optional<UsuarioTienda> findByUsuarioId(Integer id) { return this.usuarioTiendaRepository.findByUsuarioId(id); }
+
+    public void save(UsuarioTienda ua) { this.usuarioTiendaRepository.save(ua); }
 }

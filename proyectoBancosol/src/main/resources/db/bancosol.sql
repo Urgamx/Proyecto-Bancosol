@@ -23,6 +23,7 @@ CREATE TABLE TIENDA (
   id_cadena  int(10) NOT NULL,
   nombre     varchar(150) NOT NULL,
   direccion  varchar(255) NOT NULL,
+  localidad  varchar(255) NOT NULL,
   cod_postal varchar(5) NOT NULL,
   CONSTRAINT ID_TIENDA
     PRIMARY KEY (id_tienda));

@@ -13,6 +13,7 @@ import java.util.List;
 @Table(name = "tienda")
 public class Tienda {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tienda", nullable = false)
     private Integer id;
 
@@ -25,6 +26,9 @@ public class Tienda {
 
     @Column(name = "direccion", nullable = false)
     private String direccion;
+
+    @Column(name = "localidad", nullable = false)
+    private String localidad;
 
     @Column(name = "cod_postal", nullable = false, length = 5)
     private String codPostal;
