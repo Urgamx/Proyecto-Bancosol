@@ -2,6 +2,7 @@ package com.example.proyectobancosol.controller.common;
 
 import com.example.proyectobancosol.dto.request.LoginRequestDTO;
 import com.example.proyectobancosol.dto.response.UsuarioSesionDTO;
+import com.example.proyectobancosol.entity.Usuario;
 import com.example.proyectobancosol.service.common.AuthService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -29,7 +30,7 @@ public class AuthController {
         if ("loginRequired".equals(error)) {
             model.addAttribute("error", "Debes iniciar sesión para acceder.");
         } else if ("forbidden".equals(error)) {
-            model.addAttribute("error", "No tienes permisos de administrador.");
+            model.addAttribute("error", "No tienes permisos para acceder a esta zona.");
         }
 
         return "auth/login";
@@ -41,7 +42,7 @@ public class AuthController {
                         Model model) {
 
         return authService.login(loginRequestDTO)
-                .map(usuarioSesionDTO -> iniciarSesion(usuarioSesionDTO, session))
+                .map(usuario -> iniciarSesion(usuario, session))
                 .orElseGet(() -> {
                     model.addAttribute("error", "Email o contraseña inválidos.");
                     return "auth/login";
@@ -52,23 +53,38 @@ public class AuthController {
     public String logout(HttpSession session) {
         session.invalidate();
 
-        // CAMBIO: volvemos al login
+
         return "redirect:/login";
     }
 
-    private String iniciarSesion(UsuarioSesionDTO usuarioSesionDTO, HttpSession session) {
+    private String iniciarSesion(Usuario usuario, HttpSession session) {
+
+        String rol = usuario.getIdRol().getNombre();
+
+
+        session.setAttribute("usuario", usuario);
+
+
+        UsuarioSesionDTO usuarioSesionDTO = new UsuarioSesionDTO(
+                usuario.getId(),
+                usuario.getEmail(),
+                usuario.getNombreCompleto(),
+                rol
+        );
 
         session.setAttribute("usuarioSesion", usuarioSesionDTO);
-        session.setAttribute("idUsuario", usuarioSesionDTO.getIdUsuario());
-        session.setAttribute("rol", usuarioSesionDTO.getRol());
+        session.setAttribute("idUsuario", usuario.getId());
+        session.setAttribute("rol", rol);
 
-        return switch (usuarioSesionDTO.getRol()) {
+
+        return switch (rol) {
             case "ADMIN" -> "redirect:/admin";
-            case "RESP_ENTIDAD" -> "redirect:/resp-entidad";
             case "COORDINADOR" -> "redirect:/coordinador/";
+            case "RESP_ENTIDAD" -> "redirect:/resp-entidad";
             case "RESP_TIENDA" -> "redirect:/resp-tienda";
             case "CAPITAN" -> "redirect:/capitan";
-            default -> "redirect:/login";
+            default -> "redirect:/login?error=forbidden";
         };
     }
 }
+

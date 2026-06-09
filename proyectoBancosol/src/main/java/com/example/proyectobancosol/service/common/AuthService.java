@@ -19,7 +19,7 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<UsuarioSesionDTO> login(LoginRequestDTO loginRequestDTO) {
+    public Optional<Usuario> login(LoginRequestDTO loginRequestDTO) {
 
         if (loginRequestDTO == null
                 || loginRequestDTO.getEmail() == null
@@ -31,18 +31,7 @@ public class AuthService {
         String password = loginRequestDTO.getPassword();
 
         return usuarioRepository.findByEmailAndActivo(email, 1)
-                .filter(usuario -> usuario.getPassword().equals(password))
-                .map(this::convertirAUsuarioSesionDTO);
-    }
-
-
-    private UsuarioSesionDTO convertirAUsuarioSesionDTO(Usuario usuario) {
-        return new UsuarioSesionDTO(
-                usuario.getId(),
-                usuario.getEmail(),
-                usuario.getNombreCompleto(),
-                usuario.getIdRol().getNombre()
-        );
+                .filter(usuario -> usuario.getPassword().equals(password));
     }
 
 }

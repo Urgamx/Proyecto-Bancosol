@@ -14,10 +14,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class AdminAccessFilter implements Filter {
+public class RoleAccessFilter implements Filter {
 
-    // NUEVO: protege las rutas /admin y /admin/**
-    // Lo hacemos con Filter para NO tocar WebConfig.java
     @Override
     public void doFilter(ServletRequest request,
                          ServletResponse response,
@@ -29,11 +27,10 @@ public class AdminAccessFilter implements Filter {
         String contextPath = httpRequest.getContextPath();
         String uri = httpRequest.getRequestURI();
 
-        // NUEVO: solo aplicamos control a /admin y /admin/**
-        boolean esRutaAdmin = uri.equals(contextPath + "/admin")
-                || uri.startsWith(contextPath + "/admin/");
+        String rolNecesario = obtenerRolNecesario(uri, contextPath);
 
-        if (!esRutaAdmin) {
+
+        if (rolNecesario == null) {
             chain.doFilter(request, response);
             return;
         }
@@ -48,11 +45,46 @@ public class AdminAccessFilter implements Filter {
         UsuarioSesionDTO usuarioSesionDTO =
                 (UsuarioSesionDTO) session.getAttribute("usuarioSesion");
 
-        if (!"ADMIN".equals(usuarioSesionDTO.getRol())) {
+        String rolUsuario = usuarioSesionDTO.getRol();
+
+
+        if ("ADMIN".equals(rolUsuario)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+
+        if (!rolNecesario.equals(rolUsuario)) {
             httpResponse.sendRedirect(contextPath + "/login?error=forbidden");
             return;
         }
 
         chain.doFilter(request, response);
+    }
+
+
+    private String obtenerRolNecesario(String uri, String contextPath) {
+
+        if (uri.equals(contextPath + "/admin") || uri.startsWith(contextPath + "/admin/")) {
+            return "ADMIN";
+        }
+
+        if (uri.equals(contextPath + "/coordinador") || uri.startsWith(contextPath + "/coordinador/")) {
+            return "COORDINADOR";
+        }
+
+        if (uri.equals(contextPath + "/resp-entidad") || uri.startsWith(contextPath + "/resp-entidad/")) {
+            return "RESP_ENTIDAD";
+        }
+
+        if (uri.equals(contextPath + "/resp-tienda") || uri.startsWith(contextPath + "/resp-tienda/")) {
+            return "RESP_TIENDA";
+        }
+
+        if (uri.equals(contextPath + "/capitan") || uri.startsWith(contextPath + "/capitan/")) {
+            return "CAPITAN";
+        }
+
+        return null;
     }
 }

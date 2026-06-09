@@ -1,34 +1,58 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Administrador - Bancosol</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-<div class="container">
-    <header>
-        <h1>Panel Administrador</h1>
-    </header>
 
-    <div class="card">
-        <div class="card-header">
-            <h2 class="card-title">Funciones de Administrador</h2>
-        </div>
-        <div class="card-body">
+<h1>Panel Administrador</h1>
 
-            <p>Bienvenido, ${usuarioSesion.nombreCompleto}.</p>
-            <p>Rol activo: ${usuarioSesion.rol}</p>
-            <p>Desde aqui puede gestionar los elementos del sistema.</p>
-        </div>
-    </div>
+<p>Bienvenido, ${usuarioSesion.nombreCompleto}</p>
+<p>Rol activo: ${usuarioSesion.rol}</p>
 
-    <div class="card mt-3">
-        <div class="card-body text-center">
-            <a href="/logout" class="btn btn-danger">Cerrar Sesion</a>
-        </div>
-    </div>
-</div>
+<hr>
+
+<h2>Menu de administracion</h2>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+    <tr>
+        <th>Modulo</th>
+        <th>Descripcion</th>
+        <th>Estado</th>
+        <th>Accion</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <c:forEach var="item" items="${menuAdmin}">
+        <tr>
+            <td>${item.titulo}</td>
+            <td>${item.descripcion}</td>
+            <td>${item.estado}</td>
+            <td>
+                <c:choose>
+                    <c:when test="${item.url != '#'}">
+                        <a href="${item.url}">Editar</a>
+                    </c:when>
+                    <c:otherwise>
+                        Pendiente
+                    </c:otherwise>
+                </c:choose>
+            </td>
+        </tr>
+    </c:forEach>
+    </tbody>
+</table>
+
+<hr>
+
+<p>
+    <a href="/logout">Cerrar sesion</a>
+</p>
+
 </body>
 </html>
