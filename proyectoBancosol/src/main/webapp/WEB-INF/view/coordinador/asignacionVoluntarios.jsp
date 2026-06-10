@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-
+<div class="container">
 <h1>Asignacion de voluntarios</h1>
 <label>Usuario: <%=user.getNombreCompleto()%></label><br>
 <form action="/coordinador/filtrarAsignacionTurnos" method="post">
@@ -46,6 +46,7 @@
         <th>TIENDA</th>
         <th>DOMICILIO</th>
         <th>LOCALIDAD</th>
+        <th>CAMPAÑA</th>
         <th>CAPITAN</th>
         <th>HORARIO / DIA / FRANJA</th>
         <th>COLABORADOR</th>
@@ -61,12 +62,17 @@
         <td><%=turno.getIdTienda().getNombre()%></td>
         <td><%=turno.getIdTienda().getDireccion()%></td>
         <td><%=turno.getIdTienda().getLocalidad()%></td>
+        <td><%=turno.getIdCampana().getTipoDeCampana().getNombre()%></td>
         <%
+            String capitan = "";
             for (UsuarioTienda relacion : relaciones) {
                 if (relacion.getTienda().getId().equals(turno.getIdTienda().getId())) {
+                    capitan = relacion.getUsuario().getNombreCompleto();
+                    break;
+                }
+            }
         %>
-        <td><%=relacion.getUsuario().getNombreCompleto()%></td>
-        <%}}%>
+        <td><%=capitan%></td>
 
         <td><%=turno.getHoraInicio()%>-<%=turno.getHoraFin()%> / <%=turno.getDia()%> / <%=turno.getFranja()%></td>
         <td><%=turno.getIdColaborador().getNombreEntidad()%> - <%=turno.getIdColaborador().getContactoNom()%> (<%=turno.getIdColaborador().getContactoTlf()%>)</td>
@@ -81,6 +87,7 @@
 </div>
 <div class="mt-3">
     <a href="/coordinador/" class="btn btn-secondary">Volver</a>
+</div>
 </div>
 </body>
 </html>
