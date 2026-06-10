@@ -11,9 +11,45 @@ public class AdminMenuService {
     public List<AdminMenuItemDTO> obtenerMenuAdministrador() {
         return List.of(
                 new AdminMenuItemDTO(
+                        "Cadenas",
+                        "Gestion de cadenas de supermercados",
+                        "/admin/cadenas",
+                        "Disponible"
+                ),
+                new AdminMenuItemDTO(
+                        "Campanas",
+                        "Gestion de campanas y cadenas participantes",
+                        "/admin/campanas",
+                        "Disponible"
+                ),
+                new AdminMenuItemDTO(
+                        "Tiendas",
+                        "Gestion de tiendas",
+                        "/admin/tiendas",
+                        "Disponible"
+                ),
+                new AdminMenuItemDTO(
+                        "Coordinadores",
+                        "Gestion de coordinadores",
+                        "/admin/coordinadores",
+                        "Disponible"
+                ),
+                new AdminMenuItemDTO(
+                        "Asignar tiendas",
+                        "Asignacion de tiendas a coordinadores",
+                        "/admin/asignar-tiendas",
+                        "Disponible"
+                ),
+                new AdminMenuItemDTO(
                         "Colaboradores",
-                        "Gestion de colaboradores creada en el modulo coordinador",
-                        "/coordinador/colaborador",
+                        "Gestion de colaboradores",
+                        "/admin/colaboradores",
+                        "Disponible"
+                ),
+                new AdminMenuItemDTO(
+                        "Asignar colaboradores",
+                        "Asignacion de colaboradores a coordinadores",
+                        "/admin/asignar-colaboradores",
                         "Disponible"
                 ),
                 new AdminMenuItemDTO(
@@ -39,36 +75,6 @@ public class AdminMenuService {
                         "Menu creado para responsable de tienda",
                         "/resp-tienda",
                         "Disponible"
-                ),
-                new AdminMenuItemDTO(
-                        "Cadenas",
-                        "Modulo pendiente de implementar por administrador",
-                        "#",
-                        "Pendiente"
-                ),
-                new AdminMenuItemDTO(
-                        "Campanas",
-                        "Modulo pendiente de implementar por administrador",
-                        "#",
-                        "Pendiente"
-                ),
-                new AdminMenuItemDTO(
-                        "Coordinadores",
-                        "Modulo pendiente de implementar por administrador",
-                        "#",
-                        "Pendiente"
-                ),
-                new AdminMenuItemDTO(
-                        "Asignar tiendas",
-                        "Modulo pendiente de implementar por administrador",
-                        "#",
-                        "Pendiente"
-                ),
-                new AdminMenuItemDTO(
-                        "Validaciones",
-                        "Modulo pendiente de implementar por administrador",
-                        "#",
-                        "Pendiente"
                 )
         );
     }
