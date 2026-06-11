@@ -7,7 +7,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <%
   Usuario user = (Usuario) session.getAttribute("usuario");
   List<Colaborador> colaboradores = (List<Colaborador>) request.getAttribute("colaboradores");
@@ -15,13 +16,18 @@
   List<Voluntario> voluntarios = (List<Voluntario>) request.getAttribute("voluntarios");
   List<Tienda> tiendas = (List<Tienda>) request.getAttribute("tiendas");
   List<Usuario> capitanes = (List<Usuario>) request.getAttribute("capitanes");
+  List<Campana> campanas = (List<Campana>) request.getAttribute("campanas");
   Tienda tiendaSelected = (Tienda) request.getAttribute("tiendaSelected");
   String formAction = (colaboradorSelected == null) ? "/coordinador/seleccionarNuevo" : "/coordinador/guardarTurnoNuevo";
 %>
 <head>
-    <title>Nuevo Turno</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuevo Turno</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
+<div class="container">
 <h1>Nuevo Turno</h1>
 <%if (colaboradorSelected == null){%>
 <h2>Selecciona un colaborador:</h2>
@@ -81,6 +87,18 @@
       <th><%=tiendaSelected.getDireccion()%></th>
     </tr>
     <tr>
+      <td>CAMPAÑAS</td>
+      <td>
+        <select name="campana">
+          <%
+            for (Campana campana : campanas) {
+          %>
+          <option value="<%= campana.getId() %>" ><%= campana.getTipoDeCampana().getNombre() %></option>
+          <% } %>
+        </select>
+      </td>
+    </tr>
+    <tr>
       <td>CAPITANES</td>
       <td>
         <select name="capitan">
@@ -130,11 +148,17 @@
     </tr>
     <tr>
       <td>
-        <button type="submit">Guardar</button>
+        <div class="mt-3">
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
       </td>
     </tr>
     <% } %>
   </table>
 </form>
+<div class="mt-3">
+  <a href="/coordinador/" class="btn btn-secondary">Volver</a>
+</div>
+</div>
 </body>
 </html>

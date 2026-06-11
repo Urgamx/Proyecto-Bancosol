@@ -9,6 +9,9 @@ import java.util.List;
 
 public interface CampanaRepository extends JpaRepository<Campana, Integer> {
 
+    @Query("select cc.campana from CampanaCadena cc where cc.cadena.id = :cadenaId")
+    public List<Campana> findByCadena(@Param("cadenaId") Integer cadenaId);
+  
     @Query("select c from Campana c join fetch c.tipoDeCampana order by c.fecha desc")
     List<Campana> findAllConTipo();
 
@@ -37,3 +40,4 @@ public interface CampanaRepository extends JpaRepository<Campana, Integer> {
             """, nativeQuery = true)
     Long countTurnosByCampana(@Param("idCampana") Integer idCampana);
 }
+

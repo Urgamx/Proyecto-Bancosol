@@ -17,6 +17,10 @@ public class AsignacionTurno {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_campana", nullable = false)
+    private Campana idCampana;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_tienda", nullable = false)
     private Tienda idTienda;
 

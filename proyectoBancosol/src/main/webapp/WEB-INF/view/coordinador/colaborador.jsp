@@ -81,11 +81,15 @@
         <td><%=colaborador.getLocalidad()%></td>
         <td><%=colaborador.getZonaGeografica()%></td>
         <%
+            String coordinadorNombre = "";
             for (UsuarioColaborador relacion : relaciones) {
                 if (colaborador.getId().equals(relacion.getColaborador().getId())) {
+                    coordinadorNombre = relacion.getUsuario().getNombreCompleto();
+                    break;
+                }
+            }
         %>
-        <td><%=relacion.getUsuario().getNombreCompleto()%></td>
-        <%}}%>
+        <td><%=coordinadorNombre%></td>
         <td><%=colaborador.getContactoNom()%> (<%=colaborador.getContactoTlf()%>)</td>
         <td><%=colaborador.getObservaciones()%></td>
     </tr>

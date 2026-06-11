@@ -4,8 +4,6 @@ import com.example.proyectobancosol.entity.AsignacionTurno;
 import com.example.proyectobancosol.entity.Tienda;
 import com.example.proyectobancosol.entity.Usuario;
 import com.example.proyectobancosol.entity.Voluntario;
-import com.example.proyectobancosol.service.capitan.AsignacionTurnoService;
-import com.example.proyectobancosol.service.capitan.TiendaService;
 import com.example.proyectobancosol.service.respEntidad.RespEntidadService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -20,8 +18,6 @@ import java.util.List;
 @RequestMapping("/resp-entidad")
 public class RespEntidadController {
 
-    private TiendaService tiendaService;
-    private AsignacionTurnoService asignacionTurnoService;
     private RespEntidadService respEntidadService;
 
     

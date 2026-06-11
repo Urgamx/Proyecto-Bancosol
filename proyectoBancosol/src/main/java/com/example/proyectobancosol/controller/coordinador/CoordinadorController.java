@@ -25,6 +25,8 @@ public class CoordinadorController {
     private final AsignacionTurnoService asignacionTurnoService;
     private final VoluntarioService voluntarioService;
     private final TiendaService tiendaService;
+    private final CadenaService cadenaService;
+    private final CampanaService campanaService;
 
     @GetMapping("/")
     public String home(@SessionAttribute(name = "usuario",required = false) Usuario user,
@@ -169,9 +171,34 @@ public class CoordinadorController {
 
         List<UsuarioTienda> relaciones = this.usuarioTiendaService.findAll();
         List<AsignacionTurno> turnos = this.asignacionTurnoService.ListarAsignacionTurnos();
+        List<Cadena> cadenas = this.cadenaService.findAll();
 
         model.addAttribute("turnos",turnos);
         model.addAttribute("relaciones",relaciones);
+        model.addAttribute("cadenas",cadenas);
+
+        return "coordinador/asignacionVoluntarios";
+    }
+
+    @PostMapping("/filtrarAsignacionTurnos")
+    public String filtrarAsignacionTurnos(@RequestParam("cadenaId") Integer cadenaId,
+                                          @RequestParam(value = "localidad", defaultValue = "") String localidad,
+                                          @SessionAttribute(name = "usuario",required = false) Usuario user,
+                                         Model model, HttpSession session)
+    {
+        if (user == null){
+            return "redirect:/";
+        }
+
+        List<AsignacionTurno> turnos = this.asignacionTurnoService.findByCadenaLocalidad(cadenaId,localidad);
+        List<UsuarioTienda> relaciones = this.usuarioTiendaService.findAll();
+        List<Cadena> cadenas = this.cadenaService.findAll();
+
+        model.addAttribute("cadenaSelected",cadenaId);
+        model.addAttribute("localidadSelected",localidad);
+        model.addAttribute("turnos",turnos);
+        model.addAttribute("relaciones",relaciones);
+        model.addAttribute("cadenas",cadenas);
 
         return "coordinador/asignacionVoluntarios";
     }
@@ -288,6 +315,7 @@ public class CoordinadorController {
         List<Tienda> tiendas = this.tiendaService.ListarTiendas();
         List<Voluntario> voluntarios = this.voluntarioService.findAllByColaborador(colaboradorId);
         List<Usuario> capitanes = this.usuarioService.findCapitan();
+        List<Campana> campanas = this.campanaService.findByCadena(tiendaSelected.getIdCadena().getId());
 
         model.addAttribute("colaboradores",colaboradores);
         model.addAttribute("tiendas",tiendas);
@@ -295,6 +323,7 @@ public class CoordinadorController {
         model.addAttribute("voluntarios",voluntarios);
         model.addAttribute("tiendaSelected",tiendaSelected);
         model.addAttribute("capitanes",capitanes);
+        model.addAttribute("campanas",campanas);
 
         return "coordinador/nuevoTurno";
     }
@@ -304,6 +333,7 @@ public class CoordinadorController {
     @PostMapping("/guardarTurnoNuevo")
     public String guardarNuevaAsignacionTurnos(@RequestParam(value = "tiendaId") Integer tiendaId,
                                                @RequestParam(value = "colaboradorId") Integer colaboradorId,
+                                               @RequestParam(value = "campana") Integer campanaId,
                                                @RequestParam(value = "capitan") Integer capitanId,
                                                @RequestParam(value = "voluntario") Integer voluntarioId,
                                                @RequestParam(value = "comienzo") LocalTime comienzo,
@@ -321,6 +351,7 @@ public class CoordinadorController {
         Voluntario voluntario = this.voluntarioService.findById(voluntarioId);
         Colaborador colaborador = this.colaboradorService.findById(colaboradorId);
         Usuario capitan = this.usuarioService.findById(capitanId);
+        Campana campana = this.campanaService.findById(campanaId);
 
         AsignacionTurno turno = new AsignacionTurno();
         UsuarioTienda relacion = new UsuarioTienda();
@@ -328,15 +359,18 @@ public class CoordinadorController {
         turno.setIdColaborador(colaborador);
         turno.setIdVoluntario(voluntario);
         turno.setIdTienda(tienda);
+        turno.setIdCampana(campana);
         turno.setHoraInicio(comienzo);
         turno.setHoraFin(fin);
         turno.setDia(dia);
         turno.setFranja(franja);
 
+        relacion.setId(new UsuarioTiendaId());
         relacion.setUsuario(capitan);
         relacion.setTienda(tienda);
 
         this.asignacionTurnoService.save(turno);
+        this.usuarioTiendaService.save(relacion);
 
         return "redirect:/coordinador/asignacionVoluntarios";
     }
