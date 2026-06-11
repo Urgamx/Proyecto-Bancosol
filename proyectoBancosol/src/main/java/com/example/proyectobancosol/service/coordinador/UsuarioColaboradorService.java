@@ -4,7 +4,6 @@ import com.example.proyectobancosol.dao.UsuarioColaboradorRepository;
 import com.example.proyectobancosol.entity.Colaborador;
 import com.example.proyectobancosol.entity.UsuarioColaborador;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
