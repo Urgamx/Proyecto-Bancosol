@@ -4,7 +4,6 @@ import com.example.proyectobancosol.dao.UsuarioRepository;
 import com.example.proyectobancosol.entity.Usuario;
 import org.springframework.stereotype.Service;
 import com.example.proyectobancosol.dto.request.LoginRequestDTO;
-import com.example.proyectobancosol.dto.response.UsuarioSesionDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
