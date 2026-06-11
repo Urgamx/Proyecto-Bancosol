@@ -16,6 +16,15 @@ public interface CadenaRepository extends JpaRepository<Cadena, Integer> {
     @Query("select coalesce(max(c.id), 0) from Cadena c")
     Integer findMaxId();
 
+    @Query("""
+            select count(c) > 0
+            from Cadena c
+            where lower(c.nombre) = lower(:nombre)
+            and (:idCadena is null or c.id <> :idCadena)
+            """)
+    boolean existsNombreDuplicado(@Param("nombre") String nombre,
+                                  @Param("idCadena") Integer idCadena);
+
     @Query("select count(t) from Tienda t where t.idCadena.id = :idCadena")
     Long countTiendasByCadena(@Param("idCadena") Integer idCadena);
 

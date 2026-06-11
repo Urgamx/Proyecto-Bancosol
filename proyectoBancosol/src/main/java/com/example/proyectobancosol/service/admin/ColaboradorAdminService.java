@@ -5,6 +5,7 @@ import com.example.proyectobancosol.dao.UsuarioColaboradorRepository;
 import com.example.proyectobancosol.dto.request.ColaboradorRequestDTO;
 import com.example.proyectobancosol.dto.response.ColaboradorResponseDTO;
 import com.example.proyectobancosol.entity.Colaborador;
+import com.example.proyectobancosol.mapper.admin.ColaboradorAdminMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,18 +16,21 @@ public class ColaboradorAdminService {
 
     private final ColaboradorRepository colaboradorRepository;
     private final UsuarioColaboradorRepository usuarioColaboradorRepository;
+    private final ColaboradorAdminMapper colaboradorAdminMapper;
 
     public ColaboradorAdminService(ColaboradorRepository colaboradorRepository,
-                                   UsuarioColaboradorRepository usuarioColaboradorRepository) {
+                                   UsuarioColaboradorRepository usuarioColaboradorRepository,
+                                   ColaboradorAdminMapper colaboradorAdminMapper) {
         this.colaboradorRepository = colaboradorRepository;
         this.usuarioColaboradorRepository = usuarioColaboradorRepository;
+        this.colaboradorAdminMapper = colaboradorAdminMapper;
     }
 
     @Transactional(readOnly = true)
     public List<ColaboradorResponseDTO> listar() {
         return colaboradorRepository.findAllByOrderByNombreEntidadAsc()
                 .stream()
-                .map(this::convertirAResponseDTO)
+                .map(this::toResponseDTO)
                 .toList();
     }
 
@@ -34,7 +38,7 @@ public class ColaboradorAdminService {
     public List<ColaboradorResponseDTO> listarPendientes() {
         return colaboradorRepository.findByEstadoOrderByNombreEntidadAsc(2)
                 .stream()
-                .map(this::convertirAResponseDTO)
+                .map(this::toResponseDTO)
                 .toList();
     }
 
@@ -42,27 +46,13 @@ public class ColaboradorAdminService {
     public List<ColaboradorResponseDTO> listarActivos() {
         return colaboradorRepository.findByEstadoOrderByNombreEntidadAsc(1)
                 .stream()
-                .map(this::convertirAResponseDTO)
+                .map(this::toResponseDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public ColaboradorRequestDTO buscarFormulario(Integer id) {
-        Colaborador colaborador = colaboradorRepository.findById(id).orElseThrow();
-
-        return new ColaboradorRequestDTO(
-                colaborador.getId(),
-                colaborador.getNombreEntidad(),
-                colaborador.getEmail(),
-                colaborador.getContactoNom(),
-                colaborador.getContactoTlf(),
-                colaborador.getDomicilio(),
-                colaborador.getLocalidad(),
-                colaborador.getZonaGeografica(),
-                colaborador.getObservaciones(),
-                colaborador.getCodPostal(),
-                colaborador.getEstado()
-        );
+        return colaboradorAdminMapper.toRequestDTO(colaboradorRepository.findById(id).orElseThrow());
     }
 
     @Transactional
@@ -81,18 +71,9 @@ public class ColaboradorAdminService {
             colaborador = colaboradorRepository.findById(colaboradorRequestDTO.getId()).orElseThrow();
         }
 
-        colaborador.setNombreEntidad(colaboradorRequestDTO.getNombreEntidad().trim());
-        colaborador.setEmail(colaboradorRequestDTO.getEmail().trim());
-        colaborador.setContactoNom(limpiar(colaboradorRequestDTO.getContactoNom()));
-        colaborador.setContactoTlf(limpiar(colaboradorRequestDTO.getContactoTlf()));
-        colaborador.setDomicilio(limpiar(colaboradorRequestDTO.getDomicilio()));
-        colaborador.setLocalidad(limpiar(colaboradorRequestDTO.getLocalidad()));
-        colaborador.setZonaGeografica(limpiar(colaboradorRequestDTO.getZonaGeografica()));
-        colaborador.setObservaciones(limpiar(colaboradorRequestDTO.getObservaciones()));
-        colaborador.setCodPostal(limpiar(colaboradorRequestDTO.getCodPostal()));
-        colaborador.setEstado(colaboradorRequestDTO.getEstado() == null ? 2 : colaboradorRequestDTO.getEstado());
-
+        colaboradorAdminMapper.aplicarRequest(colaboradorRequestDTO, colaborador);
         colaboradorRepository.save(colaborador);
+
         return null;
     }
 
@@ -175,50 +156,18 @@ public class ColaboradorAdminService {
         return null;
     }
 
-    private String limpiar(String valor) {
-        if (valor == null || valor.trim().isEmpty()) {
-            return null;
-        }
-
-        return valor.trim();
-    }
-
-    private ColaboradorResponseDTO convertirAResponseDTO(Colaborador colaborador) {
+    private ColaboradorResponseDTO toResponseDTO(Colaborador colaborador) {
         String coordinadores = usuarioColaboradorRepository.findByColaboradorIdConUsuario(colaborador.getId())
                 .stream()
                 .map(usuarioColaborador -> usuarioColaborador.getUsuario().getNombreCompleto())
                 .reduce((a, b) -> a + ", " + b)
                 .orElse("Sin coordinador");
 
-        Long voluntarios = colaboradorRepository.countVoluntariosByColaborador(colaborador.getId());
-        Long turnos = colaboradorRepository.countTurnosByColaborador(colaborador.getId());
+        ColaboradorResponseDTO colaboradorResponseDTO = colaboradorAdminMapper.toDTO(colaborador);
+        colaboradorResponseDTO.setCoordinadoresAsignados(coordinadores);
+        colaboradorResponseDTO.setVoluntarios(colaboradorRepository.countVoluntariosByColaborador(colaborador.getId()));
+        colaboradorResponseDTO.setTurnos(colaboradorRepository.countTurnosByColaborador(colaborador.getId()));
 
-        return new ColaboradorResponseDTO(
-                colaborador.getId(),
-                colaborador.getNombreEntidad(),
-                colaborador.getEmail(),
-                colaborador.getContactoNom(),
-                colaborador.getContactoTlf(),
-                colaborador.getDomicilio(),
-                colaborador.getLocalidad(),
-                colaborador.getZonaGeografica(),
-                colaborador.getCodPostal(),
-                convertirEstadoATexto(colaborador.getEstado()),
-                coordinadores,
-                voluntarios,
-                turnos
-        );
-    }
-
-    private String convertirEstadoATexto(Integer estado) {
-        if (estado != null && estado == 1) {
-            return "Activo";
-        }
-
-        if (estado != null && estado == 2) {
-            return "Pendiente";
-        }
-
-        return "Inactivo";
+        return colaboradorResponseDTO;
     }
 }

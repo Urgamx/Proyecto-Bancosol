@@ -4,6 +4,7 @@ import com.example.proyectobancosol.dao.CadenaRepository;
 import com.example.proyectobancosol.dto.request.CadenaRequestDTO;
 import com.example.proyectobancosol.dto.response.CadenaResponseDTO;
 import com.example.proyectobancosol.entity.Cadena;
+import com.example.proyectobancosol.mapper.admin.CadenaAdminMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,23 +14,22 @@ import java.util.List;
 public class CadenaAdminService {
 
     private final CadenaRepository cadenaRepository;
+    private final CadenaAdminMapper cadenaAdminMapper;
 
-    public CadenaAdminService(CadenaRepository cadenaRepository) {
+    public CadenaAdminService(CadenaRepository cadenaRepository,
+                              CadenaAdminMapper cadenaAdminMapper) {
         this.cadenaRepository = cadenaRepository;
+        this.cadenaAdminMapper = cadenaAdminMapper;
     }
 
     @Transactional(readOnly = true)
     public List<CadenaResponseDTO> listar() {
-        return cadenaRepository.findAll()
-                .stream()
-                .map(this::convertirAResponseDTO)
-                .toList();
+        return cadenaAdminMapper.toDTOList(cadenaRepository.findAllByOrderByNombreAsc());
     }
 
     @Transactional(readOnly = true)
     public CadenaRequestDTO buscarFormulario(Integer id) {
-        Cadena cadena = cadenaRepository.findById(id).orElseThrow();
-        return convertirARequestDTO(cadena);
+        return cadenaAdminMapper.toRequestDTO(cadenaRepository.findById(id).orElseThrow());
     }
 
     @Transactional
@@ -49,11 +49,9 @@ public class CadenaAdminService {
             cadena = cadenaRepository.findById(cadenaRequestDTO.getId()).orElseThrow();
         }
 
-        cadena.setNombre(cadenaRequestDTO.getNombre().trim());
-        cadena.setPersonaContacto(limpiar(cadenaRequestDTO.getPersonaContacto()));
-        cadena.setTelefonoContacto(limpiar(cadenaRequestDTO.getTelefonoContacto()));
-
+        cadenaAdminMapper.aplicarRequest(cadenaRequestDTO, cadena);
         cadenaRepository.save(cadena);
+
         return null;
     }
 
@@ -83,36 +81,10 @@ public class CadenaAdminService {
             return "El nombre no puede superar 150 caracteres";
         }
 
-        if (cadenaRequestDTO.getId() == null && cadenaRepository.existsByNombreIgnoreCase(cadenaRequestDTO.getNombre().trim())) {
+        if (cadenaRepository.existsNombreDuplicado(cadenaRequestDTO.getNombre().trim(), cadenaRequestDTO.getId())) {
             return "Ya existe una cadena con ese nombre";
         }
 
         return null;
-    }
-
-    private String limpiar(String valor) {
-        if (valor == null || valor.trim().isEmpty()) {
-            return null;
-        }
-
-        return valor.trim();
-    }
-
-    private CadenaResponseDTO convertirAResponseDTO(Cadena cadena) {
-        return new CadenaResponseDTO(
-                cadena.getId(),
-                cadena.getNombre(),
-                cadena.getPersonaContacto(),
-                cadena.getTelefonoContacto()
-        );
-    }
-
-    private CadenaRequestDTO convertirARequestDTO(Cadena cadena) {
-        return new CadenaRequestDTO(
-                cadena.getId(),
-                cadena.getNombre(),
-                cadena.getPersonaContacto(),
-                cadena.getTelefonoContacto()
-        );
     }
 }

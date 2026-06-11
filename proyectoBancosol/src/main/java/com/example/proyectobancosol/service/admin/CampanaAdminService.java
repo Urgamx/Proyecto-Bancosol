@@ -10,15 +10,12 @@ import com.example.proyectobancosol.dto.response.CampanaResponseDTO;
 import com.example.proyectobancosol.dto.response.TipoCampanaResponseDTO;
 import com.example.proyectobancosol.entity.Cadena;
 import com.example.proyectobancosol.entity.Campana;
-import com.example.proyectobancosol.entity.CampanaCadena;
-import com.example.proyectobancosol.entity.CampanaCadenaId;
 import com.example.proyectobancosol.entity.TipoDeCampana;
+import com.example.proyectobancosol.mapper.admin.CadenaAdminMapper;
+import com.example.proyectobancosol.mapper.admin.CampanaAdminMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Service
@@ -28,22 +25,28 @@ public class CampanaAdminService {
     private final TipoDeCampanaRepository tipoDeCampanaRepository;
     private final CadenaRepository cadenaRepository;
     private final CampanaCadenaRepository campanaCadenaRepository;
+    private final CampanaAdminMapper campanaAdminMapper;
+    private final CadenaAdminMapper cadenaAdminMapper;
 
     public CampanaAdminService(CampanaRepository campanaRepository,
                                TipoDeCampanaRepository tipoDeCampanaRepository,
                                CadenaRepository cadenaRepository,
-                               CampanaCadenaRepository campanaCadenaRepository) {
+                               CampanaCadenaRepository campanaCadenaRepository,
+                               CampanaAdminMapper campanaAdminMapper,
+                               CadenaAdminMapper cadenaAdminMapper) {
         this.campanaRepository = campanaRepository;
         this.tipoDeCampanaRepository = tipoDeCampanaRepository;
         this.cadenaRepository = cadenaRepository;
         this.campanaCadenaRepository = campanaCadenaRepository;
+        this.campanaAdminMapper = campanaAdminMapper;
+        this.cadenaAdminMapper = cadenaAdminMapper;
     }
 
     @Transactional(readOnly = true)
     public List<CampanaResponseDTO> listar() {
         return campanaRepository.findAllConTipo()
                 .stream()
-                .map(this::convertirAResponseDTO)
+                .map(this::toResponseDTO)
                 .toList();
     }
 
@@ -52,35 +55,20 @@ public class CampanaAdminService {
         Campana campana = campanaRepository.findById(id).orElseThrow();
         List<Integer> idsCadenas = campanaCadenaRepository.findIdsCadenasByCampanaId(id);
 
-        return new CampanaRequestDTO(
-                campana.getId(),
-                campana.getTipoDeCampana().getId(),
-                campana.getFecha(),
-                convertirFechaEnteroAFormulario(campana.getFecha()),
-                campana.getActivo(),
-                idsCadenas
-        );
+        return campanaAdminMapper.toRequestDTO(campana, idsCadenas);
     }
 
     @Transactional(readOnly = true)
     public List<TipoCampanaResponseDTO> listarTipos() {
         return tipoDeCampanaRepository.findAllByOrderByNombreAsc()
                 .stream()
-                .map(tipo -> new TipoCampanaResponseDTO(tipo.getId(), tipo.getNombre()))
+                .map(campanaAdminMapper::toTipoCampanaResponseDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public List<CadenaResponseDTO> listarCadenas() {
-        return cadenaRepository.findAllByOrderByNombreAsc()
-                .stream()
-                .map(cadena -> new CadenaResponseDTO(
-                        cadena.getId(),
-                        cadena.getNombre(),
-                        cadena.getPersonaContacto(),
-                        cadena.getTelefonoContacto()
-                ))
-                .toList();
+        return cadenaAdminMapper.toDTOList(cadenaRepository.findAllByOrderByNombreAsc());
     }
 
     @Transactional
@@ -91,7 +79,7 @@ public class CampanaAdminService {
             return error;
         }
 
-        Integer fecha = convertirFechaFormularioAEntero(campanaRequestDTO.getFechaFormulario());
+        Integer fecha = campanaAdminMapper.convertirFechaFormularioAEntero(campanaRequestDTO.getFechaFormulario());
         TipoDeCampana tipoDeCampana = tipoDeCampanaRepository.findById(campanaRequestDTO.getIdTipoCampana()).orElseThrow();
 
         Campana campana;
@@ -103,10 +91,7 @@ public class CampanaAdminService {
             campana = campanaRepository.findById(campanaRequestDTO.getId()).orElseThrow();
         }
 
-        campana.setTipoDeCampana(tipoDeCampana);
-        campana.setFecha(fecha);
-        campana.setActivo(campanaRequestDTO.getActivo() == null ? 0 : campanaRequestDTO.getActivo());
-
+        campanaAdminMapper.aplicarRequest(campanaRequestDTO, campana, tipoDeCampana, fecha);
         campanaRepository.save(campana);
 
         campanaCadenaRepository.deleteByCampanaId(campana.getId());
@@ -155,7 +140,7 @@ public class CampanaAdminService {
             return "La fecha es obligatoria";
         }
 
-        Integer fecha = convertirFechaFormularioAEntero(campanaRequestDTO.getFechaFormulario());
+        Integer fecha = campanaAdminMapper.convertirFechaFormularioAEntero(campanaRequestDTO.getFechaFormulario());
 
         if (fecha == null) {
             return "La fecha no tiene un formato valido";
@@ -177,80 +162,19 @@ public class CampanaAdminService {
 
     private void guardarRelacionCampanaCadena(Campana campana, Integer idCadena) {
         Cadena cadena = cadenaRepository.findById(idCadena).orElseThrow();
-
-        CampanaCadenaId campanaCadenaId = new CampanaCadenaId();
-        campanaCadenaId.setIdCampana(campana.getId());
-        campanaCadenaId.setIdCadena(cadena.getId());
-
-        CampanaCadena campanaCadena = new CampanaCadena();
-        campanaCadena.setId(campanaCadenaId);
-        campanaCadena.setCampana(campana);
-        campanaCadena.setCadena(cadena);
-
-        campanaCadenaRepository.save(campanaCadena);
+        campanaCadenaRepository.save(campanaAdminMapper.toCampanaCadena(campana, cadena));
     }
 
-    private CampanaResponseDTO convertirAResponseDTO(Campana campana) {
+    private CampanaResponseDTO toResponseDTO(Campana campana) {
         String cadenas = campanaCadenaRepository.findByCampanaIdConCadena(campana.getId())
                 .stream()
                 .map(campanaCadena -> campanaCadena.getCadena().getNombre())
                 .reduce((a, b) -> a + ", " + b)
                 .orElse("Sin cadenas");
 
-        return new CampanaResponseDTO(
-                campana.getId(),
-                campana.getTipoDeCampana().getNombre(),
-                campana.getFecha(),
-                convertirFechaEnteroATexto(campana.getFecha()),
-                campana.getActivo() != null && campana.getActivo() == 1 ? "Activa" : "Inactiva",
-                cadenas
-        );
-    }
+        CampanaResponseDTO campanaResponseDTO = campanaAdminMapper.toDTO(campana);
+        campanaResponseDTO.setCadenasParticipantes(cadenas);
 
-    private Integer convertirFechaFormularioAEntero(String fechaFormulario) {
-        try {
-            LocalDate fecha = LocalDate.parse(fechaFormulario);
-            return Integer.parseInt(fecha.format(DateTimeFormatter.BASIC_ISO_DATE));
-        } catch (DateTimeParseException | NumberFormatException exception) {
-            return null;
-        }
-    }
-
-    private String convertirFechaEnteroAFormulario(Integer fechaEntero) {
-        if (fechaEntero == null) {
-            return "";
-        }
-
-        try {
-            String fechaTexto = String.valueOf(fechaEntero);
-
-            if (fechaTexto.length() != 8) {
-                return "";
-            }
-
-            LocalDate fecha = LocalDate.parse(fechaTexto, DateTimeFormatter.BASIC_ISO_DATE);
-            return fecha.toString();
-        } catch (DateTimeParseException exception) {
-            return "";
-        }
-    }
-
-    private String convertirFechaEnteroATexto(Integer fechaEntero) {
-        if (fechaEntero == null) {
-            return "";
-        }
-
-        try {
-            String fechaTexto = String.valueOf(fechaEntero);
-
-            if (fechaTexto.length() != 8) {
-                return String.valueOf(fechaEntero);
-            }
-
-            LocalDate fecha = LocalDate.parse(fechaTexto, DateTimeFormatter.BASIC_ISO_DATE);
-            return fecha.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-        } catch (DateTimeParseException exception) {
-            return String.valueOf(fechaEntero);
-        }
+        return campanaResponseDTO;
     }
 }

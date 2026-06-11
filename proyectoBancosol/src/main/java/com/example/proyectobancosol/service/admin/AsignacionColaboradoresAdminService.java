@@ -8,8 +8,8 @@ import com.example.proyectobancosol.dto.response.AsignacionColaboradoresCoordina
 import com.example.proyectobancosol.dto.response.ColaboradorResponseDTO;
 import com.example.proyectobancosol.entity.Colaborador;
 import com.example.proyectobancosol.entity.Usuario;
-import com.example.proyectobancosol.entity.UsuarioColaborador;
-import com.example.proyectobancosol.entity.UsuarioColaboradorId;
+import com.example.proyectobancosol.mapper.admin.AsignacionColaboradoresAdminMapper;
+import com.example.proyectobancosol.mapper.admin.ColaboradorAdminMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,20 +24,26 @@ public class AsignacionColaboradoresAdminService {
     private final UsuarioRepository usuarioRepository;
     private final ColaboradorRepository colaboradorRepository;
     private final UsuarioColaboradorRepository usuarioColaboradorRepository;
+    private final AsignacionColaboradoresAdminMapper asignacionColaboradoresAdminMapper;
+    private final ColaboradorAdminMapper colaboradorAdminMapper;
 
     public AsignacionColaboradoresAdminService(UsuarioRepository usuarioRepository,
                                                ColaboradorRepository colaboradorRepository,
-                                               UsuarioColaboradorRepository usuarioColaboradorRepository) {
+                                               UsuarioColaboradorRepository usuarioColaboradorRepository,
+                                               AsignacionColaboradoresAdminMapper asignacionColaboradoresAdminMapper,
+                                               ColaboradorAdminMapper colaboradorAdminMapper) {
         this.usuarioRepository = usuarioRepository;
         this.colaboradorRepository = colaboradorRepository;
         this.usuarioColaboradorRepository = usuarioColaboradorRepository;
+        this.asignacionColaboradoresAdminMapper = asignacionColaboradoresAdminMapper;
+        this.colaboradorAdminMapper = colaboradorAdminMapper;
     }
 
     @Transactional(readOnly = true)
     public List<AsignacionColaboradoresCoordinadorDTO> listar() {
         return usuarioRepository.findByRolNombre(ROL_COORDINADOR)
                 .stream()
-                .map(this::convertirAResponseDTO)
+                .map(this::toResponseDTO)
                 .toList();
     }
 
@@ -46,10 +52,7 @@ public class AsignacionColaboradoresAdminService {
         Usuario coordinador = buscarCoordinador(idCoordinador);
         List<Integer> idsColaboradores = usuarioColaboradorRepository.findIdsColaboradoresByUsuarioId(coordinador.getId());
 
-        return new AsignacionColaboradoresRequestDTO(
-                coordinador.getId(),
-                idsColaboradores
-        );
+        return asignacionColaboradoresAdminMapper.toRequestDTO(coordinador.getId(), idsColaboradores);
     }
 
     @Transactional(readOnly = true)
@@ -65,24 +68,7 @@ public class AsignacionColaboradoresAdminService {
 
     @Transactional(readOnly = true)
     public List<ColaboradorResponseDTO> listarColaboradores() {
-        return colaboradorRepository.findByEstadoOrderByNombreEntidadAsc(1)
-                .stream()
-                .map(colaborador -> new ColaboradorResponseDTO(
-                        colaborador.getId(),
-                        colaborador.getNombreEntidad(),
-                        colaborador.getEmail(),
-                        colaborador.getContactoNom(),
-                        colaborador.getContactoTlf(),
-                        colaborador.getDomicilio(),
-                        colaborador.getLocalidad(),
-                        colaborador.getZonaGeografica(),
-                        colaborador.getCodPostal(),
-                        "Activo",
-                        null,
-                        0L,
-                        0L
-                ))
-                .toList();
+        return colaboradorAdminMapper.toDTOList(colaboradorRepository.findByEstadoOrderByNombreEntidadAsc(1));
     }
 
     @Transactional
@@ -142,31 +128,19 @@ public class AsignacionColaboradoresAdminService {
 
     private void guardarRelacion(Usuario coordinador, Integer idColaborador) {
         Colaborador colaborador = colaboradorRepository.findById(idColaborador).orElseThrow();
-
-        UsuarioColaboradorId usuarioColaboradorId = new UsuarioColaboradorId();
-        usuarioColaboradorId.setIdUsuario(coordinador.getId());
-        usuarioColaboradorId.setIdColaborador(colaborador.getId());
-
-        UsuarioColaborador usuarioColaborador = new UsuarioColaborador();
-        usuarioColaborador.setId(usuarioColaboradorId);
-        usuarioColaborador.setUsuario(coordinador);
-        usuarioColaborador.setColaborador(colaborador);
-
-        usuarioColaboradorRepository.save(usuarioColaborador);
+        usuarioColaboradorRepository.save(asignacionColaboradoresAdminMapper.toUsuarioColaborador(coordinador, colaborador));
     }
 
-    private AsignacionColaboradoresCoordinadorDTO convertirAResponseDTO(Usuario coordinador) {
+    private AsignacionColaboradoresCoordinadorDTO toResponseDTO(Usuario coordinador) {
         String colaboradores = usuarioColaboradorRepository.findColaboradoresAsignadosByUsuarioId(coordinador.getId())
                 .stream()
                 .map(usuarioColaborador -> usuarioColaborador.getColaborador().getNombreEntidad())
                 .reduce((a, b) -> a + ", " + b)
                 .orElse("Sin colaboradores");
 
-        return new AsignacionColaboradoresCoordinadorDTO(
-                coordinador.getId(),
-                coordinador.getNombreCompleto(),
-                coordinador.getEmail(),
-                colaboradores
-        );
+        AsignacionColaboradoresCoordinadorDTO asignacionColaboradoresCoordinadorDTO = asignacionColaboradoresAdminMapper.toDTO(coordinador);
+        asignacionColaboradoresCoordinadorDTO.setColaboradoresAsignados(colaboradores);
+
+        return asignacionColaboradoresCoordinadorDTO;
     }
 }

@@ -6,6 +6,7 @@ import com.example.proyectobancosol.dto.request.CoordinadorRequestDTO;
 import com.example.proyectobancosol.dto.response.CoordinadorResponseDTO;
 import com.example.proyectobancosol.entity.Rol;
 import com.example.proyectobancosol.entity.Usuario;
+import com.example.proyectobancosol.mapper.admin.CoordinadorAdminMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,31 +19,27 @@ public class CoordinadorAdminService {
 
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
+    private final CoordinadorAdminMapper coordinadorAdminMapper;
 
-    public CoordinadorAdminService(UsuarioRepository usuarioRepository, RolRepository rolRepository) {
+    public CoordinadorAdminService(UsuarioRepository usuarioRepository,
+                                   RolRepository rolRepository,
+                                   CoordinadorAdminMapper coordinadorAdminMapper) {
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
+        this.coordinadorAdminMapper = coordinadorAdminMapper;
     }
 
     @Transactional(readOnly = true)
     public List<CoordinadorResponseDTO> listar() {
         return usuarioRepository.findByRolNombre(ROL_COORDINADOR)
                 .stream()
-                .map(this::convertirAResponseDTO)
+                .map(this::toResponseDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public CoordinadorRequestDTO buscarFormulario(Integer id) {
-        Usuario usuario = usuarioRepository.findById(id).orElseThrow();
-
-        return new CoordinadorRequestDTO(
-                usuario.getId(),
-                usuario.getNombreCompleto(),
-                usuario.getEmail(),
-                "",
-                usuario.getActivo()
-        );
+        return coordinadorAdminMapper.toRequestDTO(usuarioRepository.findById(id).orElseThrow());
     }
 
     @Transactional
@@ -54,7 +51,6 @@ public class CoordinadorAdminService {
         }
 
         Rol rolCoordinador = rolRepository.findByNombre(ROL_COORDINADOR).orElseThrow();
-
         Usuario usuario;
 
         if (coordinadorRequestDTO.getId() == null) {
@@ -69,12 +65,9 @@ public class CoordinadorAdminService {
             }
         }
 
-        usuario.setIdRol(rolCoordinador);
-        usuario.setNombreCompleto(coordinadorRequestDTO.getNombreCompleto().trim());
-        usuario.setEmail(coordinadorRequestDTO.getEmail().trim());
-        usuario.setActivo(coordinadorRequestDTO.getActivo() == null ? 1 : coordinadorRequestDTO.getActivo());
-
+        coordinadorAdminMapper.aplicarRequest(coordinadorRequestDTO, usuario, rolCoordinador);
         usuarioRepository.save(usuario);
+
         return null;
     }
 
@@ -132,17 +125,11 @@ public class CoordinadorAdminService {
         return null;
     }
 
-    private CoordinadorResponseDTO convertirAResponseDTO(Usuario usuario) {
-        Long tiendas = usuarioRepository.countTiendasByUsuario(usuario.getId());
-        Long colaboradores = usuarioRepository.countColaboradoresByUsuario(usuario.getId());
+    private CoordinadorResponseDTO toResponseDTO(Usuario usuario) {
+        CoordinadorResponseDTO coordinadorResponseDTO = coordinadorAdminMapper.toDTO(usuario);
+        coordinadorResponseDTO.setTiendasAsignadas(usuarioRepository.countTiendasByUsuario(usuario.getId()));
+        coordinadorResponseDTO.setColaboradoresAsignados(usuarioRepository.countColaboradoresByUsuario(usuario.getId()));
 
-        return new CoordinadorResponseDTO(
-                usuario.getId(),
-                usuario.getNombreCompleto(),
-                usuario.getEmail(),
-                usuario.getActivo() != null && usuario.getActivo() == 1 ? "Activo" : "Inactivo",
-                tiendas,
-                colaboradores
-        );
+        return coordinadorResponseDTO;
     }
 }

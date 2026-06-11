@@ -12,6 +12,7 @@ import com.example.proyectobancosol.entity.Campana;
 import com.example.proyectobancosol.entity.Colaborador;
 import com.example.proyectobancosol.entity.Tienda;
 import com.example.proyectobancosol.entity.Usuario;
+import com.example.proyectobancosol.mapper.admin.ValidacionAdminMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,19 +29,22 @@ public class ValidacionAdminService {
     private final CampanaRepository campanaRepository;
     private final CampanaCadenaRepository campanaCadenaRepository;
     private final CadenaRepository cadenaRepository;
+    private final ValidacionAdminMapper validacionAdminMapper;
 
     public ValidacionAdminService(UsuarioRepository usuarioRepository,
                                   TiendaRepository tiendaRepository,
                                   ColaboradorRepository colaboradorRepository,
                                   CampanaRepository campanaRepository,
                                   CampanaCadenaRepository campanaCadenaRepository,
-                                  CadenaRepository cadenaRepository) {
+                                  CadenaRepository cadenaRepository,
+                                  ValidacionAdminMapper validacionAdminMapper) {
         this.usuarioRepository = usuarioRepository;
         this.tiendaRepository = tiendaRepository;
         this.colaboradorRepository = colaboradorRepository;
         this.campanaRepository = campanaRepository;
         this.campanaCadenaRepository = campanaCadenaRepository;
         this.cadenaRepository = cadenaRepository;
+        this.validacionAdminMapper = validacionAdminMapper;
     }
 
     @Transactional(readOnly = true)
@@ -64,7 +68,7 @@ public class ValidacionAdminService {
                 .map(Usuario::getNombreCompleto)
                 .toList();
 
-        return crear("Coordinadores", "Coordinadores activos sin tiendas asignadas", elementos);
+        return validacionAdminMapper.toDTO("Coordinadores", "Coordinadores activos sin tiendas asignadas", elementos);
     }
 
     private ValidacionBasicaResponseDTO validarCoordinadoresSinColaboradores() {
@@ -75,7 +79,7 @@ public class ValidacionAdminService {
                 .map(Usuario::getNombreCompleto)
                 .toList();
 
-        return crear("Coordinadores", "Coordinadores activos sin colaboradores asignados", elementos);
+        return validacionAdminMapper.toDTO("Coordinadores", "Coordinadores activos sin colaboradores asignados", elementos);
     }
 
     private ValidacionBasicaResponseDTO validarTiendasSinCoordinador() {
@@ -85,7 +89,7 @@ public class ValidacionAdminService {
                 .map(this::nombreTienda)
                 .toList();
 
-        return crear("Tiendas", "Tiendas sin coordinador asignado", elementos);
+        return validacionAdminMapper.toDTO("Tiendas", "Tiendas sin coordinador asignado", elementos);
     }
 
     private ValidacionBasicaResponseDTO validarColaboradoresSinCoordinador() {
@@ -95,7 +99,7 @@ public class ValidacionAdminService {
                 .map(Colaborador::getNombreEntidad)
                 .toList();
 
-        return crear("Colaboradores", "Colaboradores activos sin coordinador asignado", elementos);
+        return validacionAdminMapper.toDTO("Colaboradores", "Colaboradores activos sin coordinador asignado", elementos);
     }
 
     private ValidacionBasicaResponseDTO validarCampanasSinCadenas() {
@@ -106,7 +110,7 @@ public class ValidacionAdminService {
                 .map(this::nombreCampana)
                 .toList();
 
-        return crear("Campanas", "Campanas activas sin cadenas asignadas", elementos);
+        return validacionAdminMapper.toDTO("Campanas", "Campanas activas sin cadenas asignadas", elementos);
     }
 
     private ValidacionBasicaResponseDTO validarCadenasSinTiendas() {
@@ -116,7 +120,7 @@ public class ValidacionAdminService {
                 .map(Cadena::getNombre)
                 .toList();
 
-        return crear("Cadenas", "Cadenas sin tiendas asociadas", elementos);
+        return validacionAdminMapper.toDTO("Cadenas", "Cadenas sin tiendas asociadas", elementos);
     }
 
     private ValidacionBasicaResponseDTO validarColaboradoresPendientes() {
@@ -125,19 +129,7 @@ public class ValidacionAdminService {
                 .map(Colaborador::getNombreEntidad)
                 .toList();
 
-        return crear("Colaboradores", "Colaboradores pendientes de validar", elementos);
-    }
-
-    private ValidacionBasicaResponseDTO crear(String modulo, String validacion, List<String> elementos) {
-        Long total = (long) elementos.size();
-
-        return new ValidacionBasicaResponseDTO(
-                modulo,
-                validacion,
-                total,
-                total == 0 ? "OK" : "Revisar",
-                total == 0 ? "Sin incidencias" : String.join(", ", elementos)
-        );
+        return validacionAdminMapper.toDTO("Colaboradores", "Colaboradores pendientes de validar", elementos);
     }
 
     private boolean estaActivo(Usuario usuario) {

@@ -7,6 +7,8 @@ import com.example.proyectobancosol.dto.response.CadenaResponseDTO;
 import com.example.proyectobancosol.dto.response.TiendaResponseDTO;
 import com.example.proyectobancosol.entity.Cadena;
 import com.example.proyectobancosol.entity.Tienda;
+import com.example.proyectobancosol.mapper.admin.CadenaAdminMapper;
+import com.example.proyectobancosol.mapper.admin.TiendaAdminMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,44 +19,32 @@ public class TiendaAdminService {
 
     private final TiendaRepository tiendaRepository;
     private final CadenaRepository cadenaRepository;
+    private final TiendaAdminMapper tiendaAdminMapper;
+    private final CadenaAdminMapper cadenaAdminMapper;
 
-    public TiendaAdminService(TiendaRepository tiendaRepository, CadenaRepository cadenaRepository) {
+    public TiendaAdminService(TiendaRepository tiendaRepository,
+                              CadenaRepository cadenaRepository,
+                              TiendaAdminMapper tiendaAdminMapper,
+                              CadenaAdminMapper cadenaAdminMapper) {
         this.tiendaRepository = tiendaRepository;
         this.cadenaRepository = cadenaRepository;
+        this.tiendaAdminMapper = tiendaAdminMapper;
+        this.cadenaAdminMapper = cadenaAdminMapper;
     }
 
     @Transactional(readOnly = true)
     public List<TiendaResponseDTO> listar() {
-        return tiendaRepository.findAllConCadena()
-                .stream()
-                .map(this::convertirAResponseDTO)
-                .toList();
+        return tiendaAdminMapper.toDTOList(tiendaRepository.findAllConCadena());
     }
 
     @Transactional(readOnly = true)
     public List<CadenaResponseDTO> listarCadenas() {
-        return cadenaRepository.findAllByOrderByNombreAsc()
-                .stream()
-                .map(cadena -> new CadenaResponseDTO(
-                        cadena.getId(),
-                        cadena.getNombre(),
-                        cadena.getPersonaContacto(),
-                        cadena.getTelefonoContacto()
-                ))
-                .toList();
+        return cadenaAdminMapper.toDTOList(cadenaRepository.findAllByOrderByNombreAsc());
     }
 
     @Transactional(readOnly = true)
     public TiendaRequestDTO buscarFormulario(Integer id) {
-        Tienda tienda = tiendaRepository.findById(id).orElseThrow();
-
-        return new TiendaRequestDTO(
-                tienda.getId(),
-                tienda.getIdCadena().getId(),
-                tienda.getNombre(),
-                tienda.getDireccion(),
-                tienda.getCodPostal()
-        );
+        return tiendaAdminMapper.toRequestDTO(tiendaRepository.findById(id).orElseThrow());
     }
 
     @Transactional
@@ -66,7 +56,6 @@ public class TiendaAdminService {
         }
 
         Cadena cadena = cadenaRepository.findById(tiendaRequestDTO.getIdCadena()).orElseThrow();
-
         Tienda tienda;
 
         if (tiendaRequestDTO.getId() == null) {
@@ -76,12 +65,9 @@ public class TiendaAdminService {
             tienda = tiendaRepository.findById(tiendaRequestDTO.getId()).orElseThrow();
         }
 
-        tienda.setIdCadena(cadena);
-        tienda.setNombre(tiendaRequestDTO.getNombre().trim());
-        tienda.setDireccion(tiendaRequestDTO.getDireccion().trim());
-        tienda.setCodPostal(tiendaRequestDTO.getCodPostal().trim());
-
+        tiendaAdminMapper.aplicarRequest(tiendaRequestDTO, tienda, cadena);
         tiendaRepository.save(tienda);
+
         return null;
     }
 
@@ -149,15 +135,5 @@ public class TiendaAdminService {
         }
 
         return null;
-    }
-
-    private TiendaResponseDTO convertirAResponseDTO(Tienda tienda) {
-        return new TiendaResponseDTO(
-                tienda.getId(),
-                tienda.getIdCadena().getNombre(),
-                tienda.getNombre(),
-                tienda.getDireccion(),
-                tienda.getCodPostal()
-        );
     }
 }

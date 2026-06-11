@@ -29,6 +29,11 @@ public interface CampanaRepository extends JpaRepository<Campana, Integer> {
     @Query("select count(tc) from TiendaCampana tc where tc.campana.id = :idCampana")
     Long countTiendasByCampana(@Param("idCampana") Integer idCampana);
 
-    @Query(value = "select count(*) from asignacion_turnos where id_campana = :idCampana", nativeQuery = true)
+    @Query(value = """
+            select count(*)
+            from asignacion_turnos a
+            join tienda_campana tc on tc.id_tienda = a.id_tienda
+            where tc.id_campana = :idCampana
+            """, nativeQuery = true)
     Long countTurnosByCampana(@Param("idCampana") Integer idCampana);
 }
