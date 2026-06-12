@@ -11,6 +11,10 @@ public class AdminMenuService {
     public List<AdminMenuItemDTO> obtenerMenuAdministrador() {
         return List.of(
                 item(
+                        "Usuarios",
+                        "Gestion de usuarios del sistema",
+                        "/admin/usuarios"),
+                item(
                         "Cadenas",
                         "Gestion de cadenas de supermercados",
                         "/admin/cadenas"),
