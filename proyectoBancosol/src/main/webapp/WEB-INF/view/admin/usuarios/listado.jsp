@@ -48,7 +48,7 @@
             <td><%=usuario.getId()%></td>
             <td><%=usuario.getNombreCompleto()%></td>
             <td><%=usuario.getEmail()%></td>
-            <td><%=usuario.getPassword()%></td>
+            <td><input type="password" value="<%=usuario.getPassword()%>" readonly style="border:none; background:transparent;"></td>
             <td><%=usuario.getIdRol().getNombre()%></td>
             <td><%=usuario.getActivo() == 1 ? "Activo" : "Inactivo"%></td>
             <td>
