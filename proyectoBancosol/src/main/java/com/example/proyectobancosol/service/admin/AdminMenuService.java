@@ -26,18 +26,12 @@ public class AdminMenuService {
                         "Coordinadores",
                         "Gestion de coordinadores",
                         "/admin/coordinadores"),
-                item(
-                        "Asignar tiendas",
-                        "Asignacion de tiendas a coordinadores",
-                        "/admin/asignar-tiendas"),
+                
                 item(
                         "Colaboradores",
                         "Gestion de colaboradores",
                         "/admin/colaboradores"),
-                item(
-                        "Asignar colaboradores",
-                        "Asignacion de colaboradores a coordinadores",
-                        "/admin/asignar-colaboradores"),
+
                 item(
                         "Asignacion de voluntarios",
                         "Gestion de asignaciones creada en el modulo coordinador",
