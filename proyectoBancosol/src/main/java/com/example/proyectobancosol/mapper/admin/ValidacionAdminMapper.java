@@ -10,7 +10,6 @@ public class ValidacionAdminMapper {
 
     public ValidacionBasicaResponseDTO toDTO(String modulo, String validacion, List<String> elementos) {
         Long total = (long) elementos.size();
-
         return new ValidacionBasicaResponseDTO(
                 modulo,
                 validacion,

@@ -10,8 +10,6 @@
 
 <h1>Validaciones basicas</h1>
 
-<p><a href="/admin">Volver al panel</a></p>
-
 <table border="1" cellpadding="8" cellspacing="0">
   <thead>
   <tr>
@@ -35,7 +33,9 @@
   </tbody>
 </table>
 
-<p><a href="/logout">Cerrar sesion</a></p>
+<form method="get" action="/admin">
+  <button type="submit">Volver al panel</button>
+</form>
 
 </body>
 </html>

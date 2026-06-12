@@ -2,6 +2,7 @@ package com.example.proyectobancosol.controller.admin;
 
 import com.example.proyectobancosol.dto.request.ColaboradorRequestDTO;
 import com.example.proyectobancosol.service.admin.ColaboradorAdminService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,14 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/admin/colaboradores")
 public class ColaboradorAdminController {
 
     private final ColaboradorAdminService colaboradorAdminService;
-
-    public ColaboradorAdminController(ColaboradorAdminService colaboradorAdminService) {
-        this.colaboradorAdminService = colaboradorAdminService;
-    }
 
     @GetMapping({"", "/"})
     public String listar(Model model) {
@@ -30,34 +28,25 @@ public class ColaboradorAdminController {
 
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
-        ColaboradorRequestDTO colaboradorRequestDTO = new ColaboradorRequestDTO();
-        colaboradorRequestDTO.setEstado(2);
-
-        model.addAttribute("colaborador", colaboradorRequestDTO);
-        model.addAttribute("modo", "Crear");
-
-        return "admin/colaboradores/formulario";
+        ColaboradorRequestDTO request = new ColaboradorRequestDTO();
+        request.setEstado(2);
+        return formulario(model, request, "Crear");
     }
 
     @GetMapping("/editar")
     public String editar(@RequestParam("id") Integer id, Model model) {
-        model.addAttribute("colaborador", colaboradorAdminService.buscarFormulario(id));
-        model.addAttribute("modo", "Editar");
-
-        return "admin/colaboradores/formulario";
+        return formulario(model, colaboradorAdminService.buscarFormulario(id), "Editar");
     }
 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute("colaborador") ColaboradorRequestDTO colaboradorRequestDTO,
+    public String guardar(@ModelAttribute("colaborador") ColaboradorRequestDTO request,
                           Model model,
                           RedirectAttributes redirectAttributes) {
-        String error = colaboradorAdminService.guardar(colaboradorRequestDTO);
+        String error = colaboradorAdminService.guardar(request);
 
         if (error != null) {
             model.addAttribute("error", error);
-            model.addAttribute("colaborador", colaboradorRequestDTO);
-            model.addAttribute("modo", colaboradorRequestDTO.getId() == null ? "Crear" : "Editar");
-            return "admin/colaboradores/formulario";
+            return formulario(model, request, request.getId() == null ? "Crear" : "Editar");
         }
 
         redirectAttributes.addFlashAttribute("mensaje", "Colaborador guardado correctamente");
@@ -65,30 +54,22 @@ public class ColaboradorAdminController {
     }
 
     @PostMapping("/rechazar")
-    public String rechazar(@RequestParam("id") Integer id,
-                           RedirectAttributes redirectAttributes) {
+    public String rechazar(@RequestParam("id") Integer id, RedirectAttributes redirectAttributes) {
         String error = colaboradorAdminService.rechazar(id);
-
-        if (error != null) {
-            redirectAttributes.addFlashAttribute("error", error);
-        } else {
-            redirectAttributes.addFlashAttribute("mensaje", "Colaborador rechazado correctamente");
-        }
-
+        redirectAttributes.addFlashAttribute(error == null ? "mensaje" : "error", error == null ? "Colaborador rechazado correctamente" : error);
         return "redirect:/admin/colaboradores";
     }
 
     @PostMapping("/eliminar")
-    public String eliminar(@RequestParam("id") Integer id,
-                           RedirectAttributes redirectAttributes) {
+    public String eliminar(@RequestParam("id") Integer id, RedirectAttributes redirectAttributes) {
         String error = colaboradorAdminService.eliminar(id);
-
-        if (error != null) {
-            redirectAttributes.addFlashAttribute("error", error);
-        } else {
-            redirectAttributes.addFlashAttribute("mensaje", "Colaborador eliminado correctamente");
-        }
-
+        redirectAttributes.addFlashAttribute(error == null ? "mensaje" : "error", error == null ? "Colaborador eliminado correctamente" : error);
         return "redirect:/admin/colaboradores";
+    }
+
+    private String formulario(Model model, ColaboradorRequestDTO request, String modo) {
+        model.addAttribute("colaborador", request);
+        model.addAttribute("modo", modo);
+        return "admin/colaboradores/formulario";
     }
 }

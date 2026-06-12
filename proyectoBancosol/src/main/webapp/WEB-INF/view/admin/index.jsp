@@ -22,8 +22,7 @@
     <tr>
         <th>Modulo</th>
         <th>Descripcion</th>
-        <th>Estado</th>
-        <th>Accion</th>
+        <th>Ir al panel</th>
     </tr>
     </thead>
 
@@ -32,7 +31,6 @@
         <tr>
             <td>${item.titulo}</td>
             <td>${item.descripcion}</td>
-            <td>${item.estado}</td>
             <td>
                 <c:choose>
                     <c:when test="${item.url != '#'}">
@@ -58,7 +56,6 @@
         <th>Modulo</th>
         <th>Tarea</th>
         <th>Total</th>
-        <th>Estado</th>
         <th>Detalle</th>
     </tr>
     </thead>
@@ -69,7 +66,6 @@
             <td>${validacion.modulo}</td>
             <td>${validacion.validacion}</td>
             <td>${validacion.total}</td>
-            <td>${validacion.estado}</td>
             <td>${validacion.detalle}</td>
         </tr>
     </c:forEach>

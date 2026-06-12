@@ -10,16 +10,18 @@ import com.example.proyectobancosol.entity.Colaborador;
 import com.example.proyectobancosol.entity.Usuario;
 import com.example.proyectobancosol.mapper.admin.AsignacionColaboradoresAdminMapper;
 import com.example.proyectobancosol.mapper.admin.ColaboradorAdminMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AsignacionColaboradoresAdminService {
 
     private static final String ROL_COORDINADOR = "COORDINADOR";
+    private static final String SIN_COLABORADORES = "Sin colaboradores";
 
     private final UsuarioRepository usuarioRepository;
     private final ColaboradorRepository colaboradorRepository;
@@ -27,22 +29,9 @@ public class AsignacionColaboradoresAdminService {
     private final AsignacionColaboradoresAdminMapper asignacionColaboradoresAdminMapper;
     private final ColaboradorAdminMapper colaboradorAdminMapper;
 
-    public AsignacionColaboradoresAdminService(UsuarioRepository usuarioRepository,
-                                               ColaboradorRepository colaboradorRepository,
-                                               UsuarioColaboradorRepository usuarioColaboradorRepository,
-                                               AsignacionColaboradoresAdminMapper asignacionColaboradoresAdminMapper,
-                                               ColaboradorAdminMapper colaboradorAdminMapper) {
-        this.usuarioRepository = usuarioRepository;
-        this.colaboradorRepository = colaboradorRepository;
-        this.usuarioColaboradorRepository = usuarioColaboradorRepository;
-        this.asignacionColaboradoresAdminMapper = asignacionColaboradoresAdminMapper;
-        this.colaboradorAdminMapper = colaboradorAdminMapper;
-    }
-
     @Transactional(readOnly = true)
     public List<AsignacionColaboradoresCoordinadorDTO> listar() {
-        return usuarioRepository.findByRolNombre(ROL_COORDINADOR)
-                .stream()
+        return usuarioRepository.findByRolNombre(ROL_COORDINADOR).stream()
                 .map(this::toResponseDTO)
                 .toList();
     }
@@ -50,9 +39,10 @@ public class AsignacionColaboradoresAdminService {
     @Transactional(readOnly = true)
     public AsignacionColaboradoresRequestDTO buscarFormulario(Integer idCoordinador) {
         Usuario coordinador = buscarCoordinador(idCoordinador);
-        List<Integer> idsColaboradores = usuarioColaboradorRepository.findIdsColaboradoresByUsuarioId(coordinador.getId());
-
-        return asignacionColaboradoresAdminMapper.toRequestDTO(coordinador.getId(), idsColaboradores);
+        return asignacionColaboradoresAdminMapper.toRequestDTO(
+                coordinador.getId(),
+                usuarioColaboradorRepository.findIdsColaboradoresByUsuarioId(coordinador.getId())
+        );
     }
 
     @Transactional(readOnly = true)
@@ -72,58 +62,51 @@ public class AsignacionColaboradoresAdminService {
     }
 
     @Transactional
-    public String guardar(AsignacionColaboradoresRequestDTO asignacionColaboradoresRequestDTO) {
-        String error = validar(asignacionColaboradoresRequestDTO);
+    public String guardar(AsignacionColaboradoresRequestDTO request) {
+        String error = validar(request);
 
         if (error != null) {
             return error;
         }
 
-        Usuario coordinador = usuarioRepository.findById(asignacionColaboradoresRequestDTO.getIdCoordinador()).orElseThrow();
-
+        Usuario coordinador = usuarioRepository.findById(request.getIdCoordinador()).orElseThrow();
         usuarioColaboradorRepository.deleteByUsuarioId(coordinador.getId());
 
-        List<Integer> idsColaboradores = asignacionColaboradoresRequestDTO.getIdsColaboradores();
-
-        if (idsColaboradores == null) {
-            idsColaboradores = new ArrayList<>();
+        if (request.getIdsColaboradores() != null) {
+            request.getIdsColaboradores().stream()
+                    .distinct()
+                    .forEach(idColaborador -> guardarRelacion(coordinador, idColaborador));
         }
-
-        idsColaboradores.stream()
-                .distinct()
-                .forEach(idColaborador -> guardarRelacion(coordinador, idColaborador));
 
         return null;
     }
 
-    private String validar(AsignacionColaboradoresRequestDTO asignacionColaboradoresRequestDTO) {
-        if (asignacionColaboradoresRequestDTO == null) {
-            return "Los datos de asignacion son obligatorios";
+    private String validar(AsignacionColaboradoresRequestDTO request) {
+        if (request == null) {
+            return "Debes meter los datos de asignacion";
         }
 
-        if (asignacionColaboradoresRequestDTO.getIdCoordinador() == null) {
+        if (request.getIdCoordinador() == null) {
             return "El coordinador es obligatorio";
         }
 
-        if (!usuarioRepository.existsById(asignacionColaboradoresRequestDTO.getIdCoordinador())) {
+        Usuario coordinador = usuarioRepository.findById(request.getIdCoordinador()).orElse(null);
+
+        if (coordinador == null) {
             return "El coordinador no existe";
         }
-
-        Usuario coordinador = usuarioRepository.findById(asignacionColaboradoresRequestDTO.getIdCoordinador()).orElseThrow();
 
         if (!ROL_COORDINADOR.equals(coordinador.getIdRol().getNombre())) {
             return "El usuario seleccionado no es coordinador";
         }
 
-        if (asignacionColaboradoresRequestDTO.getIdsColaboradores() != null) {
-            for (Integer idColaborador : asignacionColaboradoresRequestDTO.getIdsColaboradores()) {
-                if (!colaboradorRepository.existsById(idColaborador)) {
-                    return "Uno de los colaboradores seleccionados no existe";
-                }
-            }
+        if (request.getIdsColaboradores() == null) {
+            return null;
         }
 
-        return null;
+        return request.getIdsColaboradores().stream().allMatch(colaboradorRepository::existsById)
+                ? null
+                : "Uno de los colaboradores seleccionados no existe";
     }
 
     private void guardarRelacion(Usuario coordinador, Integer idColaborador) {
@@ -132,15 +115,11 @@ public class AsignacionColaboradoresAdminService {
     }
 
     private AsignacionColaboradoresCoordinadorDTO toResponseDTO(Usuario coordinador) {
-        String colaboradores = usuarioColaboradorRepository.findColaboradoresAsignadosByUsuarioId(coordinador.getId())
-                .stream()
+        String colaboradores = usuarioColaboradorRepository.findColaboradoresAsignadosByUsuarioId(coordinador.getId()).stream()
                 .map(usuarioColaborador -> usuarioColaborador.getColaborador().getNombreEntidad())
                 .reduce((a, b) -> a + ", " + b)
-                .orElse("Sin colaboradores");
+                .orElse(SIN_COLABORADORES);
 
-        AsignacionColaboradoresCoordinadorDTO asignacionColaboradoresCoordinadorDTO = asignacionColaboradoresAdminMapper.toDTO(coordinador);
-        asignacionColaboradoresCoordinadorDTO.setColaboradoresAsignados(colaboradores);
-
-        return asignacionColaboradoresCoordinadorDTO;
+        return asignacionColaboradoresAdminMapper.toDTO(coordinador, colaboradores);
     }
 }

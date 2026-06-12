@@ -2,6 +2,7 @@ package com.example.proyectobancosol.controller.admin;
 
 import com.example.proyectobancosol.dto.request.TiendaRequestDTO;
 import com.example.proyectobancosol.service.admin.TiendaAdminService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,14 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/admin/tiendas")
 public class TiendaAdminController {
 
     private final TiendaAdminService tiendaAdminService;
-
-    public TiendaAdminController(TiendaAdminService tiendaAdminService) {
-        this.tiendaAdminService = tiendaAdminService;
-    }
 
     @GetMapping({"", "/"})
     public String listar(Model model) {
@@ -29,26 +27,23 @@ public class TiendaAdminController {
 
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
-        cargarFormulario(model, new TiendaRequestDTO(), "Crear");
-        return "admin/tiendas/formulario";
+        return formulario(model, new TiendaRequestDTO(), "Crear");
     }
 
     @GetMapping("/editar")
     public String editar(@RequestParam("id") Integer id, Model model) {
-        cargarFormulario(model, tiendaAdminService.buscarFormulario(id), "Editar");
-        return "admin/tiendas/formulario";
+        return formulario(model, tiendaAdminService.buscarFormulario(id), "Editar");
     }
 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute("tienda") TiendaRequestDTO tiendaRequestDTO,
+    public String guardar(@ModelAttribute("tienda") TiendaRequestDTO request,
                           Model model,
                           RedirectAttributes redirectAttributes) {
-        String error = tiendaAdminService.guardar(tiendaRequestDTO);
+        String error = tiendaAdminService.guardar(request);
 
         if (error != null) {
-            cargarFormulario(model, tiendaRequestDTO, tiendaRequestDTO.getId() == null ? "Crear" : "Editar");
             model.addAttribute("error", error);
-            return "admin/tiendas/formulario";
+            return formulario(model, request, request.getId() == null ? "Crear" : "Editar");
         }
 
         redirectAttributes.addFlashAttribute("mensaje", "Tienda guardada correctamente");
@@ -56,22 +51,16 @@ public class TiendaAdminController {
     }
 
     @PostMapping("/eliminar")
-    public String eliminar(@RequestParam("id") Integer id,
-                           RedirectAttributes redirectAttributes) {
+    public String eliminar(@RequestParam("id") Integer id, RedirectAttributes redirectAttributes) {
         String error = tiendaAdminService.eliminar(id);
-
-        if (error != null) {
-            redirectAttributes.addFlashAttribute("error", error);
-        } else {
-            redirectAttributes.addFlashAttribute("mensaje", "Tienda eliminada correctamente");
-        }
-
+        redirectAttributes.addFlashAttribute(error == null ? "mensaje" : "error", error == null ? "Tienda eliminada correctamente" : error);
         return "redirect:/admin/tiendas";
     }
 
-    private void cargarFormulario(Model model, TiendaRequestDTO tiendaRequestDTO, String modo) {
-        model.addAttribute("tienda", tiendaRequestDTO);
+    private String formulario(Model model, TiendaRequestDTO request, String modo) {
+        model.addAttribute("tienda", request);
         model.addAttribute("modo", modo);
         model.addAttribute("cadenas", tiendaAdminService.listarCadenas());
+        return "admin/tiendas/formulario";
     }
 }

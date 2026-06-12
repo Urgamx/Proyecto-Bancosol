@@ -12,13 +12,17 @@ public class CoordinadorAdminMapper extends MapperDTO<CoordinadorResponseDTO, Us
 
     @Override
     public CoordinadorResponseDTO toDTO(Usuario usuario) {
+        return toDTO(usuario, 0L, 0L);
+    }
+
+    public CoordinadorResponseDTO toDTO(Usuario usuario, Long tiendas, Long colaboradores) {
         return new CoordinadorResponseDTO(
                 usuario.getId(),
                 usuario.getNombreCompleto(),
                 usuario.getEmail(),
                 usuario.getActivo() != null && usuario.getActivo() == 1 ? "Activo" : "Inactivo",
-                0L,
-                0L
+                tiendas,
+                colaboradores
         );
     }
 
@@ -32,10 +36,10 @@ public class CoordinadorAdminMapper extends MapperDTO<CoordinadorResponseDTO, Us
         );
     }
 
-    public void aplicarRequest(CoordinadorRequestDTO coordinadorRequestDTO, Usuario usuario, Rol rolCoordinador) {
+    public void aplicarRequest(CoordinadorRequestDTO request, Usuario usuario, Rol rolCoordinador) {
         usuario.setIdRol(rolCoordinador);
-        usuario.setNombreCompleto(coordinadorRequestDTO.getNombreCompleto().trim());
-        usuario.setEmail(coordinadorRequestDTO.getEmail().trim());
-        usuario.setActivo(coordinadorRequestDTO.getActivo() == null ? 1 : coordinadorRequestDTO.getActivo());
+        usuario.setNombreCompleto(request.getNombreCompleto().trim());
+        usuario.setEmail(request.getEmail().trim());
+        usuario.setActivo(request.getActivo() == null ? 1 : request.getActivo());
     }
 }
