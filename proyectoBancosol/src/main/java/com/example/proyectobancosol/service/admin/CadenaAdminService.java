@@ -5,22 +5,18 @@ import com.example.proyectobancosol.dto.request.CadenaRequestDTO;
 import com.example.proyectobancosol.dto.response.CadenaResponseDTO;
 import com.example.proyectobancosol.entity.Cadena;
 import com.example.proyectobancosol.mapper.admin.CadenaAdminMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CadenaAdminService {
 
     private final CadenaRepository cadenaRepository;
     private final CadenaAdminMapper cadenaAdminMapper;
-
-    public CadenaAdminService(CadenaRepository cadenaRepository,
-                              CadenaAdminMapper cadenaAdminMapper) {
-        this.cadenaRepository = cadenaRepository;
-        this.cadenaAdminMapper = cadenaAdminMapper;
-    }
 
     @Transactional(readOnly = true)
     public List<CadenaResponseDTO> listar() {
@@ -33,25 +29,16 @@ public class CadenaAdminService {
     }
 
     @Transactional
-    public String guardar(CadenaRequestDTO cadenaRequestDTO) {
-        String error = validar(cadenaRequestDTO);
+    public String guardar(CadenaRequestDTO request) {
+        String error = validar(request);
 
         if (error != null) {
             return error;
         }
 
-        Cadena cadena;
-
-        if (cadenaRequestDTO.getId() == null) {
-            cadena = new Cadena();
-            cadena.setId(cadenaRepository.findMaxId() + 1);
-        } else {
-            cadena = cadenaRepository.findById(cadenaRequestDTO.getId()).orElseThrow();
-        }
-
-        cadenaAdminMapper.aplicarRequest(cadenaRequestDTO, cadena);
+        Cadena cadena = request.getId() == null ? nuevaCadena() : cadenaRepository.findById(request.getId()).orElseThrow();
+        cadenaAdminMapper.aplicarRequest(request, cadena);
         cadenaRepository.save(cadena);
-
         return null;
     }
 
@@ -61,10 +48,7 @@ public class CadenaAdminService {
             return "La cadena no existe";
         }
 
-        Long tiendas = cadenaRepository.countTiendasByCadena(id);
-        Long campanas = cadenaRepository.countCampanasByCadena(id);
-
-        if (tiendas > 0 || campanas > 0) {
+        if (cadenaRepository.countTiendasByCadena(id) > 0 || cadenaRepository.countCampanasByCadena(id) > 0) {
             return "No se puede eliminar una cadena con tiendas o campanas asociadas";
         }
 
@@ -72,19 +56,27 @@ public class CadenaAdminService {
         return null;
     }
 
-    private String validar(CadenaRequestDTO cadenaRequestDTO) {
-        if (cadenaRequestDTO == null || cadenaRequestDTO.getNombre() == null || cadenaRequestDTO.getNombre().trim().isEmpty()) {
+    private String validar(CadenaRequestDTO request) {
+        if (request == null || vacio(request.getNombre())) {
             return "El nombre es obligatorio";
         }
 
-        if (cadenaRequestDTO.getNombre().trim().length() > 150) {
-            return "El nombre no puede superar 150 caracteres";
+        if (request.getNombre().trim().length() > 150) {
+            return "El nombre no puede tener mas de 150 caracteres";
         }
 
-        if (cadenaRepository.existsNombreDuplicado(cadenaRequestDTO.getNombre().trim(), cadenaRequestDTO.getId())) {
-            return "Ya existe una cadena con ese nombre";
-        }
+        return cadenaRepository.existsNombreDuplicado(request.getNombre().trim(), request.getId())
+                ? "Cadena duplicada"
+                : null;
+    }
 
-        return null;
+    private Cadena nuevaCadena() {
+        Cadena cadena = new Cadena();
+        cadena.setId(cadenaRepository.findMaxId() + 1);
+        return cadena;
+    }
+
+    private boolean vacio(String valor) {
+        return valor == null || valor.trim().isEmpty();
     }
 }

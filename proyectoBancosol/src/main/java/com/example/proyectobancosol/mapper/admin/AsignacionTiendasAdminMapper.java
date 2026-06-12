@@ -16,11 +16,15 @@ public class AsignacionTiendasAdminMapper extends MapperDTO<AsignacionTiendasCoo
 
     @Override
     public AsignacionTiendasCoordinadorDTO toDTO(Usuario coordinador) {
+        return toDTO(coordinador, null);
+    }
+
+    public AsignacionTiendasCoordinadorDTO toDTO(Usuario coordinador, String tiendasAsignadas) {
         return new AsignacionTiendasCoordinadorDTO(
                 coordinador.getId(),
                 coordinador.getNombreCompleto(),
                 coordinador.getEmail(),
-                null
+                tiendasAsignadas
         );
     }
 
@@ -29,15 +33,14 @@ public class AsignacionTiendasAdminMapper extends MapperDTO<AsignacionTiendasCoo
     }
 
     public UsuarioTienda toUsuarioTienda(Usuario coordinador, Tienda tienda) {
-        UsuarioTiendaId usuarioTiendaId = new UsuarioTiendaId();
-        usuarioTiendaId.setIdUsuario(coordinador.getId());
-        usuarioTiendaId.setIdTienda(tienda.getId());
+        UsuarioTiendaId id = new UsuarioTiendaId();
+        id.setIdUsuario(coordinador.getId());
+        id.setIdTienda(tienda.getId());
 
         UsuarioTienda usuarioTienda = new UsuarioTienda();
-        usuarioTienda.setId(usuarioTiendaId);
+        usuarioTienda.setId(id);
         usuarioTienda.setUsuario(coordinador);
         usuarioTienda.setTienda(tienda);
-
         return usuarioTienda;
     }
 }

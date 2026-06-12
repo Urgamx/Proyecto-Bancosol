@@ -21,13 +21,17 @@ public class CampanaAdminMapper extends MapperDTO<CampanaResponseDTO, Campana> {
 
     @Override
     public CampanaResponseDTO toDTO(Campana campana) {
+        return toDTO(campana, null);
+    }
+
+    public CampanaResponseDTO toDTO(Campana campana, String cadenasParticipantes) {
         return new CampanaResponseDTO(
                 campana.getId(),
                 campana.getTipoDeCampana().getNombre(),
                 campana.getFecha(),
                 convertirFechaEnteroATexto(campana.getFecha()),
                 campana.getActivo() != null && campana.getActivo() == 1 ? "Activa" : "Inactiva",
-                null
+                cadenasParticipantes
         );
     }
 
@@ -43,75 +47,59 @@ public class CampanaAdminMapper extends MapperDTO<CampanaResponseDTO, Campana> {
     }
 
     public TipoCampanaResponseDTO toTipoCampanaResponseDTO(TipoDeCampana tipoDeCampana) {
-        return new TipoCampanaResponseDTO(
-                tipoDeCampana.getId(),
-                tipoDeCampana.getNombre()
-        );
+        return new TipoCampanaResponseDTO(tipoDeCampana.getId(), tipoDeCampana.getNombre());
     }
 
-    public void aplicarRequest(CampanaRequestDTO campanaRequestDTO, Campana campana, TipoDeCampana tipoDeCampana, Integer fecha) {
+    public void aplicarRequest(CampanaRequestDTO request, Campana campana, TipoDeCampana tipoDeCampana, Integer fecha) {
         campana.setTipoDeCampana(tipoDeCampana);
         campana.setFecha(fecha);
-        campana.setActivo(campanaRequestDTO.getActivo() == null ? 0 : campanaRequestDTO.getActivo());
+        campana.setActivo(request.getActivo() == null ? 0 : request.getActivo());
     }
 
     public CampanaCadena toCampanaCadena(Campana campana, Cadena cadena) {
-        CampanaCadenaId campanaCadenaId = new CampanaCadenaId();
-        campanaCadenaId.setIdCampana(campana.getId());
-        campanaCadenaId.setIdCadena(cadena.getId());
+        CampanaCadenaId id = new CampanaCadenaId();
+        id.setIdCampana(campana.getId());
+        id.setIdCadena(cadena.getId());
 
         CampanaCadena campanaCadena = new CampanaCadena();
-        campanaCadena.setId(campanaCadenaId);
+        campanaCadena.setId(id);
         campanaCadena.setCampana(campana);
         campanaCadena.setCadena(cadena);
-
         return campanaCadena;
     }
 
     public Integer convertirFechaFormularioAEntero(String fechaFormulario) {
+        if (fechaFormulario == null || fechaFormulario.trim().isEmpty()) {
+            return null;
+        }
+
         try {
-            LocalDate fecha = LocalDate.parse(fechaFormulario);
-            return Integer.parseInt(fecha.format(DateTimeFormatter.BASIC_ISO_DATE));
+            return Integer.parseInt(LocalDate.parse(fechaFormulario).format(DateTimeFormatter.BASIC_ISO_DATE));
         } catch (DateTimeParseException | NumberFormatException exception) {
             return null;
         }
     }
 
     private String convertirFechaEnteroAFormulario(Integer fechaEntero) {
-        if (fechaEntero == null) {
-            return "";
-        }
-
-        try {
-            String fechaTexto = String.valueOf(fechaEntero);
-
-            if (fechaTexto.length() != 8) {
-                return "";
-            }
-
-            LocalDate fecha = LocalDate.parse(fechaTexto, DateTimeFormatter.BASIC_ISO_DATE);
-            return fecha.toString();
-        } catch (DateTimeParseException exception) {
-            return "";
-        }
+        return convertirFecha(fechaEntero, DateTimeFormatter.ISO_LOCAL_DATE, "");
     }
 
     private String convertirFechaEnteroATexto(Integer fechaEntero) {
+        return convertirFecha(fechaEntero, DateTimeFormatter.ofPattern("yyyy/MM/dd"), String.valueOf(fechaEntero));
+    }
+
+    private String convertirFecha(Integer fechaEntero, DateTimeFormatter salida, String error) {
         if (fechaEntero == null) {
             return "";
         }
 
         try {
             String fechaTexto = String.valueOf(fechaEntero);
-
-            if (fechaTexto.length() != 8) {
-                return String.valueOf(fechaEntero);
-            }
-
-            LocalDate fecha = LocalDate.parse(fechaTexto, DateTimeFormatter.BASIC_ISO_DATE);
-            return fecha.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+            return fechaTexto.length() == 8
+                    ? LocalDate.parse(fechaTexto, DateTimeFormatter.BASIC_ISO_DATE).format(salida)
+                    : error;
         } catch (DateTimeParseException exception) {
-            return String.valueOf(fechaEntero);
+            return error;
         }
     }
 }
