@@ -13,6 +13,8 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
+    public List<Usuario> findAll() { return this.usuarioRepository.findAll(); }
+
     public Usuario findById(Integer id) { return this.usuarioRepository.findById(id).get(); }
 
     public List<Usuario> findCoordinador() { return usuarioRepository.findCoordinador(); }
