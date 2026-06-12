@@ -23,6 +23,7 @@ public class ColaboradorAdminController {
     public String listar(Model model) {
         model.addAttribute("pendientes", colaboradorAdminService.listarPendientes());
         model.addAttribute("activos", colaboradorAdminService.listarActivos());
+        model.addAttribute("inactivos", colaboradorAdminService.listarInactivos());
         return "admin/colaboradores/listado";
     }
 
@@ -50,6 +51,13 @@ public class ColaboradorAdminController {
         }
 
         redirectAttributes.addFlashAttribute("mensaje", "Colaborador guardado correctamente");
+        return "redirect:/admin/colaboradores";
+    }
+
+    @PostMapping("/activar")
+    public String activar(@RequestParam("id") Integer id, RedirectAttributes redirectAttributes) {
+        String error = colaboradorAdminService.activar(id);
+        redirectAttributes.addFlashAttribute(error == null ? "mensaje" : "error", error == null ? "Colaborador activado correctamente" : error);
         return "redirect:/admin/colaboradores";
     }
 

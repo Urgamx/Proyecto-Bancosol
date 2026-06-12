@@ -43,6 +43,8 @@
       <td>${coordinador.colaboradoresAsignados}</td>
       <td>
         <a href="/admin/coordinadores/editar?id=${coordinador.id}">Editar</a>
+        <a href="/admin/asignar-tiendas/editar?idCoordinador=${coordinador.id}">Editar tiendas</a>
+        <a href="/admin/asignar-colaboradores/editar?idCoordinador=${coordinador.id}">Editar colaboradores</a>
         <form method="post" action="/admin/coordinadores/eliminar" style="display:inline">
           <input type="hidden" name="id" value="${coordinador.id}">
           <button type="submit">Eliminar</button>

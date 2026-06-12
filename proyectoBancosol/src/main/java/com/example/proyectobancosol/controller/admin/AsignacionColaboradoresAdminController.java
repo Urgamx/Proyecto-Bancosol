@@ -45,7 +45,7 @@ public class AsignacionColaboradoresAdminController {
         }
 
         redirectAttributes.addFlashAttribute("mensaje", "Asignacion de colaboradores guardada correctamente");
-        return "redirect:/admin/asignar-colaboradores";
+        return "redirect:/admin/coordinadores";
     }
 
     private String formulario(Model model, AsignacionColaboradoresRequestDTO request) {

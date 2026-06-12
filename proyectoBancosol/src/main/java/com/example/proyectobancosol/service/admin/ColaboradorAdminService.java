@@ -34,6 +34,11 @@ public class ColaboradorAdminService {
     }
 
     @Transactional(readOnly = true)
+    public List<ColaboradorResponseDTO> listarInactivos() {
+        return listarPorEstado(0);
+    }
+
+    @Transactional(readOnly = true)
     public ColaboradorRequestDTO buscarFormulario(Integer id) {
         return colaboradorAdminMapper.toRequestDTO(colaboradorRepository.findById(id).orElseThrow());
     }
@@ -53,16 +58,13 @@ public class ColaboradorAdminService {
     }
 
     @Transactional
+    public String activar(Integer id) {
+        return cambiarEstado(id, 1);
+    }
+
+    @Transactional
     public String rechazar(Integer id) {
-        Colaborador colaborador = colaboradorRepository.findById(id).orElse(null);
-
-        if (colaborador == null) {
-            return "El colaborador no existe";
-        }
-
-        colaborador.setEstado(0);
-        colaboradorRepository.save(colaborador);
-        return null;
+        return cambiarEstado(id, 0);
     }
 
     @Transactional
@@ -81,6 +83,18 @@ public class ColaboradorAdminService {
         return null;
     }
 
+    private String cambiarEstado(Integer id, Integer estado) {
+        Colaborador colaborador = colaboradorRepository.findById(id).orElse(null);
+
+        if (colaborador == null) {
+            return "El colaborador no existe";
+        }
+
+        colaborador.setEstado(estado);
+        colaboradorRepository.save(colaborador);
+        return null;
+    }
+
     private List<ColaboradorResponseDTO> listarPorEstado(Integer estado) {
         return colaboradorRepository.findByEstadoOrderByNombreEntidadAsc(estado).stream()
                 .map(this::toResponseDTO)
@@ -93,7 +107,7 @@ public class ColaboradorAdminService {
         }
 
         if (vacio(request.getNombreEntidad())) {
-            return "El nombre delaentidad es obligatorio";
+            return "El nombre de entidad es obligatorio";
         }
 
         if (vacio(request.getEmail())) {
@@ -105,7 +119,7 @@ public class ColaboradorAdminService {
         }
 
         if (largo(request.getNombreEntidad(), 150)) {
-            return "El nombre de la entidad no puede superar los 150 caracteres";
+            return "El nombre de entidad no puede superar los 150 caracteres";
         }
 
         if (largo(request.getEmail(), 100)) {
@@ -129,7 +143,7 @@ public class ColaboradorAdminService {
         }
 
         return colaboradorRepository.existsEmailDuplicado(request.getEmail().trim(), request.getId())
-                ? "Ya existe un colaborador con ese email"
+                ? "Colaborador duplicado"
                 : null;
     }
 

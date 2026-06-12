@@ -45,7 +45,7 @@ public class AsignacionTiendasAdminController {
         }
 
         redirectAttributes.addFlashAttribute("mensaje", "Asignacion de tiendas guardada correctamente");
-        return "redirect:/admin/asignar-tiendas";
+        return "redirect:/admin/coordinadores";
     }
 
     private String formulario(Model model, AsignacionTiendasRequestDTO request) {
