@@ -2,6 +2,7 @@ package com.example.proyectobancosol.controller.admin;
 
 import com.example.proyectobancosol.dto.request.CoordinadorRequestDTO;
 import com.example.proyectobancosol.service.admin.CoordinadorAdminService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,14 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/admin/coordinadores")
 public class CoordinadorAdminController {
 
     private final CoordinadorAdminService coordinadorAdminService;
-
-    public CoordinadorAdminController(CoordinadorAdminService coordinadorAdminService) {
-        this.coordinadorAdminService = coordinadorAdminService;
-    }
 
     @GetMapping({"", "/"})
     public String listar(Model model) {
@@ -29,34 +27,25 @@ public class CoordinadorAdminController {
 
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
-        CoordinadorRequestDTO coordinadorRequestDTO = new CoordinadorRequestDTO();
-        coordinadorRequestDTO.setActivo(1);
-
-        model.addAttribute("coordinador", coordinadorRequestDTO);
-        model.addAttribute("modo", "Crear");
-
-        return "admin/coordinadores/formulario";
+        CoordinadorRequestDTO request = new CoordinadorRequestDTO();
+        request.setActivo(1);
+        return formulario(model, request, "Crear");
     }
 
     @GetMapping("/editar")
     public String editar(@RequestParam("id") Integer id, Model model) {
-        model.addAttribute("coordinador", coordinadorAdminService.buscarFormulario(id));
-        model.addAttribute("modo", "Editar");
-
-        return "admin/coordinadores/formulario";
+        return formulario(model, coordinadorAdminService.buscarFormulario(id), "Editar");
     }
 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute("coordinador") CoordinadorRequestDTO coordinadorRequestDTO,
+    public String guardar(@ModelAttribute("coordinador") CoordinadorRequestDTO request,
                           Model model,
                           RedirectAttributes redirectAttributes) {
-        String error = coordinadorAdminService.guardar(coordinadorRequestDTO);
+        String error = coordinadorAdminService.guardar(request);
 
         if (error != null) {
             model.addAttribute("error", error);
-            model.addAttribute("coordinador", coordinadorRequestDTO);
-            model.addAttribute("modo", coordinadorRequestDTO.getId() == null ? "Crear" : "Editar");
-            return "admin/coordinadores/formulario";
+            return formulario(model, request, request.getId() == null ? "Crear" : "Editar");
         }
 
         redirectAttributes.addFlashAttribute("mensaje", "Coordinador guardado correctamente");
@@ -64,16 +53,15 @@ public class CoordinadorAdminController {
     }
 
     @PostMapping("/eliminar")
-    public String eliminar(@RequestParam("id") Integer id,
-                           RedirectAttributes redirectAttributes) {
+    public String eliminar(@RequestParam("id") Integer id, RedirectAttributes redirectAttributes) {
         String error = coordinadorAdminService.eliminar(id);
-
-        if (error != null) {
-            redirectAttributes.addFlashAttribute("error", error);
-        } else {
-            redirectAttributes.addFlashAttribute("mensaje", "Coordinador eliminado correctamente");
-        }
-
+        redirectAttributes.addFlashAttribute(error == null ? "mensaje" : "error", error == null ? "Coordinador eliminado correctamente" : error);
         return "redirect:/admin/coordinadores";
+    }
+
+    private String formulario(Model model, CoordinadorRequestDTO request, String modo) {
+        model.addAttribute("coordinador", request);
+        model.addAttribute("modo", modo);
+        return "admin/coordinadores/formulario";
     }
 }

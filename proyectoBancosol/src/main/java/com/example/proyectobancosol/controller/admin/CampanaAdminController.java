@@ -2,6 +2,7 @@ package com.example.proyectobancosol.controller.admin;
 
 import com.example.proyectobancosol.dto.request.CampanaRequestDTO;
 import com.example.proyectobancosol.service.admin.CampanaAdminService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,14 +15,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/admin/campanas")
 public class CampanaAdminController {
 
     private final CampanaAdminService campanaAdminService;
-
-    public CampanaAdminController(CampanaAdminService campanaAdminService) {
-        this.campanaAdminService = campanaAdminService;
-    }
 
     @GetMapping({"", "/"})
     public String listar(Model model) {
@@ -31,29 +29,25 @@ public class CampanaAdminController {
 
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
-        cargarFormulario(model, new CampanaRequestDTO(), "Crear");
-        return "admin/campanas/formulario";
+        return formulario(model, new CampanaRequestDTO(), "Crear");
     }
 
     @GetMapping("/editar")
     public String editar(@RequestParam("id") Integer id, Model model) {
-        cargarFormulario(model, campanaAdminService.buscarFormulario(id), "Editar");
-        return "admin/campanas/formulario";
+        return formulario(model, campanaAdminService.buscarFormulario(id), "Editar");
     }
 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute("campana") CampanaRequestDTO campanaRequestDTO,
+    public String guardar(@ModelAttribute("campana") CampanaRequestDTO request,
                           @RequestParam(value = "idsCadenas", required = false) List<Integer> idsCadenas,
                           Model model,
                           RedirectAttributes redirectAttributes) {
-        campanaRequestDTO.setIdsCadenas(idsCadenas);
-
-        String error = campanaAdminService.guardar(campanaRequestDTO);
+        request.setIdsCadenas(idsCadenas);
+        String error = campanaAdminService.guardar(request);
 
         if (error != null) {
-            cargarFormulario(model, campanaRequestDTO, campanaRequestDTO.getId() == null ? "Crear" : "Editar");
             model.addAttribute("error", error);
-            return "admin/campanas/formulario";
+            return formulario(model, request, request.getId() == null ? "Crear" : "Editar");
         }
 
         redirectAttributes.addFlashAttribute("mensaje", "Campana guardada correctamente");
@@ -61,23 +55,17 @@ public class CampanaAdminController {
     }
 
     @PostMapping("/eliminar")
-    public String eliminar(@RequestParam("id") Integer id,
-                           RedirectAttributes redirectAttributes) {
+    public String eliminar(@RequestParam("id") Integer id, RedirectAttributes redirectAttributes) {
         String error = campanaAdminService.eliminar(id);
-
-        if (error != null) {
-            redirectAttributes.addFlashAttribute("error", error);
-        } else {
-            redirectAttributes.addFlashAttribute("mensaje", "Campana eliminada correctamente");
-        }
-
+        redirectAttributes.addFlashAttribute(error == null ? "mensaje" : "error", error == null ? "Campana eliminada correctamente" : error);
         return "redirect:/admin/campanas";
     }
 
-    private void cargarFormulario(Model model, CampanaRequestDTO campanaRequestDTO, String modo) {
-        model.addAttribute("campana", campanaRequestDTO);
+    private String formulario(Model model, CampanaRequestDTO request, String modo) {
+        model.addAttribute("campana", request);
         model.addAttribute("modo", modo);
         model.addAttribute("tipos", campanaAdminService.listarTipos());
         model.addAttribute("cadenas", campanaAdminService.listarCadenas());
+        return "admin/campanas/formulario";
     }
 }

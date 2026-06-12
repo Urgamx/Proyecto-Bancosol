@@ -31,10 +31,10 @@ public class TiendaAdminMapper extends MapperDTO<TiendaResponseDTO, Tienda> {
         );
     }
 
-    public void aplicarRequest(TiendaRequestDTO tiendaRequestDTO, Tienda tienda, Cadena cadena) {
+    public void aplicarRequest(TiendaRequestDTO request, Tienda tienda, Cadena cadena) {
         tienda.setIdCadena(cadena);
-        tienda.setNombre(tiendaRequestDTO.getNombre().trim());
-        tienda.setDireccion(tiendaRequestDTO.getDireccion().trim());
-        tienda.setCodPostal(tiendaRequestDTO.getCodPostal().trim());
+        tienda.setNombre(request.getNombre().trim());
+        tienda.setDireccion(request.getDireccion().trim());
+        tienda.setCodPostal(request.getCodPostal().trim());
     }
 }
