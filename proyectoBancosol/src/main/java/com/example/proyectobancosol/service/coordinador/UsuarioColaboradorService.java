@@ -5,6 +5,7 @@ import com.example.proyectobancosol.entity.Colaborador;
 import com.example.proyectobancosol.entity.UsuarioColaborador;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,4 +28,9 @@ public class UsuarioColaboradorService {
     }
 
     public void save(UsuarioColaborador usuarioColaborador) { this.usuarioColaboradorRepository.save(usuarioColaborador); }
+
+    @Transactional
+    public void deleteByUsuarioId(Integer usuarioId) {
+        this.usuarioColaboradorRepository.deleteByUsuarioId(usuarioId);
+    }
 }

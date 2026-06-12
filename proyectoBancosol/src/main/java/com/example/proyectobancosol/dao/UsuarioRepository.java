@@ -12,10 +12,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Optional<Usuario> findByEmailAndActivo(String email, Integer activo);
 
-    @Query("select u from Usuario u join u.idRol r where r.id= 3")
+    @Query("select u from Usuario u join u.idRol r where r.id= 3 and u.activo = 1")
     public List<Usuario> findCoordinador();
 
-    @Query("select u from Usuario u join u.idRol r where r.id= 5")
+    @Query("select u from Usuario u join u.idRol r where r.id= 5 and u.activo = 1")
     public List<Usuario> findCapitan();
 
     boolean existsByEmailIgnoreCase(String email);
