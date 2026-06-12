@@ -10,7 +10,6 @@
 
 <h1>Coordinadores</h1>
 
-<p><a href="/admin">Volver al panel</a></p>
 <p><a href="/admin/coordinadores/nuevo">Nuevo coordinador</a></p>
 
 <c:if test="${not empty mensaje}">
@@ -44,6 +43,8 @@
       <td>${coordinador.colaboradoresAsignados}</td>
       <td>
         <a href="/admin/coordinadores/editar?id=${coordinador.id}">Editar</a>
+        <a href="/admin/asignar-tiendas/editar?idCoordinador=${coordinador.id}">Editar tiendas</a>
+        <a href="/admin/asignar-colaboradores/editar?idCoordinador=${coordinador.id}">Editar colaboradores</a>
         <form method="post" action="/admin/coordinadores/eliminar" style="display:inline">
           <input type="hidden" name="id" value="${coordinador.id}">
           <button type="submit">Eliminar</button>
@@ -54,7 +55,9 @@
   </tbody>
 </table>
 
-<p><a href="/logout">Cerrar sesion</a></p>
+<form method="get" action="/admin">
+  <button type="submit">Volver al panel</button>
+</form>
 
 </body>
 </html>

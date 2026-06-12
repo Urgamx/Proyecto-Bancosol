@@ -11,6 +11,10 @@ public class ColaboradorAdminMapper extends MapperDTO<ColaboradorResponseDTO, Co
 
     @Override
     public ColaboradorResponseDTO toDTO(Colaborador colaborador) {
+        return toDTO(colaborador, null, 0L, 0L);
+    }
+
+    public ColaboradorResponseDTO toDTO(Colaborador colaborador, String coordinadores, Long voluntarios, Long turnos) {
         return new ColaboradorResponseDTO(
                 colaborador.getId(),
                 colaborador.getNombreEntidad(),
@@ -21,10 +25,10 @@ public class ColaboradorAdminMapper extends MapperDTO<ColaboradorResponseDTO, Co
                 colaborador.getLocalidad(),
                 colaborador.getZonaGeografica(),
                 colaborador.getCodPostal(),
-                convertirEstadoATexto(colaborador.getEstado()),
-                null,
-                0L,
-                0L
+                estadoTexto(colaborador.getEstado()),
+                coordinadores,
+                voluntarios,
+                turnos
         );
     }
 
@@ -44,36 +48,28 @@ public class ColaboradorAdminMapper extends MapperDTO<ColaboradorResponseDTO, Co
         );
     }
 
-    public void aplicarRequest(ColaboradorRequestDTO colaboradorRequestDTO, Colaborador colaborador) {
-        colaborador.setNombreEntidad(colaboradorRequestDTO.getNombreEntidad().trim());
-        colaborador.setEmail(colaboradorRequestDTO.getEmail().trim());
-        colaborador.setContactoNom(limpiar(colaboradorRequestDTO.getContactoNom()));
-        colaborador.setContactoTlf(limpiar(colaboradorRequestDTO.getContactoTlf()));
-        colaborador.setDomicilio(limpiar(colaboradorRequestDTO.getDomicilio()));
-        colaborador.setLocalidad(limpiar(colaboradorRequestDTO.getLocalidad()));
-        colaborador.setZonaGeografica(limpiar(colaboradorRequestDTO.getZonaGeografica()));
-        colaborador.setObservaciones(limpiar(colaboradorRequestDTO.getObservaciones()));
-        colaborador.setCodPostal(limpiar(colaboradorRequestDTO.getCodPostal()));
-        colaborador.setEstado(colaboradorRequestDTO.getEstado() == null ? 2 : colaboradorRequestDTO.getEstado());
+    public void aplicarRequest(ColaboradorRequestDTO request, Colaborador colaborador) {
+        colaborador.setNombreEntidad(request.getNombreEntidad().trim());
+        colaborador.setEmail(request.getEmail().trim());
+        colaborador.setContactoNom(limpiar(request.getContactoNom()));
+        colaborador.setContactoTlf(limpiar(request.getContactoTlf()));
+        colaborador.setDomicilio(limpiar(request.getDomicilio()));
+        colaborador.setLocalidad(limpiar(request.getLocalidad()));
+        colaborador.setZonaGeografica(limpiar(request.getZonaGeografica()));
+        colaborador.setObservaciones(limpiar(request.getObservaciones()));
+        colaborador.setCodPostal(limpiar(request.getCodPostal()));
+        colaborador.setEstado(request.getEstado() == null ? 2 : request.getEstado());
     }
 
-    private String convertirEstadoATexto(Integer estado) {
-        if (estado != null && estado == 1) {
+    private String estadoTexto(Integer estado) {
+        if (Integer.valueOf(1).equals(estado)) {
             return "Activo";
         }
 
-        if (estado != null && estado == 2) {
-            return "Pendiente";
-        }
-
-        return "Inactivo";
+        return Integer.valueOf(2).equals(estado) ? "Pendiente" : "Inactivo";
     }
 
     private String limpiar(String valor) {
-        if (valor == null || valor.trim().isEmpty()) {
-            return null;
-        }
-
-        return valor.trim();
+        return valor == null || valor.trim().isEmpty() ? null : valor.trim();
     }
 }

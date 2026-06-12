@@ -28,17 +28,13 @@ public class CadenaAdminMapper extends MapperDTO<CadenaResponseDTO, Cadena> {
         );
     }
 
-    public void aplicarRequest(CadenaRequestDTO cadenaRequestDTO, Cadena cadena) {
-        cadena.setNombre(cadenaRequestDTO.getNombre().trim());
-        cadena.setPersonaContacto(limpiar(cadenaRequestDTO.getPersonaContacto()));
-        cadena.setTelefonoContacto(limpiar(cadenaRequestDTO.getTelefonoContacto()));
+    public void aplicarRequest(CadenaRequestDTO request, Cadena cadena) {
+        cadena.setNombre(request.getNombre().trim());
+        cadena.setPersonaContacto(limpiar(request.getPersonaContacto()));
+        cadena.setTelefonoContacto(limpiar(request.getTelefonoContacto()));
     }
 
     private String limpiar(String valor) {
-        if (valor == null || valor.trim().isEmpty()) {
-            return null;
-        }
-
-        return valor.trim();
+        return valor == null || valor.trim().isEmpty() ? null : valor.trim();
     }
 }

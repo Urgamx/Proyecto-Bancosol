@@ -9,28 +9,20 @@ import com.example.proyectobancosol.entity.Cadena;
 import com.example.proyectobancosol.entity.Tienda;
 import com.example.proyectobancosol.mapper.admin.CadenaAdminMapper;
 import com.example.proyectobancosol.mapper.admin.TiendaAdminMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TiendaAdminService {
 
     private final TiendaRepository tiendaRepository;
     private final CadenaRepository cadenaRepository;
     private final TiendaAdminMapper tiendaAdminMapper;
     private final CadenaAdminMapper cadenaAdminMapper;
-
-    public TiendaAdminService(TiendaRepository tiendaRepository,
-                              CadenaRepository cadenaRepository,
-                              TiendaAdminMapper tiendaAdminMapper,
-                              CadenaAdminMapper cadenaAdminMapper) {
-        this.tiendaRepository = tiendaRepository;
-        this.cadenaRepository = cadenaRepository;
-        this.tiendaAdminMapper = tiendaAdminMapper;
-        this.cadenaAdminMapper = cadenaAdminMapper;
-    }
 
     @Transactional(readOnly = true)
     public List<TiendaResponseDTO> listar() {
@@ -48,26 +40,17 @@ public class TiendaAdminService {
     }
 
     @Transactional
-    public String guardar(TiendaRequestDTO tiendaRequestDTO) {
-        String error = validar(tiendaRequestDTO);
+    public String guardar(TiendaRequestDTO request) {
+        String error = validar(request);
 
         if (error != null) {
             return error;
         }
 
-        Cadena cadena = cadenaRepository.findById(tiendaRequestDTO.getIdCadena()).orElseThrow();
-        Tienda tienda;
-
-        if (tiendaRequestDTO.getId() == null) {
-            tienda = new Tienda();
-            tienda.setId(tiendaRepository.findMaxId() + 1);
-        } else {
-            tienda = tiendaRepository.findById(tiendaRequestDTO.getId()).orElseThrow();
-        }
-
-        tiendaAdminMapper.aplicarRequest(tiendaRequestDTO, tienda, cadena);
+        Cadena cadena = cadenaRepository.findById(request.getIdCadena()).orElseThrow();
+        Tienda tienda = request.getId() == null ? nuevaTienda() : tiendaRepository.findById(request.getId()).orElseThrow();
+        tiendaAdminMapper.aplicarRequest(request, tienda, cadena);
         tiendaRepository.save(tienda);
-
         return null;
     }
 
@@ -77,11 +60,9 @@ public class TiendaAdminService {
             return "La tienda no existe";
         }
 
-        Long campanas = tiendaRepository.countCampanasByTienda(id);
-        Long usuarios = tiendaRepository.countUsuariosByTienda(id);
-        Long turnos = tiendaRepository.countTurnosByTienda(id);
-
-        if (campanas > 0 || usuarios > 0 || turnos > 0) {
+        if (tiendaRepository.countCampanasByTienda(id) > 0
+                || tiendaRepository.countUsuariosByTienda(id) > 0
+                || tiendaRepository.countTurnosByTienda(id) > 0) {
             return "No se puede eliminar una tienda con campanas, usuarios o turnos asociados";
         }
 
@@ -89,51 +70,63 @@ public class TiendaAdminService {
         return null;
     }
 
-    private String validar(TiendaRequestDTO tiendaRequestDTO) {
-        if (tiendaRequestDTO == null) {
+    private String validar(TiendaRequestDTO request) {
+        if (request == null) {
             return "Los datos de la tienda son obligatorios";
         }
 
-        if (tiendaRequestDTO.getIdCadena() == null) {
+        if (request.getIdCadena() == null) {
             return "La cadena es obligatoria";
         }
 
-        if (!cadenaRepository.existsById(tiendaRequestDTO.getIdCadena())) {
+        if (!cadenaRepository.existsById(request.getIdCadena())) {
             return "La cadena no existe";
         }
 
-        if (tiendaRequestDTO.getNombre() == null || tiendaRequestDTO.getNombre().trim().isEmpty()) {
+        if (vacio(request.getNombre())) {
             return "El nombre es obligatorio";
         }
 
-        if (tiendaRequestDTO.getDireccion() == null || tiendaRequestDTO.getDireccion().trim().isEmpty()) {
+        if (vacio(request.getDireccion())) {
             return "La direccion es obligatoria";
         }
 
-        if (tiendaRequestDTO.getCodPostal() == null || tiendaRequestDTO.getCodPostal().trim().isEmpty()) {
+        if (vacio(request.getCodPostal())) {
             return "El codigo postal es obligatorio";
         }
 
-        if (!tiendaRequestDTO.getCodPostal().trim().matches("\\d{5}")) {
-            return "El codigo postal debe tener 5 numeros";
+        if (!request.getCodPostal().trim().matches("\\d{5}")) {
+            return "El codigo postal debe valido";
         }
 
-        if (tiendaRequestDTO.getNombre().trim().length() > 150) {
-            return "El nombre no puede superar 150 caracteres";
+        if (largo(request.getNombre(), 150)) {
+            return "El nombre no puede superar los 150 caracteres";
         }
 
-        if (tiendaRequestDTO.getDireccion().trim().length() > 255) {
-            return "La direccion no puede superar 255 caracteres";
+        if (largo(request.getDireccion(), 255)) {
+            return "La direccion no puede superar los 255 caracteres";
         }
 
-        if (tiendaRepository.existsDuplicada(
-                tiendaRequestDTO.getIdCadena(),
-                tiendaRequestDTO.getNombre().trim(),
-                tiendaRequestDTO.getDireccion().trim(),
-                tiendaRequestDTO.getId())) {
-            return "Ya existe una tienda con esa cadena, nombre y direccion";
-        }
+        return tiendaRepository.existsDuplicada(
+                request.getIdCadena(),
+                request.getNombre().trim(),
+                request.getDireccion().trim(),
+                request.getId())
+                ? "Ya existe una tienda con esa cadena, nombre y direccion"
+                : null;
+    }
 
-        return null;
+    private Tienda nuevaTienda() {
+        Tienda tienda = new Tienda();
+        tienda.setId(tiendaRepository.findMaxId() + 1);
+        return tienda;
+    }
+
+    private boolean vacio(String valor) {
+        return valor == null || valor.trim().isEmpty();
+    }
+
+    private boolean largo(String valor, int maximo) {
+        return valor != null && valor.trim().length() > maximo;
     }
 }

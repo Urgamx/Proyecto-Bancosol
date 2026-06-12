@@ -11,8 +11,6 @@ public interface CadenaRepository extends JpaRepository<Cadena, Integer> {
 
     List<Cadena> findAllByOrderByNombreAsc();
 
-    boolean existsByNombreIgnoreCase(String nombre);
-
     @Query("select coalesce(max(c.id), 0) from Cadena c")
     Integer findMaxId();
 

@@ -10,72 +10,52 @@ public class AdminMenuService {
 
     public List<AdminMenuItemDTO> obtenerMenuAdministrador() {
         return List.of(
-                new AdminMenuItemDTO(
+                item(
+                        "Usuarios",
+                        "Gestion de usuarios del sistema",
+                        "/admin/usuarios"),
+                item(
                         "Cadenas",
                         "Gestion de cadenas de supermercados",
-                        "/admin/cadenas",
-                        "Disponible"
-                ),
-                new AdminMenuItemDTO(
+                        "/admin/cadenas"),
+                item(
                         "Campanas",
                         "Gestion de campanas y cadenas participantes",
-                        "/admin/campanas",
-                        "Disponible"
-                ),
-                new AdminMenuItemDTO(
+                        "/admin/campanas"),
+                item(
                         "Tiendas",
                         "Gestion de tiendas",
-                        "/admin/tiendas",
-                        "Disponible"
-                ),
-                new AdminMenuItemDTO(
+                        "/admin/tiendas"),
+                item(
                         "Coordinadores",
                         "Gestion de coordinadores",
-                        "/admin/coordinadores",
-                        "Disponible"
-                ),
-                new AdminMenuItemDTO(
-                        "Asignar tiendas",
-                        "Asignacion de tiendas a coordinadores",
-                        "/admin/asignar-tiendas",
-                        "Disponible"
-                ),
-                new AdminMenuItemDTO(
+                        "/admin/coordinadores"),
+                
+                item(
                         "Colaboradores",
                         "Gestion de colaboradores",
-                        "/admin/colaboradores",
-                        "Disponible"
-                ),
-                new AdminMenuItemDTO(
-                        "Asignar colaboradores",
-                        "Asignacion de colaboradores a coordinadores",
-                        "/admin/asignar-colaboradores",
-                        "Disponible"
-                ),
-                new AdminMenuItemDTO(
+                        "/admin/colaboradores"),
+
+                item(
                         "Asignacion de voluntarios",
                         "Gestion de asignaciones creada en el modulo coordinador",
-                        "/coordinador/asignacionVoluntarios",
-                        "Disponible"
-                ),
-                new AdminMenuItemDTO(
-                        "Tiendas asignadas",
+                        "/coordinador/asignacionVoluntarios"),
+                item(
+                        "Tiendas asignadas(Capitan)",
                         "Vista de tiendas creada en el modulo capitan",
-                        "/capitan",
-                        "Disponible"
-                ),
-                new AdminMenuItemDTO(
+                        "/capitan"),
+                item(
                         "Responsable entidad",
                         "Menu creado para responsable de entidad",
-                        "/resp-entidad",
-                        "Disponible"
-                ),
-                new AdminMenuItemDTO(
+                        "/resp-entidad"),
+                item(
                         "Responsable tienda",
                         "Menu creado para responsable de tienda",
-                        "/resp-tienda",
-                        "Disponible"
-                )
+                        "/resp-tienda")
         );
+    }
+
+    private AdminMenuItemDTO item(String titulo, String descripcion, String url) {
+        return new AdminMenuItemDTO(titulo, descripcion, url);
     }
 }

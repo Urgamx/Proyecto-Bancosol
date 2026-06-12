@@ -16,11 +16,15 @@ public class AsignacionColaboradoresAdminMapper extends MapperDTO<AsignacionCola
 
     @Override
     public AsignacionColaboradoresCoordinadorDTO toDTO(Usuario coordinador) {
+        return toDTO(coordinador, null);
+    }
+
+    public AsignacionColaboradoresCoordinadorDTO toDTO(Usuario coordinador, String colaboradoresAsignados) {
         return new AsignacionColaboradoresCoordinadorDTO(
                 coordinador.getId(),
                 coordinador.getNombreCompleto(),
                 coordinador.getEmail(),
-                null
+                colaboradoresAsignados
         );
     }
 
@@ -29,15 +33,14 @@ public class AsignacionColaboradoresAdminMapper extends MapperDTO<AsignacionCola
     }
 
     public UsuarioColaborador toUsuarioColaborador(Usuario coordinador, Colaborador colaborador) {
-        UsuarioColaboradorId usuarioColaboradorId = new UsuarioColaboradorId();
-        usuarioColaboradorId.setIdUsuario(coordinador.getId());
-        usuarioColaboradorId.setIdColaborador(colaborador.getId());
+        UsuarioColaboradorId id = new UsuarioColaboradorId();
+        id.setIdUsuario(coordinador.getId());
+        id.setIdColaborador(colaborador.getId());
 
         UsuarioColaborador usuarioColaborador = new UsuarioColaborador();
-        usuarioColaborador.setId(usuarioColaboradorId);
+        usuarioColaborador.setId(id);
         usuarioColaborador.setUsuario(coordinador);
         usuarioColaborador.setColaborador(colaborador);
-
         return usuarioColaborador;
     }
 }

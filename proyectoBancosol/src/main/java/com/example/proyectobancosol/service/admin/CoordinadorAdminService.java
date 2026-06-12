@@ -4,35 +4,28 @@ import com.example.proyectobancosol.dao.RolRepository;
 import com.example.proyectobancosol.dao.UsuarioRepository;
 import com.example.proyectobancosol.dto.request.CoordinadorRequestDTO;
 import com.example.proyectobancosol.dto.response.CoordinadorResponseDTO;
-import com.example.proyectobancosol.entity.Rol;
 import com.example.proyectobancosol.entity.Usuario;
 import com.example.proyectobancosol.mapper.admin.CoordinadorAdminMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CoordinadorAdminService {
 
     private static final String ROL_COORDINADOR = "COORDINADOR";
+    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
     private final CoordinadorAdminMapper coordinadorAdminMapper;
 
-    public CoordinadorAdminService(UsuarioRepository usuarioRepository,
-                                   RolRepository rolRepository,
-                                   CoordinadorAdminMapper coordinadorAdminMapper) {
-        this.usuarioRepository = usuarioRepository;
-        this.rolRepository = rolRepository;
-        this.coordinadorAdminMapper = coordinadorAdminMapper;
-    }
-
     @Transactional(readOnly = true)
     public List<CoordinadorResponseDTO> listar() {
-        return usuarioRepository.findByRolNombre(ROL_COORDINADOR)
-                .stream()
+        return usuarioRepository.findByRolNombre(ROL_COORDINADOR).stream()
                 .map(this::toResponseDTO)
                 .toList();
     }
@@ -43,31 +36,17 @@ public class CoordinadorAdminService {
     }
 
     @Transactional
-    public String guardar(CoordinadorRequestDTO coordinadorRequestDTO) {
-        String error = validar(coordinadorRequestDTO);
+    public String guardar(CoordinadorRequestDTO request) {
+        String error = validar(request);
 
         if (error != null) {
             return error;
         }
 
-        Rol rolCoordinador = rolRepository.findByNombre(ROL_COORDINADOR).orElseThrow();
-        Usuario usuario;
-
-        if (coordinadorRequestDTO.getId() == null) {
-            usuario = new Usuario();
-            usuario.setId(usuarioRepository.findMaxId() + 1);
-            usuario.setPassword(coordinadorRequestDTO.getPassword().trim());
-        } else {
-            usuario = usuarioRepository.findById(coordinadorRequestDTO.getId()).orElseThrow();
-
-            if (coordinadorRequestDTO.getPassword() != null && !coordinadorRequestDTO.getPassword().trim().isEmpty()) {
-                usuario.setPassword(coordinadorRequestDTO.getPassword().trim());
-            }
-        }
-
-        coordinadorAdminMapper.aplicarRequest(coordinadorRequestDTO, usuario, rolCoordinador);
+        Usuario usuario = request.getId() == null ? nuevoUsuario(request) : usuarioRepository.findById(request.getId()).orElseThrow();
+        actualizarPassword(usuario, request);
+        coordinadorAdminMapper.aplicarRequest(request, usuario, rolRepository.findByNombre(ROL_COORDINADOR).orElseThrow());
         usuarioRepository.save(usuario);
-
         return null;
     }
 
@@ -77,10 +56,7 @@ public class CoordinadorAdminService {
             return "El coordinador no existe";
         }
 
-        Long tiendas = usuarioRepository.countTiendasByUsuario(id);
-        Long colaboradores = usuarioRepository.countColaboradoresByUsuario(id);
-
-        if (tiendas > 0 || colaboradores > 0) {
+        if (usuarioRepository.countTiendasByUsuario(id) > 0 || usuarioRepository.countColaboradoresByUsuario(id) > 0) {
             return "No se puede eliminar un coordinador con tiendas o colaboradores asignados";
         }
 
@@ -88,48 +64,66 @@ public class CoordinadorAdminService {
         return null;
     }
 
-    private String validar(CoordinadorRequestDTO coordinadorRequestDTO) {
-        if (coordinadorRequestDTO == null) {
+    private String validar(CoordinadorRequestDTO request) {
+        if (request == null) {
             return "Los datos del coordinador son obligatorios";
         }
 
-        if (coordinadorRequestDTO.getNombreCompleto() == null || coordinadorRequestDTO.getNombreCompleto().trim().isEmpty()) {
+        if (vacio(request.getNombreCompleto())) {
             return "El nombre es obligatorio";
         }
 
-        if (coordinadorRequestDTO.getEmail() == null || coordinadorRequestDTO.getEmail().trim().isEmpty()) {
+        if (vacio(request.getEmail())) {
             return "El email es obligatorio";
         }
 
-        if (!coordinadorRequestDTO.getEmail().trim().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+        if (!request.getEmail().trim().matches(EMAIL_REGEX)) {
             return "El email no tiene un formato valido";
         }
 
-        if (coordinadorRequestDTO.getId() == null
-                && (coordinadorRequestDTO.getPassword() == null || coordinadorRequestDTO.getPassword().trim().isEmpty())) {
-            return "La contrasena es obligatoria al crear";
+        if (request.getId() == null && vacio(request.getPassword())) {
+            return "Debes introducir una contrasena";
         }
 
-        if (coordinadorRequestDTO.getNombreCompleto().trim().length() > 150) {
-            return "El nombre no puede superar 150 caracteres";
+        if (largo(request.getNombreCompleto(), 150)) {
+            return "El nombre no puede superar los 150 caracteres";
         }
 
-        if (coordinadorRequestDTO.getEmail().trim().length() > 150) {
-            return "El email no puede superar 150 caracteres";
+        if (largo(request.getEmail(), 150)) {
+            return "El email no puede superar los 150 caracteres";
         }
 
-        if (usuarioRepository.existsEmailDuplicado(coordinadorRequestDTO.getEmail().trim(), coordinadorRequestDTO.getId())) {
-            return "Ya existe un usuario con ese email";
-        }
+        return usuarioRepository.existsEmailDuplicado(request.getEmail().trim(), request.getId())
+                ? "Ya existe un usuario con ese email"
+                : null;
+    }
 
-        return null;
+    private Usuario nuevoUsuario(CoordinadorRequestDTO request) {
+        Usuario usuario = new Usuario();
+        usuario.setId(usuarioRepository.findMaxId() + 1);
+        usuario.setPassword(request.getPassword().trim());
+        return usuario;
+    }
+
+    private void actualizarPassword(Usuario usuario, CoordinadorRequestDTO request) {
+        if (!vacio(request.getPassword())) {
+            usuario.setPassword(request.getPassword().trim());
+        }
     }
 
     private CoordinadorResponseDTO toResponseDTO(Usuario usuario) {
-        CoordinadorResponseDTO coordinadorResponseDTO = coordinadorAdminMapper.toDTO(usuario);
-        coordinadorResponseDTO.setTiendasAsignadas(usuarioRepository.countTiendasByUsuario(usuario.getId()));
-        coordinadorResponseDTO.setColaboradoresAsignados(usuarioRepository.countColaboradoresByUsuario(usuario.getId()));
+        return coordinadorAdminMapper.toDTO(
+                usuario,
+                usuarioRepository.countTiendasByUsuario(usuario.getId()),
+                usuarioRepository.countColaboradoresByUsuario(usuario.getId())
+        );
+    }
 
-        return coordinadorResponseDTO;
+    private boolean vacio(String valor) {
+        return valor == null || valor.trim().isEmpty();
+    }
+
+    private boolean largo(String valor, int maximo) {
+        return valor != null && valor.trim().length() > maximo;
     }
 }

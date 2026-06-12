@@ -10,16 +10,18 @@ import com.example.proyectobancosol.entity.Tienda;
 import com.example.proyectobancosol.entity.Usuario;
 import com.example.proyectobancosol.mapper.admin.AsignacionTiendasAdminMapper;
 import com.example.proyectobancosol.mapper.admin.TiendaAdminMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AsignacionTiendasAdminService {
 
     private static final String ROL_COORDINADOR = "COORDINADOR";
+    private static final String SIN_TIENDAS = "Sin tiendas";
 
     private final UsuarioRepository usuarioRepository;
     private final TiendaRepository tiendaRepository;
@@ -27,22 +29,9 @@ public class AsignacionTiendasAdminService {
     private final AsignacionTiendasAdminMapper asignacionTiendasAdminMapper;
     private final TiendaAdminMapper tiendaAdminMapper;
 
-    public AsignacionTiendasAdminService(UsuarioRepository usuarioRepository,
-                                         TiendaRepository tiendaRepository,
-                                         UsuarioTiendaRepository usuarioTiendaRepository,
-                                         AsignacionTiendasAdminMapper asignacionTiendasAdminMapper,
-                                         TiendaAdminMapper tiendaAdminMapper) {
-        this.usuarioRepository = usuarioRepository;
-        this.tiendaRepository = tiendaRepository;
-        this.usuarioTiendaRepository = usuarioTiendaRepository;
-        this.asignacionTiendasAdminMapper = asignacionTiendasAdminMapper;
-        this.tiendaAdminMapper = tiendaAdminMapper;
-    }
-
     @Transactional(readOnly = true)
     public List<AsignacionTiendasCoordinadorDTO> listar() {
-        return usuarioRepository.findByRolNombre(ROL_COORDINADOR)
-                .stream()
+        return usuarioRepository.findByRolNombre(ROL_COORDINADOR).stream()
                 .map(this::toResponseDTO)
                 .toList();
     }
@@ -50,9 +39,10 @@ public class AsignacionTiendasAdminService {
     @Transactional(readOnly = true)
     public AsignacionTiendasRequestDTO buscarFormulario(Integer idCoordinador) {
         Usuario coordinador = buscarCoordinador(idCoordinador);
-        List<Integer> idsTiendas = usuarioTiendaRepository.findIdsTiendasByUsuarioId(coordinador.getId());
-
-        return asignacionTiendasAdminMapper.toRequestDTO(coordinador.getId(), idsTiendas);
+        return asignacionTiendasAdminMapper.toRequestDTO(
+                coordinador.getId(),
+                usuarioTiendaRepository.findIdsTiendasByUsuarioId(coordinador.getId())
+        );
     }
 
     @Transactional(readOnly = true)
@@ -72,58 +62,51 @@ public class AsignacionTiendasAdminService {
     }
 
     @Transactional
-    public String guardar(AsignacionTiendasRequestDTO asignacionTiendasRequestDTO) {
-        String error = validar(asignacionTiendasRequestDTO);
+    public String guardar(AsignacionTiendasRequestDTO request) {
+        String error = validar(request);
 
         if (error != null) {
             return error;
         }
 
-        Usuario coordinador = usuarioRepository.findById(asignacionTiendasRequestDTO.getIdCoordinador()).orElseThrow();
-
+        Usuario coordinador = usuarioRepository.findById(request.getIdCoordinador()).orElseThrow();
         usuarioTiendaRepository.deleteByUsuarioId(coordinador.getId());
 
-        List<Integer> idsTiendas = asignacionTiendasRequestDTO.getIdsTiendas();
-
-        if (idsTiendas == null) {
-            idsTiendas = new ArrayList<>();
+        if (request.getIdsTiendas() != null) {
+            request.getIdsTiendas().stream()
+                    .distinct()
+                    .forEach(idTienda -> guardarRelacion(coordinador, idTienda));
         }
-
-        idsTiendas.stream()
-                .distinct()
-                .forEach(idTienda -> guardarRelacion(coordinador, idTienda));
 
         return null;
     }
 
-    private String validar(AsignacionTiendasRequestDTO asignacionTiendasRequestDTO) {
-        if (asignacionTiendasRequestDTO == null) {
-            return "Los datos de asignacion son obligatorios";
+    private String validar(AsignacionTiendasRequestDTO request) {
+        if (request == null) {
+            return "Los datos de la tienda son obligatorios";
         }
 
-        if (asignacionTiendasRequestDTO.getIdCoordinador() == null) {
+        if (request.getIdCoordinador() == null) {
             return "El coordinador es obligatorio";
         }
 
-        if (!usuarioRepository.existsById(asignacionTiendasRequestDTO.getIdCoordinador())) {
+        Usuario coordinador = usuarioRepository.findById(request.getIdCoordinador()).orElse(null);
+
+        if (coordinador == null) {
             return "El coordinador no existe";
         }
 
-        Usuario coordinador = usuarioRepository.findById(asignacionTiendasRequestDTO.getIdCoordinador()).orElseThrow();
-
         if (!ROL_COORDINADOR.equals(coordinador.getIdRol().getNombre())) {
-            return "El usuario seleccionado no es coordinador";
+            return "El usuario seleccionado no es un coordinador";
         }
 
-        if (asignacionTiendasRequestDTO.getIdsTiendas() != null) {
-            for (Integer idTienda : asignacionTiendasRequestDTO.getIdsTiendas()) {
-                if (!tiendaRepository.existsById(idTienda)) {
-                    return "Una de las tiendas seleccionadas no existe";
-                }
-            }
+        if (request.getIdsTiendas() == null) {
+            return null;
         }
 
-        return null;
+        return request.getIdsTiendas().stream().allMatch(tiendaRepository::existsById)
+                ? null
+                : "Una de las tiendas seleccionadas no existe";
     }
 
     private void guardarRelacion(Usuario coordinador, Integer idTienda) {
@@ -132,15 +115,11 @@ public class AsignacionTiendasAdminService {
     }
 
     private AsignacionTiendasCoordinadorDTO toResponseDTO(Usuario coordinador) {
-        String tiendas = usuarioTiendaRepository.findTiendasAsignadasByUsuarioId(coordinador.getId())
-                .stream()
+        String tiendas = usuarioTiendaRepository.findTiendasAsignadasByUsuarioId(coordinador.getId()).stream()
                 .map(usuarioTienda -> usuarioTienda.getTienda().getIdCadena().getNombre() + " - " + usuarioTienda.getTienda().getNombre())
                 .reduce((a, b) -> a + ", " + b)
-                .orElse("Sin tiendas");
+                .orElse(SIN_TIENDAS);
 
-        AsignacionTiendasCoordinadorDTO asignacionTiendasCoordinadorDTO = asignacionTiendasAdminMapper.toDTO(coordinador);
-        asignacionTiendasCoordinadorDTO.setTiendasAsignadas(tiendas);
-
-        return asignacionTiendasCoordinadorDTO;
+        return asignacionTiendasAdminMapper.toDTO(coordinador, tiendas);
     }
 }

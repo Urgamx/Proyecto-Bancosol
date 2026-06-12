@@ -65,5 +65,9 @@
     <a href="/admin/campanas">Cancelar</a>
 </form>
 
+<form method="get" action="/admin">
+    <button type="submit">Volver al panel</button>
+</form>
+
 </body>
 </html>

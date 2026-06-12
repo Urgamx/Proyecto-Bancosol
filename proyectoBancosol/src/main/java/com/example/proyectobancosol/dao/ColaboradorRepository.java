@@ -12,7 +12,6 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, Intege
     @Query("select c from Colaborador c where c.estado = 1")
     public List<Colaborador> findAllActivos();
 
-    List<Colaborador> findAllByOrderByNombreEntidadAsc();
 
     List<Colaborador> findByEstadoOrderByNombreEntidadAsc(Integer estado);
 

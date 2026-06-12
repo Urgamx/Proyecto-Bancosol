@@ -2,6 +2,7 @@ package com.example.proyectobancosol.controller.admin;
 
 import com.example.proyectobancosol.dto.request.AsignacionTiendasRequestDTO;
 import com.example.proyectobancosol.service.admin.AsignacionTiendasAdminService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,14 +14,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/admin/asignar-tiendas")
 public class AsignacionTiendasAdminController {
 
     private final AsignacionTiendasAdminService asignacionTiendasAdminService;
-
-    public AsignacionTiendasAdminController(AsignacionTiendasAdminService asignacionTiendasAdminService) {
-        this.asignacionTiendasAdminService = asignacionTiendasAdminService;
-    }
 
     @GetMapping({"", "/"})
     public String listar(Model model) {
@@ -30,8 +28,7 @@ public class AsignacionTiendasAdminController {
 
     @GetMapping("/editar")
     public String editar(@RequestParam("idCoordinador") Integer idCoordinador, Model model) {
-        cargarFormulario(model, asignacionTiendasAdminService.buscarFormulario(idCoordinador));
-        return "admin/asignar-tiendas/formulario";
+        return formulario(model, asignacionTiendasAdminService.buscarFormulario(idCoordinador));
     }
 
     @PostMapping("/guardar")
@@ -39,23 +36,22 @@ public class AsignacionTiendasAdminController {
                           @RequestParam(value = "idsTiendas", required = false) List<Integer> idsTiendas,
                           Model model,
                           RedirectAttributes redirectAttributes) {
-        AsignacionTiendasRequestDTO asignacionTiendasRequestDTO = new AsignacionTiendasRequestDTO(idCoordinador, idsTiendas);
-
-        String error = asignacionTiendasAdminService.guardar(asignacionTiendasRequestDTO);
+        AsignacionTiendasRequestDTO request = new AsignacionTiendasRequestDTO(idCoordinador, idsTiendas);
+        String error = asignacionTiendasAdminService.guardar(request);
 
         if (error != null) {
-            cargarFormulario(model, asignacionTiendasRequestDTO);
             model.addAttribute("error", error);
-            return "admin/asignar-tiendas/formulario";
+            return formulario(model, request);
         }
 
         redirectAttributes.addFlashAttribute("mensaje", "Asignacion de tiendas guardada correctamente");
-        return "redirect:/admin/asignar-tiendas";
+        return "redirect:/admin/coordinadores";
     }
 
-    private void cargarFormulario(Model model, AsignacionTiendasRequestDTO asignacionTiendasRequestDTO) {
-        model.addAttribute("asignacion", asignacionTiendasRequestDTO);
-        model.addAttribute("coordinador", asignacionTiendasAdminService.buscarCoordinador(asignacionTiendasRequestDTO.getIdCoordinador()));
+    private String formulario(Model model, AsignacionTiendasRequestDTO request) {
+        model.addAttribute("asignacion", request);
+        model.addAttribute("coordinador", asignacionTiendasAdminService.buscarCoordinador(request.getIdCoordinador()));
         model.addAttribute("tiendas", asignacionTiendasAdminService.listarTiendas());
+        return "admin/asignar-tiendas/formulario";
     }
 }

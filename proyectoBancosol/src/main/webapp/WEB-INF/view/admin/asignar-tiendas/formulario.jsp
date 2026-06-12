@@ -40,7 +40,11 @@
     </c:forEach>
 
     <button type="submit">Guardar</button>
-    <a href="/admin/asignar-tiendas">Cancelar</a>
+    <a href="/admin/coordinadores">Cancelar</a>
+</form>
+
+<form method="get" action="/admin">
+    <button type="submit">Volver al panel</button>
 </form>
 
 </body>

@@ -13,13 +13,17 @@ import com.example.proyectobancosol.entity.Campana;
 import com.example.proyectobancosol.entity.TipoDeCampana;
 import com.example.proyectobancosol.mapper.admin.CadenaAdminMapper;
 import com.example.proyectobancosol.mapper.admin.CampanaAdminMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CampanaAdminService {
+
+    private static final String SIN_CADENAS = "Sin cadenas";
 
     private final CampanaRepository campanaRepository;
     private final TipoDeCampanaRepository tipoDeCampanaRepository;
@@ -28,40 +32,24 @@ public class CampanaAdminService {
     private final CampanaAdminMapper campanaAdminMapper;
     private final CadenaAdminMapper cadenaAdminMapper;
 
-    public CampanaAdminService(CampanaRepository campanaRepository,
-                               TipoDeCampanaRepository tipoDeCampanaRepository,
-                               CadenaRepository cadenaRepository,
-                               CampanaCadenaRepository campanaCadenaRepository,
-                               CampanaAdminMapper campanaAdminMapper,
-                               CadenaAdminMapper cadenaAdminMapper) {
-        this.campanaRepository = campanaRepository;
-        this.tipoDeCampanaRepository = tipoDeCampanaRepository;
-        this.cadenaRepository = cadenaRepository;
-        this.campanaCadenaRepository = campanaCadenaRepository;
-        this.campanaAdminMapper = campanaAdminMapper;
-        this.cadenaAdminMapper = cadenaAdminMapper;
-    }
-
     @Transactional(readOnly = true)
     public List<CampanaResponseDTO> listar() {
-        return campanaRepository.findAllConTipo()
-                .stream()
+        return campanaRepository.findAllConTipo().stream()
                 .map(this::toResponseDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public CampanaRequestDTO buscarFormulario(Integer id) {
-        Campana campana = campanaRepository.findById(id).orElseThrow();
-        List<Integer> idsCadenas = campanaCadenaRepository.findIdsCadenasByCampanaId(id);
-
-        return campanaAdminMapper.toRequestDTO(campana, idsCadenas);
+        return campanaAdminMapper.toRequestDTO(
+                campanaRepository.findById(id).orElseThrow(),
+                campanaCadenaRepository.findIdsCadenasByCampanaId(id)
+        );
     }
 
     @Transactional(readOnly = true)
     public List<TipoCampanaResponseDTO> listarTipos() {
-        return tipoDeCampanaRepository.findAllByOrderByNombreAsc()
-                .stream()
+        return tipoDeCampanaRepository.findAllByOrderByNombreAsc().stream()
                 .map(campanaAdminMapper::toTipoCampanaResponseDTO)
                 .toList();
     }
@@ -72,34 +60,21 @@ public class CampanaAdminService {
     }
 
     @Transactional
-    public String guardar(CampanaRequestDTO campanaRequestDTO) {
-        String error = validar(campanaRequestDTO);
+    public String guardar(CampanaRequestDTO request) {
+        Integer fecha = campanaAdminMapper.convertirFechaFormularioAEntero(request == null ? null : request.getFechaFormulario());
+        String error = validar(request, fecha);
 
         if (error != null) {
             return error;
         }
 
-        Integer fecha = campanaAdminMapper.convertirFechaFormularioAEntero(campanaRequestDTO.getFechaFormulario());
-        TipoDeCampana tipoDeCampana = tipoDeCampanaRepository.findById(campanaRequestDTO.getIdTipoCampana()).orElseThrow();
+        TipoDeCampana tipo = tipoDeCampanaRepository.findById(request.getIdTipoCampana()).orElseThrow();
+        Campana campana = request.getId() == null ? nuevaCampana() : campanaRepository.findById(request.getId()).orElseThrow();
 
-        Campana campana;
-
-        if (campanaRequestDTO.getId() == null) {
-            campana = new Campana();
-            campana.setId(campanaRepository.findMaxId() + 1);
-        } else {
-            campana = campanaRepository.findById(campanaRequestDTO.getId()).orElseThrow();
-        }
-
-        campanaAdminMapper.aplicarRequest(campanaRequestDTO, campana, tipoDeCampana, fecha);
+        campanaAdminMapper.aplicarRequest(request, campana, tipo, fecha);
         campanaRepository.save(campana);
-
         campanaCadenaRepository.deleteByCampanaId(campana.getId());
-
-        campanaRequestDTO.getIdsCadenas()
-                .stream()
-                .distinct()
-                .forEach(idCadena -> guardarRelacionCampanaCadena(campana, idCadena));
+        request.getIdsCadenas().stream().distinct().forEach(idCadena -> guardarRelacion(campana, idCadena));
 
         return null;
     }
@@ -110,71 +85,70 @@ public class CampanaAdminService {
             return "La campana no existe";
         }
 
-        Long tiendas = campanaRepository.countTiendasByCampana(id);
-        Long turnos = campanaRepository.countTurnosByCampana(id);
-
-        if (tiendas > 0 || turnos > 0) {
+        if (campanaRepository.countTiendasByCampana(id) > 0 || campanaRepository.countTurnosByCampana(id) > 0) {
             return "No se puede eliminar una campana con tiendas o turnos asociados";
         }
 
         campanaCadenaRepository.deleteByCampanaId(id);
         campanaRepository.deleteById(id);
-
         return null;
     }
 
-    private String validar(CampanaRequestDTO campanaRequestDTO) {
-        if (campanaRequestDTO == null) {
+    private String validar(CampanaRequestDTO request, Integer fecha) {
+        if (request == null) {
             return "Los datos de la campana son obligatorios";
         }
 
-        if (campanaRequestDTO.getIdTipoCampana() == null) {
+        if (request.getIdTipoCampana() == null) {
             return "El tipo de campana es obligatorio";
         }
 
-        if (!tipoDeCampanaRepository.existsById(campanaRequestDTO.getIdTipoCampana())) {
-            return "El tipo de campana no existe";
+        if (!tipoDeCampanaRepository.existsById(request.getIdTipoCampana())) {
+            return "Ese tipo de campana no existe";
         }
 
-        if (campanaRequestDTO.getFechaFormulario() == null || campanaRequestDTO.getFechaFormulario().isBlank()) {
+        if (vacio(request.getFechaFormulario())) {
             return "La fecha es obligatoria";
         }
-
-        Integer fecha = campanaAdminMapper.convertirFechaFormularioAEntero(campanaRequestDTO.getFechaFormulario());
 
         if (fecha == null) {
             return "La fecha no tiene un formato valido";
         }
 
-        if (campanaRequestDTO.getIdsCadenas() == null || campanaRequestDTO.getIdsCadenas().isEmpty()) {
-            return "Debe seleccionar al menos una cadena";
+        if (request.getIdsCadenas() == null || request.getIdsCadenas().isEmpty()) {
+            return "Tienes que elegir minimo una cadena";
         }
 
-        if (campanaRepository.existsDuplicada(
-                campanaRequestDTO.getIdTipoCampana(),
-                fecha,
-                campanaRequestDTO.getId())) {
-            return "Ya existe una campana con ese tipo y fecha";
+        if (!request.getIdsCadenas().stream().allMatch(cadenaRepository::existsById)) {
+            return "Una de las cadenas seleccionadas no existe";
         }
 
-        return null;
+        return campanaRepository.existsDuplicada(request.getIdTipoCampana(), fecha, request.getId())
+                ? "Ya existe una campana con ese tipo y fecha"
+                : null;
     }
 
-    private void guardarRelacionCampanaCadena(Campana campana, Integer idCadena) {
+    private void guardarRelacion(Campana campana, Integer idCadena) {
         Cadena cadena = cadenaRepository.findById(idCadena).orElseThrow();
         campanaCadenaRepository.save(campanaAdminMapper.toCampanaCadena(campana, cadena));
     }
 
     private CampanaResponseDTO toResponseDTO(Campana campana) {
-        String cadenas = campanaCadenaRepository.findByCampanaIdConCadena(campana.getId())
-                .stream()
+        String cadenas = campanaCadenaRepository.findByCampanaIdConCadena(campana.getId()).stream()
                 .map(campanaCadena -> campanaCadena.getCadena().getNombre())
                 .reduce((a, b) -> a + ", " + b)
-                .orElse("Sin cadenas");
+                .orElse(SIN_CADENAS);
 
-        CampanaResponseDTO campanaResponseDTO = campanaAdminMapper.toDTO(campana);
-        campanaResponseDTO.setCadenasParticipantes(cadenas);
+        return campanaAdminMapper.toDTO(campana, cadenas);
+    }
 
-        return campanaResponseDTO;
+    private Campana nuevaCampana() {
+        Campana campana = new Campana();
+        campana.setId(campanaRepository.findMaxId() + 1);
+        return campana;
+    }
+
+    private boolean vacio(String valor) {
+        return valor == null || valor.trim().isEmpty();
     }
 }

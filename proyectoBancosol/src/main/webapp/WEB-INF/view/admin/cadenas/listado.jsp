@@ -10,7 +10,6 @@
 
 <h1>Cadenas</h1>
 
-<p><a href="/admin">Volver al panel</a></p>
 <p><a href="/admin/cadenas/nuevo">Nueva cadena</a></p>
 
 <c:if test="${not empty mensaje}">
@@ -50,7 +49,9 @@
     </tbody>
 </table>
 
-<p><a href="/logout">Cerrar sesion</a></p>
+<form method="get" action="/admin">
+    <button type="submit">Volver al panel</button>
+</form>
 
 </body>
 </html>

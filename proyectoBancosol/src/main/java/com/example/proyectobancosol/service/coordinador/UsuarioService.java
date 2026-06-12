@@ -13,10 +13,16 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
+    public List<Usuario> findAll() { return this.usuarioRepository.findAll(); }
+
     public Usuario findById(Integer id) { return this.usuarioRepository.findById(id).get(); }
 
     public List<Usuario> findCoordinador() { return usuarioRepository.findCoordinador(); }
 
     public List<Usuario> findCapitan() { return usuarioRepository.findCapitan(); }
+
+    public void save(Usuario usuario) { this.usuarioRepository.save(usuario); }
+
+    public void delete(Usuario usuario) { this.usuarioRepository.delete(usuario);}
 
 }
