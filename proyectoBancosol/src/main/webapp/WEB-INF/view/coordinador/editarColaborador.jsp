@@ -1,4 +1,3 @@
-<%@ page import="com.example.proyectobancosol.entity.Colaborador" %>
 <%@ page import="com.example.proyectobancosol.dto.request.ColaboradorRequestDTO" %><%--
   Created by IntelliJ IDEA.
   User: USUARIO

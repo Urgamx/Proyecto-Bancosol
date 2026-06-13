@@ -1,7 +1,5 @@
 <%@ page import="com.example.proyectobancosol.entity.AsignacionTurno" %>
-<%@ page import="com.example.proyectobancosol.entity.Colaborador" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.proyectobancosol.entity.Voluntario" %>
 <%@ page import="com.example.proyectobancosol.dto.response.ColaboradorResponseDTO" %>
 <%@ page import="com.example.proyectobancosol.dto.response.VoluntarioDTO" %>
 <%@ page import="com.example.proyectobancosol.dto.request.ColaboradorRequestDTO" %>

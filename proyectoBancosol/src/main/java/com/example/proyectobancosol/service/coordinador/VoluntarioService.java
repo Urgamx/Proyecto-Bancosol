@@ -2,7 +2,6 @@ package com.example.proyectobancosol.service.coordinador;
 
 import com.example.proyectobancosol.dao.VoluntarioRepository;
 import com.example.proyectobancosol.dto.response.VoluntarioDTO;
-import com.example.proyectobancosol.entity.Voluntario;
 import com.example.proyectobancosol.mapper.coordinador.VoluntarioMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -83,7 +83,7 @@
     </table>
 
     <div class="mt-3">
-        <a href="/admin/usuarios/nuevo" class="btn btn-primary">Añadir Colaborador</a>
+        <a href="/admin/usuarios/nuevo" class="btn btn-primary">Añadir Usuario</a>
     </div>
     <div class="mt-3">
         <a href="/admin/" class="btn btn-secondary">Volver</a>
