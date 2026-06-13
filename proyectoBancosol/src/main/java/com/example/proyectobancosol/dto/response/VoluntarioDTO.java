@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class VoluntarioDTO {
     private Integer id;
-    private Integer idColaborador;
+    private ColaboradorResponseDTO Colaborador;
     private String nombre;
     private String telefono;
     private String email;

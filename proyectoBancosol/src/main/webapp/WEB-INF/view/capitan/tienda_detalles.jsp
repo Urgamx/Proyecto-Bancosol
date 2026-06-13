@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="com.example.proyectobancosol.entity.Tienda" %>
-<%@ page import="com.example.proyectobancosol.entity.AsignacionTurno" %>
+<%@ page import="com.example.proyectobancosol.dto.response.TiendaResponseDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.AsignacionTurnoDTO" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -13,8 +13,8 @@
 <body>
 <div class="container">
     <%
-        Tienda tienda = (Tienda) request.getAttribute("tienda");
-        List<AsignacionTurno> turnos = (List<AsignacionTurno>) request.getAttribute("turnos");
+        TiendaResponseDTO tienda = (TiendaResponseDTO) request.getAttribute("tienda");
+        List<AsignacionTurnoDTO> turnos = (List<AsignacionTurnoDTO>) request.getAttribute("turnos");
     %>
 
     <div class="mb-3">
@@ -30,7 +30,7 @@
             <p><strong>Tienda:</strong> <%=tienda.getNombre()%></p>
             <p><strong>Dirección:</strong> <%=tienda.getDireccion()%></p>
             <p><strong>Código Postal:</strong> <%=tienda.getCodPostal()%></p>
-            <p><strong>Cadena:</strong> <%=tienda.getIdCadena().getNombre()%></p>
+            <p><strong>Cadena:</strong> <%=tienda.getCadena()%></p>
         </div>
     </div>
 
@@ -50,25 +50,25 @@
         </tr>
         </thead>
         <tbody>
-        <%for(AsignacionTurno turno : turnos){%>
+        <%for(AsignacionTurnoDTO turno : turnos){%>
         <tr>
-            <td><a href="/capitan/detalles-voluntario?id=<%=turno.getIdVoluntario().getId()%>&tienda=<%=tienda.getId()%>"><%=turno.getIdVoluntario().getNombre()%></a></td>
-            <td><%=turno.getIdCampana().getTipoDeCampana().getNombre()%></td>
+            <td><a href="/capitan/detalles-voluntario?id=<%=turno.getVoluntarioDTO().getId()%>&tienda=<%=tienda.getId()%>"><%=turno.getVoluntarioDTO().getNombre()%></a></td>
+            <td><%=turno.getCampanaResponseDTO().getTipoCampana()%></td>
             <td><%=turno.getDia()%></td>
             <td><%=turno.getFranja()%></td>
             <td><%=turno.getHoraInicio()%> - <%=turno.getHoraFin()%></td>
             <td>
-                <%if(turno.getIncidencia() != null){%>
+                <%if(turno.getIncidenciaDTO() != null){%>
                 <span class="text-danger"><strong>Sí</strong></span><br>
-                <small><%=turno.getIncidencia().getDescripcion()%></small>
+                <small><%=turno.getIncidenciaDTO().getDescripcion()%></small>
                 <%}else{%>
                 <span class="text-success">Sin incidencias</span>
                 <%}%>
             </td>
             <td>
-                <a href="/capitan/detalles-voluntario?id=<%=turno.getIdVoluntario().getId()%>&tienda=<%=tienda.getId()%>" class="btn btn-primary btn-sm">Ver Detalles</a>
-                <%if(turno.getIncidencia() == null){%>
-                <a href="/capitan/registrar-incidencia?id=<%=turno.getId()%>&tienda=<%=tienda.getId()%>" class="btn btn-warning btn-sm">Reportar</a>
+                <a href="/capitan/detalles-voluntario?id=<%=turno.getVoluntarioDTO().getId()%>&tienda=<%=tienda.getId()%>" class="btn btn-primary btn-sm">Ver Detalles</a>
+                <%if(turno.getIncidenciaDTO() == null){%>
+                <a href="/capitan/registrar-incidencia?id=<%=turno.getIdAsignacion()%>&tienda=<%=tienda.getId()%>" class="btn btn-warning btn-sm">Reportar</a>
                 <%}%>
             </td>
         </tr>

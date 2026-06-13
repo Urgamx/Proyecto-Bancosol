@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="com.example.proyectobancosol.entity.Tienda" %>
-<%@ page import="com.example.proyectobancosol.entity.AsignacionTurno" %>
+<%@ page import="com.example.proyectobancosol.dto.response.TiendaResponseDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.AsignacionTurnoDTO" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -13,8 +13,8 @@
 <body>
 <div class="container">
     <%
-        Tienda tienda = (Tienda) request.getAttribute("tienda");
-        List<AsignacionTurno> turnos = (List<AsignacionTurno>) request.getAttribute("turnos");
+        TiendaResponseDTO tienda = (TiendaResponseDTO) request.getAttribute("tienda");
+        List<AsignacionTurnoDTO> turnos = (List<AsignacionTurnoDTO>) request.getAttribute("turnos");
     %>
 
     <div class="mb-3">
@@ -45,17 +45,17 @@
         </tr>
         </thead>
         <tbody>
-        <%for(AsignacionTurno turno : turnos){%>
+        <%for(AsignacionTurnoDTO turno : turnos){%>
         <tr>
             <td>
-                <a href="/capitan/detalles-voluntario?id=<%=turno.getIdVoluntario().getId()%>&tienda=<%=tienda.getId()%>"><strong><%=turno.getIdVoluntario().getNombre()%></strong></a>
+                <a href="/capitan/detalles-voluntario?id=<%=turno.getVoluntarioDTO().getId()%>&tienda=<%=tienda.getId()%>"><strong><%=turno.getVoluntarioDTO().getNombre()%></strong></a>
             </td>
-            <td><%=turno.getIdCampana().getTipoDeCampana().getNombre()%></td>
+            <td><%=turno.getCampanaResponseDTO().getTipoCampana()%></td>
             <td><%=turno.getDia()%></td>
             <td><%=turno.getFranja()%></td>
             <td><%=turno.getHoraInicio()%> - <%=turno.getHoraFin()%></td>
             <td>
-                <%if(turno.getIncidencia() != null){%>
+                <%if(turno.getIncidenciaDTO() != null){%>
                 <span class="text-danger"><strong>INCIDENCIA REGISTRADA</strong></span>
                 <%}else{%>
                 <span class="text-success"><strong>SIN INCIDENCIAS</strong></span>
