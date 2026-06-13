@@ -153,7 +153,6 @@ public class CapitanAdminService {
 
     private Usuario nuevoUsuario(CapitanRequestDTO request) {
         Usuario usuario = new Usuario();
-        usuario.setId(usuarioRepository.findMaxId() + 1);
         usuario.setPassword(request.getPassword().trim());
         return usuario;
     }
