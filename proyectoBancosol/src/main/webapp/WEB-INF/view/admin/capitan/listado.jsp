@@ -4,120 +4,84 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>${modo} Capitan</title>
+    <title>Capitanes</title>
 </head>
 <body>
 
-<h1>${modo} Capitan</h1>
+<h1>Capitanes</h1>
 
-<p><a href="/admin/capitanes">Volver al listado</a></p>
+<p><a href="/admin">Volver al panel</a></p>
+<p><a href="/admin/capitanes/nuevo">Nuevo Capitan</a></p>
 
+<c:if test="${not empty mensaje}">
+    <p>${mensaje}</p>
+</c:if>
 <c:if test="${not empty error}">
-    <p><strong>Error: ${error}</strong></p>
+    <p>${error}</p>
 </c:if>
 
-<form method="post" action="/admin/capitanes/guardar">
+<h2>Capitanes</h2>
 
-    <input type="hidden" name="id" value="${capitan.id}">
-
-    <div>
-        <label for="nombreCompleto">Nombre Completo:</label>
-        <input type="text" id="nombreCompleto" name="nombreCompleto" value="${capitan.nombreCompleto}">
-    </div>
-
-    <div>
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email" value="${capitan.email}">
-    </div>
-
-    <div>
-        <label for="password">Contrasena:</label>
-        <input type="password" id="password" name="password">
-        <c:if test="${modo == 'Editar'}">
-            <small>(Dejar en blanco si no se desea cambiar)</small>
-        </c:if>
-    </div>
-
-    <div>
-        <label for="activo">Estado:</label>
-        <select id="activo" name="activo">
-            <option value="1" <c:if test="${capitan.activo == 1}">selected</c:if>>Activo</option>
-            <option value="0" <c:if test="${capitan.activo == 0}">selected</c:if>>Inactivo</option>
-        </select>
-    </div>
-
-    <div>
-        <label>Campanas Asignadas:</label>
-        <br>
-        <c:forEach var="campana" items="${todasCampanas}">
-            <input type="checkbox"
-                   name="idCampanasSeleccionadas"
-                   value="${campana.id}"
-                   class="checkbox-campana"
-                   onchange="filtrarTiendas()"
-            <c:forEach var="idAsignado" items="${capitan.idCampanasSeleccionadas}">
-                   <c:if test="${campana.id == idAsignado}">checked</c:if>
-            </c:forEach>
-            >
-            ${campana.tipoDeCampana.nombre}
-            <br>
-        </c:forEach>
-        <c:if test="${empty todasCampanas}">
-            <p>No existen campanas creadas en el sistema.</p>
-        </c:if>
-    </div>
-
-    <div>
-        <label>Tiendas Gestionadas:</label>
-        <br>
-        <c:forEach var="tienda" items="${todasTiendas}">
-            <div class="contenedor-tienda" data-campana="${tienda.idCadena.id}" style="display: none">
-                <input type="checkbox"
-                       name="idTiendasSeleccionadas"
-                       value="${tienda.id}"
-                <c:forEach var="idAsignado" items="${capitan.idTiendasSeleccionadas}">
-                       <c:if test="${tienda.id == idAsignado}">checked</c:if>
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Estado</th>
+        <th>Campanas</th>
+        <th>Tiendas</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <c:forEach var="capitan" items="${capitanes}">
+        <tr>
+            <td>${capitan.id}</td>
+            <td>${capitan.nombreCompleto}</td>
+            <td>${capitan.email}</td>
+            <td>
+                <c:choose>
+                    <c:when test="${capitan.activo == 1}">
+                        Activo
+                    </c:when>
+                    <c:otherwise>
+                        Inactivo
+                    </c:otherwise>
+                </c:choose>
+            </td>
+            <td>
+                <c:forEach var="campana" items="${capitan.nombresCampanas}" varStatus="status">
+                    ${campana}${not status.last ? ', ' : ''}
                 </c:forEach>
-                >
-                    ${tienda.nombre}
-            </div>
-        </c:forEach>
-        <c:if test="${empty todasTiendas}">
-            <p>No existen tiendas creadas en el sistema.</p>
-        </c:if>
-    </div>
-
-    <br>
-    <div>
-        <button type="submit">Guardar Capitan</button>
-    </div>
-
-</form>
-
-<script>
-    function filtrarTiendas() {
-        const campanasMarcadas = Array.from(document.querySelectorAll('.checkbox-campana:checked'))
-            .map(cb => cb.value);
-
-        const tiendas = document.querySelectorAll('.contenedor-tienda');
-
-        tiendas.forEach(tienda => {
-            const idCampanaTienda = tienda.getAttribute('data-campana');
-
-            if (campanasMarcadas.length === 0) {
-                tienda.style.display = 'none';
-                tienda.querySelector('input').checked = false;
-            } else if (campanasMarcadas.includes(idCampanaTienda)) {
-                tienda.style.display = 'block';
-            } else {
-                tienda.style.display = 'none';
-                tienda.querySelector('input').checked = false;
-            }
-        });
-    }
-
-    document.addEventListener("DOMContentLoaded", filtrarTiendas);
-</script>
+                <c:if test="${empty capitan.nombresCampanas}">
+                    Ninguna
+                </c:if>
+            </td>
+            <td>
+                <c:forEach var="tienda" items="${capitan.nombresTiendas}" varStatus="status">
+                    ${tienda}${not status.last ? ', ' : ''}
+                </c:forEach>
+                <c:if test="${empty capitan.nombresTiendas}">
+                    Ninguna
+                </c:if>
+            </td>
+            <td>
+                <a href="/admin/capitanes/editar?id=${capitan.id}">Editar</a>
+                <form method="post" action="/admin/capitanes/eliminar" style="display:inline">
+                    <input type="hidden" name="id" value="${capitan.id}">
+                    <button type="submit">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+    </c:forEach>
+    <c:if test="${empty capitanes}">
+        <tr>
+            <td colspan="7">No hay capitanes registrados en el sistema.</td>
+        </tr>
+    </c:if>
+    </tbody>
+</table>
 
 </body>
 </html>

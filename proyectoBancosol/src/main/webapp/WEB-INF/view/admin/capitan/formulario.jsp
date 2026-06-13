@@ -94,6 +94,7 @@
 
 </form>
 
+
 <script>
     function filtrarTiendas() {
         const campanasMarcadas = Array.from(document.querySelectorAll('.checkbox-campana:checked'))
