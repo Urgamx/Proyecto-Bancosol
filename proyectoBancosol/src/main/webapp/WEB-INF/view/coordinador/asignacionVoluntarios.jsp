@@ -34,6 +34,7 @@
 <form action="/coordinador/filtrarAsignacionTurnos" method="post">
     <label>CADENA:</label>
     <select name="cadenaId">
+        <option value=""></option>
         <%
             for(CadenaResponseDTO cadena : cadenas) {
         %>
