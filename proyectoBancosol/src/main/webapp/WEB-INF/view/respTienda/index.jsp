@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="com.example.proyectobancosol.entity.Usuario" %>
-<%@ page import="com.example.proyectobancosol.entity.Tienda" %>
+<%@ page import="com.example.proyectobancosol.dto.response.UsuarioSesionDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.TiendaResponseDTO" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -17,15 +17,15 @@
     </header>
     
 <%
-    Usuario user = (Usuario) session.getAttribute("usuario");
-    List<Tienda> tiendas = (List<Tienda>) request.getAttribute("tiendas");
+    UsuarioSesionDTO user = (UsuarioSesionDTO) session.getAttribute("usuarioSesion");
+    List<TiendaResponseDTO> tiendas = (List<TiendaResponseDTO>) request.getAttribute("tiendas");
 %>
 
     <div class="user-info">
         <div class="user-avatar"><%=user.getNombreCompleto().charAt(0)%></div>
         <div class="user-details">
             <h3><%=user.getNombreCompleto()%></h3>
-            <p><%=user.getIdRol().getNombre()%></p>
+            <p>Responsable de Tienda</p>
         </div>
     </div>
 
@@ -42,7 +42,7 @@
                 </tr>
             </thead>
             <tbody>
-            <%for(Tienda tienda : tiendas){%>
+            <%for(TiendaResponseDTO tienda : tiendas){%>
             <tr>
                 <td><%=tienda.getNombre()%></td>
                 <td><%=tienda.getDireccion()%></td>

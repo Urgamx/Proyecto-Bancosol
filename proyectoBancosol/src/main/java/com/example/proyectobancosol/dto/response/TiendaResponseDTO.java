@@ -14,4 +14,8 @@ public class TiendaResponseDTO {
     private String nombre;
     private String direccion;
     private String codPostal;
+
+    public String getNombreCadena() {
+        return cadena;
+    }
 }

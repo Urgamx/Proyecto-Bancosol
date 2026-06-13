@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="com.example.proyectobancosol.entity.Usuario" %>
-<%@ page import="com.example.proyectobancosol.entity.Voluntario" %>
+<%@ page import="com.example.proyectobancosol.dto.response.UsuarioSesionDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.VoluntarioResponseDTO" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,8 +12,8 @@
 <body>
 <div class="container">
 <%
-    Usuario user = (Usuario) session.getAttribute("usuario");
-    Voluntario voluntario = (Voluntario) request.getAttribute("voluntario");
+    UsuarioSesionDTO user = (UsuarioSesionDTO) session.getAttribute("usuarioSesion");
+    VoluntarioResponseDTO voluntario = (VoluntarioResponseDTO) request.getAttribute("voluntario");
     Integer idTienda = (Integer) request.getAttribute("idTienda");
 %>
 
@@ -49,27 +49,27 @@
             </div>
         </div>
 
-        <%if(voluntario.getIdColaborador() != null){%>
+        <%if(voluntario.isPerteneceAEntidad()){%>
             <div class="card mt-3">
                 <div class="card-header" style="background: linear-gradient(135deg, #ff9800 0%, #e68900 100%);">
                     <h2 class="card-title">Información de la Entidad Colaboradora</h2>
                 </div>
                 <div class="card-body">
                     <div class="mb-2">
-                        <strong>Nombre Entidad:</strong> <span class="text-primary"><%=voluntario.getIdColaborador().getNombreEntidad()%></span>
+                        <strong>Nombre Entidad:</strong> <span class="text-primary"><%=voluntario.getNombreEntidad()%></span>
                     </div>
                     
                     <div class="mb-2">
-                        <strong>Email Entidad:</strong> <span class="text-primary"><%=voluntario.getIdColaborador().getEmail()%></span>
+                        <strong>Email Entidad:</strong> <span class="text-primary"><%=voluntario.getEmailEntidad()%></span>
                     </div>
                     
                     <div class="mb-2">
-                        <strong>Teléfono Entidad:</strong> <span class="text-primary"><%=voluntario.getIdColaborador().getContactoTlf()%></span>
+                        <strong>Teléfono Entidad:</strong> <span class="text-primary"><%=voluntario.getTelefonoEntidad()%></span>
                     </div>
 
-                    <%if(voluntario.getIdColaborador().getDomicilio() != null && !voluntario.getIdColaborador().getDomicilio().isEmpty()){%>
+                    <%if(voluntario.getDomicilioEntidad() != null && !voluntario.getDomicilioEntidad().isEmpty()){%>
                         <div class="mb-2">
-                            <strong>Dirección:</strong> <span class="text-primary"><%=voluntario.getIdColaborador().getDomicilio()%></span>
+                            <strong>Dirección:</strong> <span class="text-primary"><%=voluntario.getDomicilioEntidad()%></span>
                         </div>
                     <%}%>
                 </div>

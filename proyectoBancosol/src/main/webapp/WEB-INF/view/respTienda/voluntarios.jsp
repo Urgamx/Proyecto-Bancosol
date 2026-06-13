@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="com.example.proyectobancosol.entity.Usuario" %>
-<%@ page import="com.example.proyectobancosol.entity.Tienda" %>
-<%@ page import="com.example.proyectobancosol.entity.AsignacionTurno" %>
+<%@ page import="com.example.proyectobancosol.dto.response.UsuarioSesionDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.TiendaResponseDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.AsignacionTurnoResponseDTO" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -14,9 +14,9 @@
 <body>
 <div class="container">
 <%
-    Usuario user = (Usuario) session.getAttribute("usuario");
-    Tienda tienda = (Tienda) request.getAttribute("tienda");
-    List<AsignacionTurno> turnos = (List<AsignacionTurno>) request.getAttribute("turnos");
+    UsuarioSesionDTO user = (UsuarioSesionDTO) session.getAttribute("usuarioSesion");
+    TiendaResponseDTO tienda = (TiendaResponseDTO) request.getAttribute("tienda");
+    List<AsignacionTurnoResponseDTO> turnos = (List<AsignacionTurnoResponseDTO>) request.getAttribute("turnos");
 %>
 
     <div class="mb-3">
@@ -40,24 +40,20 @@
                 <tr>
                     <th>VOLUNTARIO</th>
                     <th>CAMPAÑA</th>
-                    <th>DÍA</th>
-                    <th>FRANJA</th>
                     <th>HORARIO</th>
                     <th>ESTADO</th>
                 </tr>
             </thead>
             <tbody>
-            <%for(AsignacionTurno turno : turnos){%>
+            <%for(AsignacionTurnoResponseDTO turno : turnos){%>
             <tr>
                 <td>
-                    <a href="/resp-tienda/detalles-voluntario?id=<%=turno.getIdVoluntario().getId()%>&tienda=<%=tienda.getId()%>"><strong><%=turno.getIdVoluntario().getNombre()%></strong></a>
+                    <a href="/resp-tienda/detalles-voluntario?id=<%=turno.getVoluntario().getId()%>&tienda=<%=tienda.getId()%>"><strong><%=turno.getVoluntario().getNombre()%></strong></a>
                 </td>
-                <td><%=turno.getIdCampana().getTipoDeCampana().getNombre()%></td>
-                <td><%=turno.getDia()%></td>
-                <td><%=turno.getFranja()%></td>
-                <td><%=turno.getHoraInicio()%> - <%=turno.getHoraFin()%></td>
+                <td><%=turno.getNombreCampana()%></td>
+                <td><%=turno.getHorario()%></td>
                 <td>
-                    <%if(turno.getIncidencia() != null){%>
+                    <%if(turno.getDescripcionIncidencia() != null && !turno.getDescripcionIncidencia().isEmpty()){%>
                         <span class="text-danger"><strong>INCIDENCIA REGISTRADA</strong></span>
                     <%}else{%>
                         <span class="text-success"><strong>SIN INCIDENCIAS</strong></span>
