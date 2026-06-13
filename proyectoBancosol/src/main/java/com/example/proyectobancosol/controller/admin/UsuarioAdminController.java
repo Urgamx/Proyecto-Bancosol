@@ -92,12 +92,10 @@ public class UsuarioAdminController {
                           @RequestParam("estado") Integer estado)
     {
 
-        UsuarioDTO usuario = null;
+        UsuarioDTO usuario = new UsuarioDTO();
 
         if (id != null) {
-            usuario = usuarioService.findById(id);
-        } else {
-            usuario = new UsuarioDTO();
+            usuario.setId(id);
         }
 
         usuario.setNombreCompleto(nombre);

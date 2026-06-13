@@ -185,7 +185,7 @@ public class CoordinadorController {
     }
 
     @PostMapping("/filtrarAsignacionTurnos")
-    public String filtrarAsignacionTurnos(@RequestParam("cadenaId") Integer cadenaId,
+    public String filtrarAsignacionTurnos(@RequestParam(value = "cadenaId",required = false) Integer cadenaId,
                                           @RequestParam(value = "localidad", defaultValue = "") String localidad,
                                           @SessionAttribute(name = "usuario",required = false) Usuario user,
                                          Model model, HttpSession session)
@@ -193,8 +193,14 @@ public class CoordinadorController {
         if (user == null){
             return "redirect:/";
         }
+        List<AsignacionTurno> turnos = null;
 
-        List<AsignacionTurno> turnos = this.asignacionTurnoService.findByCadenaLocalidad(cadenaId,localidad);
+        if (cadenaId == null) {
+            turnos = this.asignacionTurnoService.findByLocalidad(localidad);
+        } else {
+
+            turnos = this.asignacionTurnoService.findByCadenaLocalidad(cadenaId,localidad);
+        }
         List<UsuarioTiendaDTO> relaciones = this.usuarioTiendaService.findAll();
         List<CadenaResponseDTO> cadenas = this.cadenaService.findAll();
         List<UsuarioDTO> capitanes = this.usuarioService.findCapitan();

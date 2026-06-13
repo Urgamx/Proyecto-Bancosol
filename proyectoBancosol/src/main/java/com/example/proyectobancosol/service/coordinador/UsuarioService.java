@@ -43,12 +43,23 @@ public class UsuarioService {
     }
 
     public void save(UsuarioDTO dto) {
-        Usuario usuario = this.usuarioRepository.findById(dto.getId()).orElse(new Usuario());
+        Usuario usuario;
+
+        if (dto.getId() != null) {
+            usuario = this.usuarioRepository.findById(dto.getId())
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + dto.getId()));
+        } else {
+            usuario = new Usuario();
+        }
+
         usuario.setEmail(dto.getEmail());
         usuario.setActivo(dto.getActivo());
-        usuario.setIdRol(this.rolRepository.findById(dto.getIdRol()).get());
         usuario.setNombreCompleto(dto.getNombreCompleto());
         usuario.setPassword(dto.getPassword());
+
+        usuario.setIdRol(this.rolRepository.findById(dto.getIdRol())
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado con ID: " + dto.getIdRol())));
+
         this.usuarioRepository.save(usuario);
     }
 
