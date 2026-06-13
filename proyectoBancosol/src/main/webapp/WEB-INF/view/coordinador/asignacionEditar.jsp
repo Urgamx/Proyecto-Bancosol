@@ -1,4 +1,3 @@
-<%@ page import="com.example.proyectobancosol.entity.AsignacionTurno" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.proyectobancosol.dto.response.ColaboradorResponseDTO" %>
 <%@ page import="com.example.proyectobancosol.dto.response.VoluntarioDTO" %>
