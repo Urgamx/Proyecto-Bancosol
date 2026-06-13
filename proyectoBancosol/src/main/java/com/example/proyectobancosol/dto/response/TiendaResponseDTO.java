@@ -13,6 +13,7 @@ public class TiendaResponseDTO {
     private String cadena;
     private String nombre;
     private String direccion;
+    private String localidad;
     private String codPostal;
 
     public String getNombreCadena() {

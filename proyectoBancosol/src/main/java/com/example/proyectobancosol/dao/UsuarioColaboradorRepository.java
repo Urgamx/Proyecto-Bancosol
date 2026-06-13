@@ -12,11 +12,11 @@ import java.util.List;
 
 public interface UsuarioColaboradorRepository extends JpaRepository<UsuarioColaborador, UsuarioColaboradorId> {
 
-    @Query(" select c from UsuarioColaborador uc join uc.colaborador c join uc.usuario u where lower(c.localidad) like lower(concat('%', :localidad, '%')) and lower(c.zonaGeografica) like lower(concat('%', :zonaGeo, '%'))")
+    @Query(" select c from UsuarioColaborador uc join uc.colaborador c join uc.usuario u where lower(c.localidad) like lower(concat('%', :localidad, '%')) and lower(c.zonaGeografica) like lower(concat('%', :zonaGeo, '%')) and c.estado = 1")
     public List<Colaborador> findByZonaLocalidad(@Param("zonaGeo") String zonaGeo,
                                                  @Param("localidad") String localidad);
 
-    @Query(" select c from UsuarioColaborador uc join uc.colaborador c join uc.usuario u where lower(c.localidad) like lower(concat('%', :localidad, '%')) and lower(c.zonaGeografica) like lower(concat('%', :zonaGeo, '%')) and u.id = :coordinadorId")
+    @Query(" select c from UsuarioColaborador uc join uc.colaborador c join uc.usuario u where lower(c.localidad) like lower(concat('%', :localidad, '%')) and lower(c.zonaGeografica) like lower(concat('%', :zonaGeo, '%')) and u.id = :coordinadorId and c.estado = 1")
     public List<Colaborador> findByZonaLocalidadCoorId(@Param("zonaGeo") String zonaGeo,
                                                        @Param("localidad") String localidad,
                                                        @Param("coordinadorId") Integer coordinadorId);

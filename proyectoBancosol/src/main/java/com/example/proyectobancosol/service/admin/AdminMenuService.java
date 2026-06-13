@@ -41,9 +41,9 @@ public class AdminMenuService {
                         "Gestion de asignaciones creada en el modulo coordinador",
                         "/coordinador/asignacionVoluntarios"),
                 item(
-                        "Tiendas asignadas(Capitan)",
-                        "Vista de tiendas creada en el modulo capitan",
-                        "/capitan"),
+                        "Capitanes",
+                        "Gestion de capitanes",
+                        "/admin/capitanes"),
                 item(
                         "Responsable entidad",
                         "Menu creado para responsable de entidad",

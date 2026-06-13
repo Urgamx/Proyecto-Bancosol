@@ -35,4 +35,6 @@ public class AsignacionTurnoService {
 
     public List<AsignacionTurno> findByCadenaLocalidad(Integer cadenaId, String localidad) { return this.asignacionTurnoRepository.findByCadenaLocalidad(cadenaId,localidad); }
 
+    public List<AsignacionTurno> findByLocalidad(String localidad) { return this.asignacionTurnoRepository.findByLocalidad(localidad); }
+
 }

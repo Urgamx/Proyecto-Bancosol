@@ -1,7 +1,7 @@
 package com.example.proyectobancosol.controller.admin;
 
-import com.example.proyectobancosol.entity.Rol;
-import com.example.proyectobancosol.entity.Usuario;
+import com.example.proyectobancosol.dto.response.RolResponseDTO;
+import com.example.proyectobancosol.dto.response.UsuarioDTO;
 import com.example.proyectobancosol.service.admin.RolAdminService;
 import com.example.proyectobancosol.service.coordinador.UsuarioColaboradorService;
 import com.example.proyectobancosol.service.coordinador.UsuarioService;
@@ -31,9 +31,32 @@ public class UsuarioAdminController {
     public String listar(Model model,
                          HttpSession session){
 
-        List<Usuario> usuarios = this.usuarioService.findAll();
+        List<UsuarioDTO> usuarios = this.usuarioService.findAll();
+        List<RolResponseDTO> roles = this.rolAdminService.findAll();
 
+        model.addAttribute("roles", roles);
         model.addAttribute("usuarios", usuarios);
+
+        return "admin/usuarios/listado";
+    }
+
+    @PostMapping("/filtrar")
+    public String filtrar(@RequestParam(value = "rolId", required = false) Integer rolId,
+                          @RequestParam("nombre") String nombre,
+                          Model model) {
+
+        List<UsuarioDTO> usuarios = null;
+        if (rolId == null) {
+            usuarios = this.usuarioService.findByNombre(nombre);
+        } else {
+            usuarios = this.usuarioService.findByNombreRol(rolId,nombre);
+        }
+        List<RolResponseDTO> roles = this.rolAdminService.findAll();
+
+        model.addAttribute("roles", roles);
+        model.addAttribute("usuarios", usuarios);
+        model.addAttribute("nombreSelected", nombre);
+        model.addAttribute("rolSelected", rolId);
 
         return "admin/usuarios/listado";
     }
@@ -42,8 +65,8 @@ public class UsuarioAdminController {
     public String editar(@RequestParam("id") Integer id,
                          Model model) {
 
-        Usuario usuario = this.usuarioService.findById(id);
-        List<Rol> roles = this.rolAdminService.findAll();
+        UsuarioDTO usuario = this.usuarioService.findById(id);
+        List<RolResponseDTO> roles = this.rolAdminService.findAll();
 
         model.addAttribute("usuario", usuario);
         model.addAttribute("roles", roles);
@@ -54,12 +77,11 @@ public class UsuarioAdminController {
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
 
-        List<Rol> roles = this.rolAdminService.findAll();
+        List<RolResponseDTO> roles = this.rolAdminService.findAll();
         model.addAttribute("roles", roles);
 
         return "admin/usuarios/formulario";
     }
-
 
     @PostMapping("/guardar")
     public String guardar(@RequestParam(value = "id" ,required = false) Integer id,
@@ -70,18 +92,16 @@ public class UsuarioAdminController {
                           @RequestParam("estado") Integer estado)
     {
 
-        Usuario usuario = null;
+        UsuarioDTO usuario = new UsuarioDTO();
 
         if (id != null) {
-            usuario = usuarioService.findById(id);
-        } else {
-            usuario = new Usuario();
+            usuario.setId(id);
         }
 
         usuario.setNombreCompleto(nombre);
         usuario.setEmail(email);
         usuario.setPassword(password);
-        usuario.setIdRol(this.rolAdminService.findById(rolId));
+        usuario.setIdRol(rolId);
         usuario.setActivo(estado);
 
         usuarioService.save(usuario);
@@ -92,7 +112,7 @@ public class UsuarioAdminController {
     @PostMapping("/eliminar")
     public String eliminar(@RequestParam("id") Integer id)
     {
-        Usuario usuario = usuarioService.findById(id);
+        UsuarioDTO usuario = usuarioService.findById(id);
         this.usuarioColaboradorService.deleteByUsuarioId(id);
         this.usuarioTiendaService.deleteByUsuarioId(id);
 

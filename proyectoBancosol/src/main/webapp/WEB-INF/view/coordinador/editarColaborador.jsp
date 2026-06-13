@@ -1,4 +1,4 @@
-<%@ page import="com.example.proyectobancosol.entity.Colaborador" %><%--
+<%@ page import="com.example.proyectobancosol.dto.request.ColaboradorRequestDTO" %><%--
   Created by IntelliJ IDEA.
   User: USUARIO
   Date: 18/05/2026
@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <%
-    Colaborador colaborador = (Colaborador) request.getAttribute("colaborador");
+    ColaboradorRequestDTO colaborador = (ColaboradorRequestDTO) request.getAttribute("colaborador");
 %>
 <head>
     <meta charset="UTF-8">

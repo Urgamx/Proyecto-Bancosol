@@ -25,7 +25,7 @@
     </header>
 
     <div class="alert alert-warning">
-        <strong>Nota:</strong> Por favor, describe con detalle el problema o incidencia que ocurrió durante el turno.
+        <strong>Nota:</strong> Por favor, describe con detalle el problem u incidencia que ocurrió durante el turno.
     </div>
 
     <div class="card">

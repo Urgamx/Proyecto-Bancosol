@@ -1,9 +1,9 @@
 package com.example.proyectobancosol.controller.capitan;
 
-import com.example.proyectobancosol.entity.AsignacionTurno;
-import com.example.proyectobancosol.entity.Tienda;
+import com.example.proyectobancosol.dto.response.AsignacionTurnoDTO;
+import com.example.proyectobancosol.dto.response.TiendaResponseDTO;
+import com.example.proyectobancosol.dto.response.VoluntarioDTO;
 import com.example.proyectobancosol.entity.Usuario;
-import com.example.proyectobancosol.entity.Voluntario;
 import com.example.proyectobancosol.service.capitan.CapitanService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -18,8 +18,7 @@ import java.util.List;
 @RequestMapping("/capitan")
 public class CapitanController {
 
-    private CapitanService capitanService;
-
+    private final CapitanService capitanService;
 
     @GetMapping({"", "/"})
     public String home(@SessionAttribute(name = "usuario", required = false) Usuario user,
@@ -28,7 +27,7 @@ public class CapitanController {
             return "redirect:/login";
         }
 
-        List<Tienda> tiendas = capitanService.obtenerTiendasDelUsuario(user.getId());
+        List<TiendaResponseDTO> tiendas = capitanService.obtenerTiendasDelUsuario(user.getId());
         model.addAttribute("tiendas", tiendas);
         model.addAttribute("usuario", user);
 
@@ -43,10 +42,10 @@ public class CapitanController {
             return "redirect:/login";
         }
 
-        Tienda tienda = capitanService.obtenerTiendaPorId(idTienda);
+        TiendaResponseDTO tienda = capitanService.obtenerTiendaPorId(idTienda);
         model.addAttribute("tienda", tienda);
 
-        List<AsignacionTurno> turnos = capitanService.obtenerVoluntariosPorTienda(idTienda);
+        List<AsignacionTurnoDTO> turnos = capitanService.obtenerVoluntariosPorTienda(idTienda);
         model.addAttribute("turnos", turnos);
         model.addAttribute("usuario", user);
 
@@ -92,10 +91,10 @@ public class CapitanController {
             return "redirect:/login";
         }
 
-        Tienda tienda = capitanService.obtenerTiendaPorId(idTienda);
+        TiendaResponseDTO tienda = capitanService.obtenerTiendaPorId(idTienda);
         model.addAttribute("tienda", tienda);
 
-        List<AsignacionTurno> turnos = capitanService.obtenerVoluntariosPorTienda(idTienda);
+        List<AsignacionTurnoDTO> turnos = capitanService.obtenerVoluntariosPorTienda(idTienda);
         model.addAttribute("turnos", turnos);
         model.addAttribute("usuario", user);
 
@@ -111,12 +110,11 @@ public class CapitanController {
             return "redirect:/login";
         }
 
-        Voluntario voluntario = capitanService.obtenerVoluntarioPorId(idVoluntario);
+        VoluntarioDTO voluntario = capitanService.obtenerVoluntarioPorId(idVoluntario);
         model.addAttribute("voluntario", voluntario);
         model.addAttribute("idTienda", idTienda);
         model.addAttribute("usuario", user);
 
         return "capitan/detalles_voluntario";
     }
-
 }

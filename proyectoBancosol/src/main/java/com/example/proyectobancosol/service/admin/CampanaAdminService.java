@@ -69,8 +69,7 @@ public class CampanaAdminService {
         }
 
         TipoDeCampana tipo = tipoDeCampanaRepository.findById(request.getIdTipoCampana()).orElseThrow();
-        Campana campana = request.getId() == null ? nuevaCampana() : campanaRepository.findById(request.getId()).orElseThrow();
-
+        Campana campana = request.getId() == null ? new Campana() : campanaRepository.findById(request.getId()).orElseThrow();
         campanaAdminMapper.aplicarRequest(request, campana, tipo, fecha);
         campanaRepository.save(campana);
         campanaCadenaRepository.deleteByCampanaId(campana.getId());
@@ -142,11 +141,7 @@ public class CampanaAdminService {
         return campanaAdminMapper.toDTO(campana, cadenas);
     }
 
-    private Campana nuevaCampana() {
-        Campana campana = new Campana();
-        campana.setId(campanaRepository.findMaxId() + 1);
-        return campana;
-    }
+
 
     private boolean vacio(String valor) {
         return valor == null || valor.trim().isEmpty();

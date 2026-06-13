@@ -43,7 +43,7 @@ public class CoordinadorAdminService {
             return error;
         }
 
-        Usuario usuario = request.getId() == null ? nuevoUsuario(request) : usuarioRepository.findById(request.getId()).orElseThrow();
+        Usuario usuario = request.getId() == null ? new Usuario() : usuarioRepository.findById(request.getId()).orElseThrow();
         actualizarPassword(usuario, request);
         coordinadorAdminMapper.aplicarRequest(request, usuario, rolRepository.findByNombre(ROL_COORDINADOR).orElseThrow());
         usuarioRepository.save(usuario);
@@ -98,12 +98,7 @@ public class CoordinadorAdminService {
                 : null;
     }
 
-    private Usuario nuevoUsuario(CoordinadorRequestDTO request) {
-        Usuario usuario = new Usuario();
-        usuario.setId(usuarioRepository.findMaxId() + 1);
-        usuario.setPassword(request.getPassword().trim());
-        return usuario;
-    }
+
 
     private void actualizarPassword(Usuario usuario, CoordinadorRequestDTO request) {
         if (!vacio(request.getPassword())) {

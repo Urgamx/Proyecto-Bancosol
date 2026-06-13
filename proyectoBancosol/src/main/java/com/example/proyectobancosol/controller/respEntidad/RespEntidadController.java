@@ -90,6 +90,7 @@ public class RespEntidadController {
         }
 
         respEntidadService.registrarIncidencia(idAsignacion, descripcion);
+
         return "redirect:/resp-entidad/tienda?id=" + idTienda;
     }
 

@@ -1,22 +1,26 @@
-<%@ page import="com.example.proyectobancosol.entity.Usuario" %>
 <%@ page import="com.example.proyectobancosol.entity.AsignacionTurno" %>
-<%@ page import="com.example.proyectobancosol.entity.Colaborador" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.proyectobancosol.entity.Voluntario" %>
+<%@ page import="com.example.proyectobancosol.dto.response.ColaboradorResponseDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.VoluntarioDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.request.ColaboradorRequestDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
+<html lang="es">
 <%
-    Usuario user = (Usuario) session.getAttribute("usuario");
     AsignacionTurno turno = (AsignacionTurno) request.getAttribute("turno");
-    List<Colaborador> colaboradores = (List<Colaborador>) request.getAttribute("colaboradores");
-    Colaborador colaboradorSelected = (Colaborador) request.getAttribute("colaboradorSelected");
-    List<Voluntario> voluntarios = (List<Voluntario>) request.getAttribute("voluntarios");
+    List<ColaboradorResponseDTO> colaboradores = (List<ColaboradorResponseDTO>) request.getAttribute("colaboradores");
+    ColaboradorRequestDTO colaboradorSelected = (ColaboradorRequestDTO) request.getAttribute("colaboradorSelected");
+    List<VoluntarioDTO> voluntarios = (List<VoluntarioDTO>) request.getAttribute("voluntarios");
     String formAction = (colaboradorSelected == null) ? "/coordinador/seleccionar" : "/coordinador/guardarEditar";
 %>
-<html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seleccionar Colaborador</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
+<div class="container">
 <h1>Editar Turno</h1>
 
 <form method="post" action="<%= formAction %>">
@@ -38,7 +42,7 @@
                     <% if (colaboradorSelected == null) { %>
                 <select name="colaborador">
                     <%
-                        for (Colaborador colaborador : colaboradores) {
+                        for (ColaboradorResponseDTO colaborador : colaboradores) {
                             String selected = "";
                             if (turno.getIdColaborador().getId().equals(colaborador.getId())) {
                                 selected = "selected";
@@ -65,7 +69,7 @@
             <td>
                 <select name="voluntario">
                     <%
-                        for (Voluntario voluntario : voluntarios) {
+                        for (VoluntarioDTO voluntario : voluntarios) {
                             String selected = "";
                             if (turno.getIdVoluntario().getId().equals(voluntario.getId())) {
                                 selected = "selected";
@@ -109,7 +113,10 @@
     </table>
 </form>
 
-<a href="/coordinador/asignacionVoluntarios">Volver</a>
+    <div class="mt-3">
+        <a href="/coordinador/asignacionVoluntarios" class="btn btn-secondary">Volver</a>
+    </div>
 
+</div>
 </body>
 </html>
