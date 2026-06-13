@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="com.example.proyectobancosol.entity.Usuario" %>
-<%@ page import="com.example.proyectobancosol.entity.AsignacionTurno" %>
+<%@ page import="com.example.proyectobancosol.dto.response.UsuarioSesionDTO" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,7 +11,7 @@
 <body>
 <div class="container" style="max-width: 600px;">
 <%
-    Usuario user = (Usuario) session.getAttribute("usuario");
+    UsuarioSesionDTO user = (UsuarioSesionDTO) session.getAttribute("usuario");
     Integer idAsignacion = Integer.parseInt(request.getParameter("id") != null ? request.getParameter("id") : "0");
     Integer idTienda = Integer.parseInt(request.getParameter("tienda") != null ? request.getParameter("tienda") : "0");
 %>
@@ -32,7 +31,8 @@
     <div class="card">
         <div class="card-body">
             <p><strong>ID de Asignación:</strong> <%=idAsignacion%></p>
-            <p><strong>Usuario:</strong> <%=user.getNombreCompleto()%></p>
+            <%-- 3. USAMOS EL NOMBRE LIMPIO DEL DTO --%>
+            <p><strong>Usuario:</strong> <%=user.getNombre()%></p>
         </div>
     </div>
 

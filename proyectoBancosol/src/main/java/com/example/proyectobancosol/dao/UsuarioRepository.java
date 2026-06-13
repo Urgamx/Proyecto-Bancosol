@@ -47,4 +47,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     @Query("select count(uc) from UsuarioColaborador uc where uc.usuario.id = :idUsuario")
     Long countColaboradoresByUsuario(@Param("idUsuario") Integer idUsuario);
+
 }

@@ -5,6 +5,9 @@ import com.example.proyectobancosol.dao.IncidenciaRepository;
 import com.example.proyectobancosol.dao.TiendaRepository;
 import com.example.proyectobancosol.dao.UsuarioTiendaRepository;
 import com.example.proyectobancosol.dao.VoluntarioRepository;
+import com.example.proyectobancosol.dto.response.AsignacionTurnoResponseDTO;
+import com.example.proyectobancosol.dto.response.TiendaResponseDTO;
+import com.example.proyectobancosol.dto.response.VoluntarioResponseDTO;
 import com.example.proyectobancosol.entity.AsignacionTurno;
 import com.example.proyectobancosol.entity.Incidencia;
 import com.example.proyectobancosol.entity.Tienda;
@@ -13,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -24,19 +28,73 @@ public class ResTiendaService {
     private IncidenciaRepository incidenciaRepository;
     private VoluntarioRepository voluntarioRepository;
 
+    private TiendaResponseDTO mapearTienda(Tienda tienda) {
+        if (tienda == null) return null;
+        TiendaResponseDTO dto = new TiendaResponseDTO();
+        dto.setId(tienda.getId());
+        dto.setNombre(tienda.getNombre());
+        dto.setDireccion(tienda.getDireccion());
+        return dto;
+    }
 
-    public Tienda obtenerTiendaDelUsuario(Integer idUsuario) {
+    private VoluntarioResponseDTO mapearVoluntario(Voluntario voluntario) {
+        if (voluntario == null) return null;
+        VoluntarioResponseDTO dto = new VoluntarioResponseDTO();
+        dto.setId(voluntario.getId());
+        dto.setNombre(voluntario.getNombre());
+        dto.setEmail(voluntario.getEmail());
+        dto.setTelefono(voluntario.getTelefono());
+
+        if (voluntario.getIdColaborador() != null) {
+            dto.setPerteneceAEntidad(true);
+            dto.setNombreEntidad(voluntario.getIdColaborador().getNombreEntidad());
+            dto.setEmailEntidad(voluntario.getIdColaborador().getEmail());
+            dto.setTelefonoEntidad(voluntario.getIdColaborador().getContactoTlf());
+            dto.setDomicilioEntidad(voluntario.getIdColaborador().getDomicilio());
+        } else {
+            dto.setPerteneceAEntidad(false);
+        }
+        return dto;
+    }
+
+    private AsignacionTurnoResponseDTO mapearAsignacion(AsignacionTurno asignacion) {
+        if (asignacion == null) return null;
+        AsignacionTurnoResponseDTO dto = new AsignacionTurnoResponseDTO();
+        dto.setId(asignacion.getId());
+        String horarioCompleto = asignacion.getDia() + " - " + asignacion.getFranja();
+        dto.setHorario(horarioCompleto); 
+        dto.setVoluntario(mapearVoluntario(asignacion.getIdVoluntario()));
+        
+        if (asignacion.getIncidencia() != null) {
+            dto.setDescripcionIncidencia(asignacion.getIncidencia().getDescripcion());
+        }
+        return dto;
+    }
+
+    
+    public TiendaResponseDTO obtenerTiendaDelUsuario(Integer idUsuario) {
         return usuarioTiendaRepository.findByUsuarioId(idUsuario)
-                .map(ut -> ut.getTienda())
+                .map(ut -> mapearTienda(ut.getTienda()))
                 .orElse(null);
     }
 
-    public List<Tienda> obtenerTiendasDelUsuario(Integer idUsuario) {
-        return tiendaRepository.findTiendasByUsuarioId(idUsuario);
+    public List<TiendaResponseDTO> obtenerTiendasDelUsuario(Integer idUsuario) {
+        return tiendaRepository.findTiendasByUsuarioId(idUsuario).stream()
+                .map(this::mapearTienda)
+                .collect(Collectors.toList());
     }
 
-    public List<AsignacionTurno> obtenerVoluntariosPorTienda(Integer idTienda) {
-        return asignacionTurnoRepository.findAsignacionesByTiendaId(idTienda);
+    public List<VoluntarioResponseDTO> obtenerVoluntariosDeTienda(Integer idTienda) {
+        return asignacionTurnoRepository.findAsignacionesByTiendaId(idTienda).stream()
+                .map(asignacion -> mapearVoluntario(asignacion.getIdVoluntario()))
+                .distinct() 
+                .collect(Collectors.toList());
+    }
+
+    public List<AsignacionTurnoResponseDTO> obtenerVoluntariosPorTienda(Integer idTienda) {
+        return asignacionTurnoRepository.findAsignacionesByTiendaId(idTienda).stream()
+                .map(this::mapearAsignacion)
+                .collect(Collectors.toList());
     }
 
     public void registrarIncidencia(Integer idAsignacion, String descripcion) {
@@ -62,11 +120,15 @@ public class ResTiendaService {
         }
     }
 
-    public Tienda obtenerTiendaPorId(Integer idTienda) {
-        return tiendaRepository.findById(idTienda).orElse(null);
+    public TiendaResponseDTO obtenerTiendaPorId(Integer idTienda) {
+        return tiendaRepository.findById(idTienda)
+                .map(this::mapearTienda)
+                .orElse(null);
     }
 
-    public Voluntario obtenerVoluntarioPorId(Integer idVoluntario) {
-        return voluntarioRepository.findById(idVoluntario).orElse(null);
+    public VoluntarioResponseDTO obtenerVoluntarioPorId(Integer idVoluntario) {
+        return voluntarioRepository.findById(idVoluntario)
+                .map(this::mapearVoluntario)
+                .orElse(null);
     }
 }

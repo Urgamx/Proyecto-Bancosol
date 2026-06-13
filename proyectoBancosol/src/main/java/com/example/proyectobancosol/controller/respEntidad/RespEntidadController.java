@@ -1,9 +1,10 @@
 package com.example.proyectobancosol.controller.respEntidad;
 
-import com.example.proyectobancosol.entity.AsignacionTurno;
-import com.example.proyectobancosol.entity.Tienda;
+import com.example.proyectobancosol.dto.response.AsignacionTurnoResponseDTO;
+import com.example.proyectobancosol.dto.response.TiendaResponseDTO;
+import com.example.proyectobancosol.dto.response.UsuarioSesionDTO;
+import com.example.proyectobancosol.dto.response.VoluntarioResponseDTO;
 import com.example.proyectobancosol.entity.Usuario;
-import com.example.proyectobancosol.entity.Voluntario;
 import com.example.proyectobancosol.service.respEntidad.RespEntidadService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,14 @@ public class RespEntidadController {
 
     private RespEntidadService respEntidadService;
 
-    
+    private UsuarioSesionDTO protegerUsuarioParaVista(Usuario user) {
+        if (user == null) return null;
+        UsuarioSesionDTO userDTO = new UsuarioSesionDTO();
+        userDTO.setNombreCompleto(user.getNombreCompleto()); // ¡Cámbialo si tu DTO usa otro nombre!
+        userDTO.setIdUsuario(user.getId());                 // ¡Cámbialo si tu DTO usa otro nombre!
+        return userDTO;
+    }
+
     @GetMapping({"", "/"})
     public String home(@SessionAttribute(name = "usuario", required = false) Usuario user,
                        Model model, HttpSession session) {
@@ -28,9 +36,10 @@ public class RespEntidadController {
             return "redirect:/login";
         }
 
-        List<Tienda> tiendas = respEntidadService.obtenerTiendasDelUsuario(user.getId());
+        
+        List<TiendaResponseDTO> tiendas = respEntidadService.obtenerTiendasDelUsuario(user.getId());
         model.addAttribute("tiendas", tiendas);
-        model.addAttribute("usuario", user);
+        model.addAttribute("usuario", protegerUsuarioParaVista(user));
 
         return "respEntidad/index";
     }
@@ -43,12 +52,13 @@ public class RespEntidadController {
             return "redirect:/login";
         }
 
-        Tienda tienda = respEntidadService.obtenerTiendaPorId(idTienda);
+        
+        TiendaResponseDTO tienda = respEntidadService.obtenerTiendaPorId(idTienda);
         model.addAttribute("tienda", tienda);
 
-        List<AsignacionTurno> turnos = respEntidadService.obtenerVoluntariosPorTienda(idTienda);
+        List<AsignacionTurnoResponseDTO> turnos = respEntidadService.obtenerVoluntariosPorTienda(idTienda);
         model.addAttribute("turnos", turnos);
-        model.addAttribute("usuario", user);
+        model.addAttribute("usuario", protegerUsuarioParaVista(user));
 
         return "respEntidad/tienda_detalles";
     }
@@ -64,7 +74,7 @@ public class RespEntidadController {
 
         model.addAttribute("idAsignacion", idAsignacion);
         model.addAttribute("idTienda", idTienda);
-        model.addAttribute("usuario", user);
+        model.addAttribute("usuario", protegerUsuarioParaVista(user));
 
         return "respEntidad/registrar_incidencia";
     }
@@ -92,12 +102,13 @@ public class RespEntidadController {
             return "redirect:/login";
         }
 
-        Tienda tienda = respEntidadService.obtenerTiendaPorId(idTienda);
+        
+        TiendaResponseDTO tienda = respEntidadService.obtenerTiendaPorId(idTienda);
         model.addAttribute("tienda", tienda);
-
-        List<AsignacionTurno> turnos = respEntidadService.obtenerVoluntariosPorTienda(idTienda);
+        
+        List<AsignacionTurnoResponseDTO> turnos = respEntidadService.obtenerVoluntariosPorTienda(idTienda);
         model.addAttribute("turnos", turnos);
-        model.addAttribute("usuario", user);
+        model.addAttribute("usuario", protegerUsuarioParaVista(user));
 
         return "respEntidad/voluntarios";
     }
@@ -110,13 +121,12 @@ public class RespEntidadController {
         if (user == null) {
             return "redirect:/login";
         }
-
-        Voluntario voluntario = respEntidadService.obtenerVoluntarioPorId(idVoluntario);
+        
+        VoluntarioResponseDTO voluntario = respEntidadService.obtenerVoluntarioPorId(idVoluntario);
         model.addAttribute("voluntario", voluntario);
         model.addAttribute("idTienda", idTienda);
-        model.addAttribute("usuario", user);
+        model.addAttribute("usuario", protegerUsuarioParaVista(user));
 
         return "respEntidad/detalles_voluntario";
     }
-
 }

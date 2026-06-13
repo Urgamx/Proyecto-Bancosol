@@ -15,4 +15,8 @@ public class TiendaResponseDTO {
     private String direccion;
     private String localidad;
     private String codPostal;
+
+    public String getNombreCadena() {
+        return cadena;
+    }
 }
