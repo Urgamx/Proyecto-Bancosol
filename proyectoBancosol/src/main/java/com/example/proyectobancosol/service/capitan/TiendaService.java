@@ -1,7 +1,10 @@
 package com.example.proyectobancosol.service.capitan;
 
 import com.example.proyectobancosol.dao.TiendaRepository;
+import com.example.proyectobancosol.dto.request.TiendaRequestDTO;
+import com.example.proyectobancosol.dto.response.TiendaResponseDTO;
 import com.example.proyectobancosol.entity.Tienda;
+import com.example.proyectobancosol.mapper.admin.TiendaAdminMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
@@ -12,23 +15,24 @@ import java.util.List;
 @AllArgsConstructor
 public class TiendaService {
 
-    private TiendaRepository tiendaRepository;
+    private final TiendaRepository tiendaRepository;
+    private final TiendaAdminMapper tiendaAdminMapper;
 
-    public Tienda findTiendaById(@Param("id") Integer id){
-        return tiendaRepository.findById(id).get();
+    public TiendaRequestDTO findTiendaById(@Param("id") Integer id){
+        return this.tiendaAdminMapper.toRequestDTO(tiendaRepository.findById(id).get());
     }
 
-    public List<Tienda> ListarTiendas(){
+    public List<TiendaResponseDTO> ListarTiendas(){
         return this.ListarTiendas(null);
     }
 
-    public List<Tienda> ListarTiendas(Integer idUsuario){
-        List<Tienda> tiendas;
+    public List<TiendaResponseDTO> ListarTiendas(Integer idUsuario){
+        List<TiendaResponseDTO> tiendas;
 
         if(idUsuario == null){
-            tiendas = this.tiendaRepository.findAll();
+            tiendas = tiendaAdminMapper.toDTOList(this.tiendaRepository.findAll());
         }else{
-            tiendas = this.tiendaRepository.findTiendasByUsuarioId(idUsuario);
+            tiendas = tiendaAdminMapper.toDTOList(this.tiendaRepository.findTiendasByUsuarioId(idUsuario));
         }
 
         return tiendas;

@@ -1,6 +1,8 @@
 package com.example.proyectobancosol.dto.response;
 
 
+import com.example.proyectobancosol.dto.request.ColaboradorRequestDTO;
+import com.example.proyectobancosol.dto.request.TiendaRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,4 +22,8 @@ public class AsignacionTurnoDTO {
     private CampanaResponseDTO campanaResponseDTO;
 
     private IncidenciaDTO incidenciaDTO;
+
+    private TiendaRequestDTO tiendaResponseDTO;
+
+    private ColaboradorRequestDTO colaboradorRequestDTO;
 }

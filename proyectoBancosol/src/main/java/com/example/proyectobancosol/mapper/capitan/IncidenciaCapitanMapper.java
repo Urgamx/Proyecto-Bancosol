@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class IncidenciaCapitanMapper extends MapperDTO<IncidenciaDTO, Incidencia> {
     @Override
     public IncidenciaDTO toDTO(Incidencia incidencia) {
-        return new IncidenciaDTO(incidencia.getAsignacion().getId(),incidencia.getDescripcion());
+        return new IncidenciaDTO(incidencia.getId(), incidencia.getAsignacion().getId(),incidencia.getDescripcion());
     }
 
 }

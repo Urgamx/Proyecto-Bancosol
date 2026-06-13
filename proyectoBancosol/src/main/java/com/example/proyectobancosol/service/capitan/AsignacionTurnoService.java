@@ -1,10 +1,15 @@
 package com.example.proyectobancosol.service.capitan;
 
-import com.example.proyectobancosol.dao.AsignacionTurnoRepository;
+import com.example.proyectobancosol.dao.*;
+import com.example.proyectobancosol.dto.response.AsignacionTurnoDTO;
 import com.example.proyectobancosol.entity.AsignacionTurno;
+import com.example.proyectobancosol.entity.Usuario;
+import com.example.proyectobancosol.entity.Voluntario;
+import com.example.proyectobancosol.mapper.capitan.AsignacionTurnoCapitanMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -12,29 +17,90 @@ import java.util.List;
 public class AsignacionTurnoService {
 
     private final AsignacionTurnoRepository asignacionTurnoRepository;
+    private final CampanaRepository campanaRepository;
+    private final AsignacionTurnoCapitanMapper asignacionTurnoCapitanMapper;
+    private final IncidenciaRepository incidenciaRepository;
+    private final TiendaRepository tiendaRepository;
+    private final ColaboradorRepository colaboradorRepository;
+    private final VoluntarioRepository voluntarioRepository;
 
-    public List<AsignacionTurno> ListarAsignacionTurnos(){
+    public List<AsignacionTurnoDTO> ListarAsignacionTurnos(){
         return this.ListarAsignacionTurnos(null);
     }
 
-    public List<AsignacionTurno> ListarAsignacionTurnos(Integer idTienda){
-        List<AsignacionTurno> turnos;
+    public List<AsignacionTurnoDTO> ListarAsignacionTurnos(Integer idTienda){
+        List<AsignacionTurnoDTO> turnos;
 
         if(idTienda == null){
-            turnos = this.asignacionTurnoRepository.findAll();
+            turnos = asignacionTurnoCapitanMapper.toDTOList(this.asignacionTurnoRepository.findAll());
         }else{
-            turnos= this.asignacionTurnoRepository.findAsignacionesByTiendaId(idTienda);
+            turnos= asignacionTurnoCapitanMapper.toDTOList(this.asignacionTurnoRepository.findAsignacionesByTiendaId(idTienda));
         }
 
         return turnos;
     }
 
-    public AsignacionTurno findById(Integer id) { return this.asignacionTurnoRepository.findById(id).get();}
+    public AsignacionTurnoDTO findById(Integer id) { return asignacionTurnoCapitanMapper.toDTO(this.asignacionTurnoRepository.findById(id).get());}
 
-    public void save(AsignacionTurno au) { this.asignacionTurnoRepository.save(au); }
+    public void save(AsignacionTurnoDTO dto) {
 
-    public List<AsignacionTurno> findByCadenaLocalidad(Integer cadenaId, String localidad) { return this.asignacionTurnoRepository.findByCadenaLocalidad(cadenaId,localidad); }
+        AsignacionTurno au;
 
-    public List<AsignacionTurno> findByLocalidad(String localidad) { return this.asignacionTurnoRepository.findByLocalidad(localidad); }
+        if (dto.getIdAsignacion() != null) {
+            au = this.asignacionTurnoRepository.findById(dto.getIdAsignacion())
+                    .orElseThrow(() -> new RuntimeException("Asignación no encontrada con ID: " + dto.getIdAsignacion()));
+        } else {
+            au = new AsignacionTurno();
+        }
+
+        au.setDia(dto.getDia());
+        au.setFranja(dto.getFranja());
+        if (dto.getHoraInicio() != null) au.setHoraInicio(LocalTime.parse(dto.getHoraInicio()));
+        if (dto.getHoraFin() != null) au.setHoraFin(LocalTime.parse(dto.getHoraFin()));
+
+
+        if (dto.getCampanaResponseDTO() != null && dto.getCampanaResponseDTO().getId() != null) {
+            au.setIdCampana(this.campanaRepository.findById(dto.getCampanaResponseDTO().getId())
+                    .orElseThrow(() -> new RuntimeException("Campaña no encontrada con ID: " + dto.getCampanaResponseDTO().getId())));
+        } else {
+            throw new IllegalArgumentException("La campaña es obligatoria para registrar una asignación de turno.");
+        }
+
+        if (dto.getVoluntarioDTO() != null && dto.getVoluntarioDTO().getId() != null) {
+
+            var voluntario = this.voluntarioRepository.findById(dto.getVoluntarioDTO().getId())
+                    .orElseThrow(() -> new RuntimeException("Voluntario no encontrado con ID: " + dto.getVoluntarioDTO().getId()));
+
+            au.setIdVoluntario(voluntario);
+
+            au.setIdColaborador(voluntario.getIdColaborador());
+        } else {
+            throw new IllegalArgumentException("El voluntario es obligatorio para registrar una asignación de turno.");
+        }
+
+        if (dto.getTiendaResponseDTO() != null && dto.getTiendaResponseDTO().getId() != null) {
+            au.setIdTienda(this.tiendaRepository.findById(dto.getTiendaResponseDTO().getId())
+                    .orElseThrow(() -> new RuntimeException("Tienda no encontrada con ID: " + dto.getTiendaResponseDTO().getId())));
+        } else {
+            throw new IllegalArgumentException("La tienda es obligatoria para registrar una asignación de turno.");
+        }
+
+        if (dto.getIncidenciaDTO() != null && dto.getIncidenciaDTO().getIdIncidencia() != null) {
+            au.setIncidencia(this.incidenciaRepository.findById(dto.getIncidenciaDTO().getIdIncidencia())
+                    .orElse(null));
+        } else {
+            au.setIncidencia(null);
+        }
+
+        this.asignacionTurnoRepository.save(au);
+    }
+
+    public List<AsignacionTurnoDTO> findByCadenaLocalidad(Integer cadenaId, String localidad) {
+        return asignacionTurnoCapitanMapper.toDTOList(this.asignacionTurnoRepository.findByCadenaLocalidad(cadenaId,localidad));
+    }
+
+    public List<AsignacionTurnoDTO> findByLocalidad(String localidad) {
+        return asignacionTurnoCapitanMapper.toDTOList(this.asignacionTurnoRepository.findByLocalidad(localidad));
+    }
 
 }
