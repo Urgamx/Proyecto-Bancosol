@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IncidenciaDTO {
-
+    private Integer idIncidencia;
     private Integer idAsignacionTurno;
     private String descripcion;
 

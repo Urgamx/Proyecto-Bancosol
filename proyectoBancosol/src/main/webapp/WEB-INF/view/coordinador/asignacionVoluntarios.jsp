@@ -2,7 +2,8 @@
 <%@ page import="com.example.proyectobancosol.entity.*" %>
 <%@ page import="com.example.proyectobancosol.dto.response.UsuarioTiendaDTO" %>
 <%@ page import="com.example.proyectobancosol.dto.response.CadenaResponseDTO" %>
-<%@ page import="com.example.proyectobancosol.dto.response.UsuarioDTO" %><%--
+<%@ page import="com.example.proyectobancosol.dto.response.UsuarioDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.AsignacionTurnoDTO" %><%--
   Created by IntelliJ IDEA.
   User: USUARIO
   Date: 18/05/2026
@@ -14,7 +15,7 @@
 <html lang="es">
 <%
     Usuario user = (Usuario) session.getAttribute("usuario");
-    List<AsignacionTurno> turnos = (List<AsignacionTurno>) request.getAttribute("turnos");
+    List<AsignacionTurnoDTO> turnos = (List<AsignacionTurnoDTO>) request.getAttribute("turnos");
     List<UsuarioTiendaDTO> relaciones = (List<UsuarioTiendaDTO>) request.getAttribute("relaciones");
     List<CadenaResponseDTO> cadenas = (List<CadenaResponseDTO>) request.getAttribute("cadenas");
     List<UsuarioDTO> capitanes = (List<UsuarioDTO>) request.getAttribute("capitanes");
@@ -61,18 +62,18 @@
     </tr>
 
     <%
-        for (AsignacionTurno turno : turnos) {
+        for (AsignacionTurnoDTO turno : turnos) {
     %>
     <tr>
-        <td><%=turno.getIdTienda().getNombre()%></td>
-        <td><%=turno.getIdTienda().getDireccion()%></td>
-        <td><%=turno.getIdTienda().getLocalidad()%></td>
-        <td><%=turno.getIdCampana().getTipoDeCampana().getNombre()%></td>
+        <td><%=turno.getTiendaResponseDTO().getNombre()%></td>
+        <td><%=turno.getTiendaResponseDTO().getDireccion()%></td>
+        <td><%=turno.getTiendaResponseDTO().getLocalidad()%></td>
+        <td><%=turno.getCampanaResponseDTO().getTipoCampana()%></td>
         <%
             String nombreCapitan = "";
             for (UsuarioTiendaDTO relacion : relaciones) {
                 for (UsuarioDTO capitan : capitanes) {
-                    if (relacion.getTiendaId().equals(turno.getIdTienda().getId()) && relacion.getUsuarioId().equals(capitan.getId())) {
+                    if (relacion.getTiendaId().equals(turno.getTiendaResponseDTO().getId()) && relacion.getUsuarioId().equals(capitan.getId())) {
                         nombreCapitan = capitan.getNombreCompleto();
                         break;
                     }
@@ -82,10 +83,10 @@
         <td><%=nombreCapitan%></td>
 
         <td><%=turno.getHoraInicio()%>-<%=turno.getHoraFin()%> / <%=turno.getDia()%> / <%=turno.getFranja()%></td>
-        <td><%=turno.getIdColaborador().getNombreEntidad()%> - <%=turno.getIdColaborador().getContactoNom()%> (<%=turno.getIdColaborador().getContactoTlf()%>)</td>
-        <td><%=turno.getIdVoluntario().getNombre()%> (<%=turno.getIdVoluntario().getTelefono()%>)</td>
-        <td><%=turno.getIdColaborador().getObservaciones()%></td>
-        <td><a href="/coordinador/asignacionSeleccion?id=<%=turno.getId()%>">Editar</a></td>
+        <td><%=turno.getColaboradorRequestDTO().getNombreEntidad()%> - <%=turno.getColaboradorRequestDTO().getContactoNom()%> (<%=turno.getColaboradorRequestDTO().getContactoTlf()%>)</td>
+        <td><%=turno.getVoluntarioDTO().getNombre()%> (<%=turno.getVoluntarioDTO().getTelefono()%>)</td>
+        <td><%=turno.getColaboradorRequestDTO().getObservaciones()%></td>
+        <td><a href="/coordinador/asignacionSeleccion?id=<%=turno.getIdAsignacion()%>">Editar</a></td>
     </tr>
     <%}%>
 </table>

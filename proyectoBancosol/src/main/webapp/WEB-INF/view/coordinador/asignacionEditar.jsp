@@ -3,11 +3,12 @@
 <%@ page import="com.example.proyectobancosol.dto.response.ColaboradorResponseDTO" %>
 <%@ page import="com.example.proyectobancosol.dto.response.VoluntarioDTO" %>
 <%@ page import="com.example.proyectobancosol.dto.request.ColaboradorRequestDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.AsignacionTurnoDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="es">
 <%
-    AsignacionTurno turno = (AsignacionTurno) request.getAttribute("turno");
+    AsignacionTurnoDTO turno = (AsignacionTurnoDTO) request.getAttribute("turno");
     List<ColaboradorResponseDTO> colaboradores = (List<ColaboradorResponseDTO>) request.getAttribute("colaboradores");
     ColaboradorRequestDTO colaboradorSelected = (ColaboradorRequestDTO) request.getAttribute("colaboradorSelected");
     List<VoluntarioDTO> voluntarios = (List<VoluntarioDTO>) request.getAttribute("voluntarios");
@@ -24,16 +25,16 @@
 <h1>Editar Turno</h1>
 
 <form method="post" action="<%= formAction %>">
-    <input type="hidden" name="id" value="<%=turno.getId()%>">
+    <input type="hidden" name="id" value="<%=turno.getIdAsignacion()%>">
     <input type="hidden" name="colaboradorId" value="<%= colaboradorSelected != null ? colaboradorSelected.getId() : "" %>">
     <table>
         <tr>
             <td>TIENDA</td>
-            <th><%= turno.getIdTienda().getNombre() %></th>
+            <th><%= turno.getTiendaResponseDTO().getNombre() %></th>
         </tr>
         <tr>
             <td>DOMICILIO</td>
-            <th><%= turno.getIdTienda().getDireccion() %></th>
+            <th><%= turno.getTiendaResponseDTO().getDireccion() %></th>
         </tr>
 
         <tr>
@@ -44,7 +45,7 @@
                     <%
                         for (ColaboradorResponseDTO colaborador : colaboradores) {
                             String selected = "";
-                            if (turno.getIdColaborador().getId().equals(colaborador.getId())) {
+                            if (turno.getColaboradorRequestDTO().getId().equals(colaborador.getId())) {
                                 selected = "selected";
                             }
                     %>
@@ -71,7 +72,7 @@
                     <%
                         for (VoluntarioDTO voluntario : voluntarios) {
                             String selected = "";
-                            if (turno.getIdVoluntario().getId().equals(voluntario.getId())) {
+                            if (turno.getVoluntarioDTO().getId().equals(voluntario.getId())) {
                                 selected = "selected";
                             }
                     %>
