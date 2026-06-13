@@ -47,11 +47,11 @@ public class AdminMenuService {
                 item(
                         "Responsable entidad",
                         "Menu creado para responsable de entidad",
-                        "/resp-entidad"),
+                        "/admin/resp-entidad"),
                 item(
                         "Responsable tienda",
                         "Menu creado para responsable de tienda",
-                        "/resp-tienda")
+                        "/admin/resp-tienda")
         );
     }
 
