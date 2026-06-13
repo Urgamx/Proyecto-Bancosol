@@ -1,7 +1,10 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.proyectobancosol.entity.Colaborador" %>
 <%@ page import="com.example.proyectobancosol.entity.Usuario" %>
-<%@ page import="com.example.proyectobancosol.entity.UsuarioColaborador" %><%--
+<%@ page import="com.example.proyectobancosol.entity.UsuarioColaborador" %>
+<%@ page import="com.example.proyectobancosol.dto.response.ColaboradorResponseDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.UsuarioColaboradorDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.UsuarioDTO" %><%--
   Created by IntelliJ IDEA.
   User: USUARIO
   Date: 17/05/2026
@@ -12,9 +15,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <%
-    List<Colaborador> colaboradores = (List<Colaborador>) request.getAttribute("colaboradores");
-    List<UsuarioColaborador> relaciones = (List<UsuarioColaborador>) request.getAttribute("relaciones");
-    List<Usuario> coordinadores = (List<Usuario>) request.getAttribute("coordinadores");
+    List<ColaboradorResponseDTO> colaboradores = (List<ColaboradorResponseDTO>) request.getAttribute("colaboradores");
+    List<UsuarioColaboradorDTO> relaciones = (List<UsuarioColaboradorDTO>) request.getAttribute("relaciones");
+    List<UsuarioDTO> coordinadores = (List<UsuarioDTO>) request.getAttribute("coordinadores");
     Usuario user = (Usuario) session.getAttribute("usuario");
     String zonaGeo = (String) request.getAttribute("zonaGeo");
     String localidad = (String) request.getAttribute("localidad");
@@ -49,7 +52,7 @@
         <select name="coordinador">
             <option value=""></option>
             <%
-                for (Usuario coordinador : coordinadores) {
+                for (UsuarioDTO coordinador : coordinadores) {
             %>
             <option value="<%=coordinador.getId()%>" <%=coordinador.getId().equals(coordinadorFiltro) ? "selected" : ""%>><%=coordinador.getNombreCompleto()%></option>
             <%}%>
@@ -73,7 +76,7 @@
     <tbody>
 
     <%
-        for (Colaborador colaborador : colaboradores) {
+        for (ColaboradorResponseDTO colaborador : colaboradores) {
     %>
     <tr>
         <td><a href="/coordinador/editarColaborador?id=<%=colaborador.getId()%>"><%=colaborador.getNombreEntidad()%></a></td>
@@ -82,10 +85,12 @@
         <td><%=colaborador.getZonaGeografica()%></td>
         <%
             String coordinadorNombre = "";
-            for (UsuarioColaborador relacion : relaciones) {
-                if (colaborador.getId().equals(relacion.getColaborador().getId())) {
-                    coordinadorNombre = relacion.getUsuario().getNombreCompleto();
-                    break;
+            for (UsuarioColaboradorDTO relacion : relaciones) {
+                for (UsuarioDTO coordinador : coordinadores) {
+                    if (colaborador.getId().equals(relacion.getColaboradorId()) && relacion.getUsuarioId().equals(coordinador.getId())) {
+                        coordinadorNombre = coordinador.getNombreCompleto();
+                        break;
+                    }
                 }
             }
         %>

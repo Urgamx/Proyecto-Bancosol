@@ -1,5 +1,7 @@
 package com.example.proyectobancosol.controller.coordinador;
 
+import com.example.proyectobancosol.dto.request.ColaboradorRequestDTO;
+import com.example.proyectobancosol.dto.response.*;
 import com.example.proyectobancosol.entity.*;
 import com.example.proyectobancosol.service.capitan.AsignacionTurnoService;
 import com.example.proyectobancosol.service.capitan.TiendaService;
@@ -49,9 +51,9 @@ public class CoordinadorController {
             return "redirect:/";
         }
 
-        List<Colaborador> colaboradores = this.colaboradorService.findAllActivos();
-        List<UsuarioColaborador> relaciones = this.usuarioColaboradorService.findAll();
-        List<Usuario> coordinadores = this.usuarioService.findCoordinador();
+        List<ColaboradorResponseDTO> colaboradores = this.colaboradorService.findAllActivos();
+        List<UsuarioColaboradorDTO> relaciones = this.usuarioColaboradorService.findAll();
+        List<UsuarioDTO> coordinadores = this.usuarioService.findCoordinador();
         model.addAttribute("colaboradores",colaboradores);
         model.addAttribute("relaciones", relaciones);
         model.addAttribute("coordinadores", coordinadores);
@@ -69,14 +71,14 @@ public class CoordinadorController {
             return "redirect:/";
         }
 
-        List<Colaborador> colaboradores = null;
+        List<ColaboradorResponseDTO> colaboradores = null;
         if (coordinadorId == null) {
             colaboradores = this.usuarioColaboradorService.findByZonaLocalidad(zonaGeo,localidad);
         } else {
             colaboradores = this.usuarioColaboradorService.findByZonaLocalidadCoorId(zonaGeo,localidad,coordinadorId);
         }
-        List<UsuarioColaborador> relaciones = this.usuarioColaboradorService.findAll();
-        List<Usuario> coordinadores = this.usuarioService.findCoordinador();
+        List<UsuarioColaboradorDTO> relaciones = this.usuarioColaboradorService.findAll();
+        List<UsuarioDTO> coordinadores = this.usuarioService.findCoordinador();
         model.addAttribute("colaboradores",colaboradores);
         model.addAttribute("relaciones", relaciones);
         model.addAttribute("coordinadores", coordinadores);
@@ -97,7 +99,7 @@ public class CoordinadorController {
             return "redirect:/";
         }
 
-        Colaborador colaborador = this.colaboradorService.findById(id);
+        ColaboradorRequestDTO colaborador = this.colaboradorService.findById(id);
         model.addAttribute("colaborador",colaborador);
         return "coordinador/editarColaborador";
     }
@@ -131,12 +133,12 @@ public class CoordinadorController {
             return "redirect:/";
         }
 
-        Colaborador colaborador = null;
+        ColaboradorRequestDTO colaborador = null;
 
         if (id != null) {
             colaborador = this.colaboradorService.findById(id);
         } else {
-            colaborador = new Colaborador();
+            colaborador = new ColaboradorRequestDTO();
         }
 
         colaborador.setEmail(email);
@@ -152,9 +154,9 @@ public class CoordinadorController {
         this.colaboradorService.save(colaborador);
 
         if (id == null) {
-            UsuarioColaborador relacion = new UsuarioColaborador();
-            relacion.setColaborador(colaborador);
-            relacion.setUsuario(user);
+            UsuarioColaboradorDTO relacion = new UsuarioColaboradorDTO();
+            relacion.setColaboradorId(colaborador.getId());
+            relacion.setUsuarioId(user.getId());
             this.usuarioColaboradorService.save(relacion);
         }
 
@@ -169,13 +171,15 @@ public class CoordinadorController {
             return "redirect:/";
         }
 
-        List<UsuarioTienda> relaciones = this.usuarioTiendaService.findAll();
+        List<UsuarioTiendaDTO> relaciones = this.usuarioTiendaService.findAll();
         List<AsignacionTurno> turnos = this.asignacionTurnoService.ListarAsignacionTurnos();
-        List<Cadena> cadenas = this.cadenaService.findAll();
+        List<CadenaResponseDTO> cadenas = this.cadenaService.findAll();
+        List<UsuarioDTO> capitanes = this.usuarioService.findCapitan();
 
         model.addAttribute("turnos",turnos);
         model.addAttribute("relaciones",relaciones);
         model.addAttribute("cadenas",cadenas);
+        model.addAttribute("capitanes",capitanes);
 
         return "coordinador/asignacionVoluntarios";
     }
@@ -191,14 +195,16 @@ public class CoordinadorController {
         }
 
         List<AsignacionTurno> turnos = this.asignacionTurnoService.findByCadenaLocalidad(cadenaId,localidad);
-        List<UsuarioTienda> relaciones = this.usuarioTiendaService.findAll();
-        List<Cadena> cadenas = this.cadenaService.findAll();
+        List<UsuarioTiendaDTO> relaciones = this.usuarioTiendaService.findAll();
+        List<CadenaResponseDTO> cadenas = this.cadenaService.findAll();
+        List<UsuarioDTO> capitanes = this.usuarioService.findCapitan();
 
         model.addAttribute("cadenaSelected",cadenaId);
         model.addAttribute("localidadSelected",localidad);
         model.addAttribute("turnos",turnos);
         model.addAttribute("relaciones",relaciones);
         model.addAttribute("cadenas",cadenas);
+        model.addAttribute("capitanes",capitanes);
 
         return "coordinador/asignacionVoluntarios";
     }
@@ -214,7 +220,7 @@ public class CoordinadorController {
 
 
         AsignacionTurno turno = this.asignacionTurnoService.findById(id);
-        List<Colaborador> colaboradores = this.colaboradorService.findAll();
+        List<ColaboradorResponseDTO> colaboradores = this.colaboradorService.findAll();
 
         model.addAttribute("turno",turno);
         model.addAttribute("colaboradores",colaboradores);
@@ -234,9 +240,9 @@ public class CoordinadorController {
 
 
         AsignacionTurno turno = this.asignacionTurnoService.findById(id);
-        Colaborador colaborador = this.colaboradorService.findById(colaboradorId);
-        List<Colaborador> colaboradores = this.colaboradorService.findAll();
-        List<Voluntario> voluntarios = this.voluntarioService.findAllByColaborador(colaboradorId);
+        ColaboradorRequestDTO colaborador = this.colaboradorService.findById(colaboradorId);
+        List<ColaboradorResponseDTO> colaboradores = this.colaboradorService.findAll();
+        List<VoluntarioDTO> voluntarios = this.voluntarioService.findAllByColaborador(colaboradorId);
 
 
         model.addAttribute("turno",turno);
@@ -265,11 +271,11 @@ public class CoordinadorController {
 
 
         AsignacionTurno turno = this.asignacionTurnoService.findById(id);
-        Voluntario voluntario = this.voluntarioService.findById(voluntarioId);
-        Colaborador colaborador = this.colaboradorService.findById(colaboradorId);
+        VoluntarioDTO voluntario = this.voluntarioService.findById(voluntarioId);
+        ColaboradorRequestDTO colaborador = this.colaboradorService.findById(colaboradorId);
 
-        turno.setIdColaborador(colaborador);
-        turno.setIdVoluntario(voluntario);
+        //turno.setIdColaborador(colaborador);
+        //turno.setIdVoluntario(voluntario);
         turno.setHoraInicio(comienzo);
         turno.setHoraFin(fin);
         turno.setDia(dia);
@@ -290,7 +296,7 @@ public class CoordinadorController {
         }
 
 
-        List<Colaborador> colaboradores = this.colaboradorService.findAll();
+        List<ColaboradorResponseDTO> colaboradores = this.colaboradorService.findAll();
         List<Tienda> tiendas = this.tiendaService.ListarTiendas();
 
         model.addAttribute("colaboradores",colaboradores);
@@ -309,13 +315,13 @@ public class CoordinadorController {
             return "redirect:/";
         }
 
-        Colaborador colaboradorSelected = this.colaboradorService.findById(colaboradorId);
+        ColaboradorRequestDTO colaboradorSelected = this.colaboradorService.findById(colaboradorId);
         Tienda tiendaSelected = this.tiendaService.findTiendaById(tiendaId);
-        List<Colaborador> colaboradores = this.colaboradorService.findAll();
+        List<ColaboradorResponseDTO> colaboradores = this.colaboradorService.findAll();
         List<Tienda> tiendas = this.tiendaService.ListarTiendas();
-        List<Voluntario> voluntarios = this.voluntarioService.findAllByColaborador(colaboradorId);
-        List<Usuario> capitanes = this.usuarioService.findCapitan();
-        List<Campana> campanas = this.campanaService.findByCadena(tiendaSelected.getIdCadena().getId());
+        List<VoluntarioDTO> voluntarios = this.voluntarioService.findAllByColaborador(colaboradorId);
+        List<UsuarioDTO> capitanes = this.usuarioService.findCapitan();
+        List<CampanaResponseDTO> campanas = this.campanaService.findByCadena(tiendaSelected.getIdCadena().getId());
 
         model.addAttribute("colaboradores",colaboradores);
         model.addAttribute("tiendas",tiendas);
@@ -348,26 +354,26 @@ public class CoordinadorController {
         }
 
         Tienda tienda = this.tiendaService.findTiendaById(tiendaId);
-        Voluntario voluntario = this.voluntarioService.findById(voluntarioId);
-        Colaborador colaborador = this.colaboradorService.findById(colaboradorId);
-        Usuario capitan = this.usuarioService.findById(capitanId);
-        Campana campana = this.campanaService.findById(campanaId);
+        VoluntarioDTO voluntario = this.voluntarioService.findById(voluntarioId);
+        ColaboradorRequestDTO colaborador = this.colaboradorService.findById(colaboradorId);
+        UsuarioDTO capitan = this.usuarioService.findById(capitanId);
+        CampanaResponseDTO campana = this.campanaService.findById(campanaId);
 
         AsignacionTurno turno = new AsignacionTurno();
-        UsuarioTienda relacion = new UsuarioTienda();
+        UsuarioTiendaDTO relacion = new UsuarioTiendaDTO();
 
-        turno.setIdColaborador(colaborador);
-        turno.setIdVoluntario(voluntario);
+        //turno.setIdColaborador(colaborador);
+        //turno.setIdVoluntario(voluntario);
         turno.setIdTienda(tienda);
-        turno.setIdCampana(campana);
+        //turno.setIdCampana(campana);
         turno.setHoraInicio(comienzo);
         turno.setHoraFin(fin);
         turno.setDia(dia);
         turno.setFranja(franja);
 
         relacion.setId(new UsuarioTiendaId());
-        relacion.setUsuario(capitan);
-        relacion.setTienda(tienda);
+        relacion.setUsuarioId(capitan.getId());
+        relacion.setTiendaId(tiendaId);
 
         this.asignacionTurnoService.save(turno);
         this.usuarioTiendaService.save(relacion);

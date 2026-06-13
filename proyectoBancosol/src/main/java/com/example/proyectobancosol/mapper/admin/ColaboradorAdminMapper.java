@@ -24,6 +24,7 @@ public class ColaboradorAdminMapper extends MapperDTO<ColaboradorResponseDTO, Co
                 colaborador.getDomicilio(),
                 colaborador.getLocalidad(),
                 colaborador.getZonaGeografica(),
+                colaborador.getObservaciones(),
                 colaborador.getCodPostal(),
                 estadoTexto(colaborador.getEstado()),
                 coordinadores,

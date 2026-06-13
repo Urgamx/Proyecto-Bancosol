@@ -1,6 +1,8 @@
 <%@ page import="com.example.proyectobancosol.entity.Usuario" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.proyectobancosol.entity.Rol" %><%--
+<%@ page import="com.example.proyectobancosol.entity.Rol" %>
+<%@ page import="com.example.proyectobancosol.dto.response.RolResponseDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.UsuarioDTO" %><%--
   Created by IntelliJ IDEA.
   User: USUARIO
   Date: 12/06/2026
@@ -11,8 +13,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <%
-    Usuario usuario = (Usuario) request.getAttribute("usuario");
-    List<Rol> roles = (List<Rol>) request.getAttribute("roles");
+    UsuarioDTO usuario = (UsuarioDTO) request.getAttribute("usuario");
+    List<RolResponseDTO> roles = (List<RolResponseDTO>) request.getAttribute("roles");
 %>
 <head>
     <meta charset="UTF-8">
@@ -43,8 +45,8 @@
             <td><label>Rol</label></td>
             <td>
                 <select name="rol">
-                    <% for (Rol rol : roles) {%>
-                        <option value="<%=rol.getId()%>" <%=usuario != null && usuario.getIdRol().getId().equals(rol.getId()) ? "selected" : ""%>><%=rol.getNombre()%></option>
+                    <% for (RolResponseDTO rol : roles) {%>
+                        <option value="<%=rol.getId()%>" <%=usuario != null && usuario.getIdRol().equals(rol.getId()) ? "selected" : ""%>><%=rol.getNombre()%></option>
                     <%}%>
                 </select>
             </td>

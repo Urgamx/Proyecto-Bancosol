@@ -1,5 +1,8 @@
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.proyectobancosol.entity.*" %><%--
+<%@ page import="com.example.proyectobancosol.entity.*" %>
+<%@ page import="com.example.proyectobancosol.dto.response.UsuarioTiendaDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.CadenaResponseDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.UsuarioDTO" %><%--
   Created by IntelliJ IDEA.
   User: USUARIO
   Date: 18/05/2026
@@ -12,8 +15,9 @@
 <%
     Usuario user = (Usuario) session.getAttribute("usuario");
     List<AsignacionTurno> turnos = (List<AsignacionTurno>) request.getAttribute("turnos");
-    List<UsuarioTienda> relaciones = (List<UsuarioTienda>) request.getAttribute("relaciones");
-    List<Cadena> cadenas = (List<Cadena>) request.getAttribute("cadenas");
+    List<UsuarioTiendaDTO> relaciones = (List<UsuarioTiendaDTO>) request.getAttribute("relaciones");
+    List<CadenaResponseDTO> cadenas = (List<CadenaResponseDTO>) request.getAttribute("cadenas");
+    List<UsuarioDTO> capitanes = (List<UsuarioDTO>) request.getAttribute("capitanes");
     Integer cadenaSelected = (Integer) request.getAttribute("cadenaSelected");
     String localidadSelected = (String) request.getAttribute("localidadSelected");
 %>
@@ -31,7 +35,7 @@
     <label>CADENA:</label>
     <select name="cadenaId">
         <%
-            for(Cadena cadena : cadenas) {
+            for(CadenaResponseDTO cadena : cadenas) {
         %>
         <option value="<%=cadena.getId()%>" <%=cadenaSelected != null && cadena.getId().equals(cadenaSelected) ? "selected" : ""%>><%=cadena.getNombre()%></option>
         <%}%>
@@ -64,15 +68,17 @@
         <td><%=turno.getIdTienda().getLocalidad()%></td>
         <td><%=turno.getIdCampana().getTipoDeCampana().getNombre()%></td>
         <%
-            String capitan = "";
-            for (UsuarioTienda relacion : relaciones) {
-                if (relacion.getTienda().getId().equals(turno.getIdTienda().getId())) {
-                    capitan = relacion.getUsuario().getNombreCompleto();
-                    break;
+            String nombreCapitan = "";
+            for (UsuarioTiendaDTO relacion : relaciones) {
+                for (UsuarioDTO capitan : capitanes) {
+                    if (relacion.getTiendaId().equals(turno.getIdTienda().getId()) && relacion.getUsuarioId().equals(capitan.getId())) {
+                        nombreCapitan = capitan.getNombreCompleto();
+                        break;
+                    }
                 }
             }
         %>
-        <td><%=capitan%></td>
+        <td><%=nombreCapitan%></td>
 
         <td><%=turno.getHoraInicio()%>-<%=turno.getHoraFin()%> / <%=turno.getDia()%> / <%=turno.getFranja()%></td>
         <td><%=turno.getIdColaborador().getNombreEntidad()%> - <%=turno.getIdColaborador().getContactoNom()%> (<%=turno.getIdColaborador().getContactoTlf()%>)</td>
@@ -86,7 +92,11 @@
     <a href="/coordinador/nuevoTurno" class="btn btn-primary">Añadir Turno</a>
 </div>
 <div class="mt-3">
+    <%if (user.getIdRol().getId().equals(3)) {%>
     <a href="/coordinador/" class="btn btn-secondary">Volver</a>
+    <%} else if (user.getIdRol().getId().equals(1)) {%>
+    <a href="/admin/" class="btn btn-secondary">Volver</a>
+    <%}%>
 </div>
 </div>
 </body>

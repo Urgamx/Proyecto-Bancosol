@@ -1,7 +1,13 @@
 package com.example.proyectobancosol.service.coordinador;
 
+import com.example.proyectobancosol.dao.RolRepository;
 import com.example.proyectobancosol.dao.UsuarioRepository;
+import com.example.proyectobancosol.dto.request.CoordinadorRequestDTO;
+import com.example.proyectobancosol.dto.response.CoordinadorResponseDTO;
+import com.example.proyectobancosol.dto.response.UsuarioDTO;
 import com.example.proyectobancosol.entity.Usuario;
+import com.example.proyectobancosol.mapper.admin.CoordinadorAdminMapper;
+import com.example.proyectobancosol.mapper.coordinador.UsuarioMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,17 +18,37 @@ import java.util.List;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioMapper usuarioMapper;
+    private final RolRepository rolRepository;
 
-    public List<Usuario> findAll() { return this.usuarioRepository.findAll(); }
+    public List<UsuarioDTO> findAll() {
+        return usuarioMapper.toDTOList(this.usuarioRepository.findAll());
+    }
 
-    public Usuario findById(Integer id) { return this.usuarioRepository.findById(id).get(); }
+    public UsuarioDTO findById(Integer id) {
+        return usuarioMapper.toDTO(this.usuarioRepository.findById(id).get());
+    }
 
-    public List<Usuario> findCoordinador() { return usuarioRepository.findCoordinador(); }
+    public List<UsuarioDTO> findCoordinador() {
+        return usuarioMapper.toDTOList(this.usuarioRepository.findCoordinador());
+    }
 
-    public List<Usuario> findCapitan() { return usuarioRepository.findCapitan(); }
+    public List<UsuarioDTO> findCapitan() {
+        return usuarioMapper.toDTOList(this.usuarioRepository.findCapitan());
+    }
 
-    public void save(Usuario usuario) { this.usuarioRepository.save(usuario); }
+    public void save(UsuarioDTO dto) {
+        Usuario usuario = this.usuarioRepository.findById(dto.getId()).orElse(new Usuario());
+        usuario.setEmail(dto.getEmail());
+        usuario.setActivo(dto.getActivo());
+        usuario.setIdRol(this.rolRepository.findById(dto.getIdRol()).get());
+        usuario.setNombreCompleto(dto.getNombreCompleto());
+        usuario.setPassword(dto.getPassword());
+        this.usuarioRepository.save(usuario);
+    }
 
-    public void delete(Usuario usuario) { this.usuarioRepository.delete(usuario);}
+    public void delete(UsuarioDTO dto) {
+        this.usuarioRepository.delete(this.usuarioRepository.findById(dto.getId()).get());
+    }
 
 }

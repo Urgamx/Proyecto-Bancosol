@@ -17,6 +17,7 @@ public class ColaboradorResponseDTO {
     private String domicilio;
     private String localidad;
     private String zonaGeografica;
+    private String observaciones;
     private String codPostal;
     private String estado;
     private String coordinadoresAsignados;

@@ -1,5 +1,10 @@
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.proyectobancosol.entity.*" %><%--
+<%@ page import="com.example.proyectobancosol.entity.*" %>
+<%@ page import="com.example.proyectobancosol.dto.response.ColaboradorResponseDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.request.ColaboradorRequestDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.VoluntarioDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.UsuarioDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.CampanaResponseDTO" %><%--
   Created by IntelliJ IDEA.
   User: USUARIO
   Date: 09/06/2026
@@ -10,13 +15,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <%
-  Usuario user = (Usuario) session.getAttribute("usuario");
-  List<Colaborador> colaboradores = (List<Colaborador>) request.getAttribute("colaboradores");
-  Colaborador colaboradorSelected = (Colaborador) request.getAttribute("colaboradorSelected");
-  List<Voluntario> voluntarios = (List<Voluntario>) request.getAttribute("voluntarios");
+  List<ColaboradorResponseDTO> colaboradores = (List<ColaboradorResponseDTO>) request.getAttribute("colaboradores");
+  ColaboradorRequestDTO colaboradorSelected = (ColaboradorRequestDTO) request.getAttribute("colaboradorSelected");
+  List<VoluntarioDTO> voluntarios = (List<VoluntarioDTO>) request.getAttribute("voluntarios");
   List<Tienda> tiendas = (List<Tienda>) request.getAttribute("tiendas");
-  List<Usuario> capitanes = (List<Usuario>) request.getAttribute("capitanes");
-  List<Campana> campanas = (List<Campana>) request.getAttribute("campanas");
+  List<UsuarioDTO> capitanes = (List<UsuarioDTO>) request.getAttribute("capitanes");
+  List<CampanaResponseDTO> campanas = (List<CampanaResponseDTO>) request.getAttribute("campanas");
   Tienda tiendaSelected = (Tienda) request.getAttribute("tiendaSelected");
   String formAction = (colaboradorSelected == null) ? "/coordinador/seleccionarNuevo" : "/coordinador/guardarTurnoNuevo";
 %>
@@ -44,7 +48,7 @@
         <% if (colaboradorSelected == null) { %>
         <select name="colaborador">
           <%
-            for (Colaborador colaborador : colaboradores) {
+            for (ColaboradorResponseDTO colaborador : colaboradores) {
 
           %>
           <option value="<%= colaborador.getId() %>"><%= colaborador.getNombreEntidad() %></option>
@@ -91,9 +95,9 @@
       <td>
         <select name="campana">
           <%
-            for (Campana campana : campanas) {
+            for (CampanaResponseDTO campana : campanas) {
           %>
-          <option value="<%= campana.getId() %>" ><%= campana.getTipoDeCampana().getNombre() %></option>
+          <option value="<%= campana.getId() %>" ><%= campana.getTipoCampana() %></option>
           <% } %>
         </select>
       </td>
@@ -103,7 +107,7 @@
       <td>
         <select name="capitan">
           <%
-            for (Usuario capitan : capitanes) {
+            for (UsuarioDTO capitan : capitanes) {
           %>
           <option value="<%= capitan.getId() %>" ><%= capitan.getNombreCompleto() %></option>
           <% } %>
@@ -115,7 +119,7 @@
       <td>
         <select name="voluntario">
           <%
-            for (Voluntario voluntario : voluntarios) {
+            for (VoluntarioDTO voluntario : voluntarios) {
           %>
           <option value="<%= voluntario.getId() %>" ><%= voluntario.getNombre() %></option>
           <% } %>

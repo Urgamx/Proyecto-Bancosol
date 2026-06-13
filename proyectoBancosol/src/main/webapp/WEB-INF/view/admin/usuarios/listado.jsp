@@ -1,5 +1,6 @@
 <%@ page import="com.example.proyectobancosol.entity.Usuario" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.proyectobancosol.dto.response.UsuarioDTO" %><%--
   Created by IntelliJ IDEA.
   User: USUARIO
   Date: 12/06/2026
@@ -11,7 +12,8 @@
 <html lang="es">
 <%
     Usuario user = (Usuario) session.getAttribute("usuario");
-    List<Usuario> usuarios = (List<Usuario>) request.getAttribute("usuarios");
+    List<UsuarioDTO> usuarios = (List<UsuarioDTO>) request.getAttribute("usuarios");
+    String[] nombres = {"ADMIN", "RESP_ENTIDAD", "COORDINADOR", "RESP_TIENDA", "CAPITAN"};
 %>
 <head>
     <meta charset="UTF-8">
@@ -42,14 +44,14 @@
         </tr>
 
         <%
-            for (Usuario usuario : usuarios) {
+            for (UsuarioDTO usuario : usuarios) {
         %>
         <tr>
             <td><%=usuario.getId()%></td>
             <td><%=usuario.getNombreCompleto()%></td>
             <td><%=usuario.getEmail()%></td>
             <td><input type="password" value="<%=usuario.getPassword()%>" readonly style="border:none; background:transparent;"></td>
-            <td><%=usuario.getIdRol().getNombre()%></td>
+            <td><%=nombres[usuario.getIdRol()-1]%></td>
             <td><%=usuario.getActivo() == 1 ? "Activo" : "Inactivo"%></td>
             <td>
                 <a href="/admin/usuarios/editar?id=<%=usuario.getId()%>">Editar</a>
