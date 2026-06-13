@@ -6,6 +6,7 @@ import com.example.proyectobancosol.dao.UsuarioRepository;
 import com.example.proyectobancosol.dao.UsuarioTiendaRepository;
 import com.example.proyectobancosol.dto.response.UsuarioTiendaDTO;
 import com.example.proyectobancosol.entity.UsuarioTienda;
+import com.example.proyectobancosol.entity.UsuarioTiendaId;
 import com.example.proyectobancosol.mapper.coordinador.UsuarioTiendaMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,9 +34,26 @@ public class UsuarioTiendaService {
     }
 
     public void save(UsuarioTiendaDTO dto) {
-        UsuarioTienda ua = this.usuarioTiendaRepository.findById(dto.getId()).orElse(new UsuarioTienda());
-        ua.setTienda(this.tiendaRepository.findById(dto.getTiendaId()).get());
-        ua.setUsuario(this.usuarioRepository.findById(dto.getUsuarioId()).get());
+        UsuarioTienda ua;
+
+        if (dto.getId() != null && dto.getId().getIdUsuario() != null && dto.getId().getIdTienda() != null) {
+            ua = this.usuarioTiendaRepository.findById(dto.getId())
+                    .orElse(new UsuarioTienda());
+        } else {
+            ua = new UsuarioTienda();
+        }
+
+        ua.setTienda(this.tiendaRepository.findById(dto.getTiendaId())
+                .orElseThrow(() -> new RuntimeException("Tienda no encontrada con ID: " + dto.getTiendaId())));
+
+        ua.setUsuario(this.usuarioRepository.findById(dto.getUsuarioId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + dto.getUsuarioId())));
+
+        UsuarioTiendaId idClave = new UsuarioTiendaId();
+        idClave.setIdUsuario(ua.getUsuario().getId());
+        idClave.setIdTienda(ua.getTienda().getId());
+        ua.setId(idClave);
+
         this.usuarioTiendaRepository.save(ua);
     }
 

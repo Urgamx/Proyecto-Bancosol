@@ -1,10 +1,7 @@
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.proyectobancosol.entity.*" %>
-<%@ page import="com.example.proyectobancosol.dto.response.ColaboradorResponseDTO" %>
 <%@ page import="com.example.proyectobancosol.dto.request.ColaboradorRequestDTO" %>
-<%@ page import="com.example.proyectobancosol.dto.response.VoluntarioDTO" %>
-<%@ page import="com.example.proyectobancosol.dto.response.UsuarioDTO" %>
-<%@ page import="com.example.proyectobancosol.dto.response.CampanaResponseDTO" %><%--
+<%@ page import="com.example.proyectobancosol.dto.response.*" %>
+<%@ page import="com.example.proyectobancosol.dto.request.TiendaRequestDTO" %><%--
   Created by IntelliJ IDEA.
   User: USUARIO
   Date: 09/06/2026
@@ -18,10 +15,10 @@
   List<ColaboradorResponseDTO> colaboradores = (List<ColaboradorResponseDTO>) request.getAttribute("colaboradores");
   ColaboradorRequestDTO colaboradorSelected = (ColaboradorRequestDTO) request.getAttribute("colaboradorSelected");
   List<VoluntarioDTO> voluntarios = (List<VoluntarioDTO>) request.getAttribute("voluntarios");
-  List<Tienda> tiendas = (List<Tienda>) request.getAttribute("tiendas");
+  List<TiendaResponseDTO> tiendas = (List<TiendaResponseDTO>) request.getAttribute("tiendas");
   List<UsuarioDTO> capitanes = (List<UsuarioDTO>) request.getAttribute("capitanes");
   List<CampanaResponseDTO> campanas = (List<CampanaResponseDTO>) request.getAttribute("campanas");
-  Tienda tiendaSelected = (Tienda) request.getAttribute("tiendaSelected");
+  TiendaRequestDTO tiendaSelected = (TiendaRequestDTO) request.getAttribute("tiendaSelected");
   String formAction = (colaboradorSelected == null) ? "/coordinador/seleccionarNuevo" : "/coordinador/guardarTurnoNuevo";
 %>
 <head>
@@ -65,7 +62,7 @@
       <th>
         <select name="tienda">
           <%
-            for (Tienda tienda : tiendas) {
+            for (TiendaResponseDTO tienda : tiendas) {
 
           %>
           <option value="<%= tienda.getId() %>"><%= tienda.getNombre() %></option>
