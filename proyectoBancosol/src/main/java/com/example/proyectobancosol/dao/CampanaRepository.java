@@ -39,5 +39,18 @@ public interface CampanaRepository extends JpaRepository<Campana, Integer> {
             where tc.id_campana = :idCampana
             """, nativeQuery = true)
     Long countTurnosByCampana(@Param("idCampana") Integer idCampana);
+
+
+    @Query("""
+        select c.tipoDeCampana.nombre 
+        from Campana c 
+        where c.usuario.id = :usuarioId
+        order by c.fecha desc
+       """)
+    List<String> findNombresCampanasByUsuarioId(@Param("usuarioId") Integer usuarioId);
+
+    @Query("select c.id from Campana c where c.usuario.id = :usuarioId")
+    List<Integer> findIdCampanasByUsuarioId(@Param("usuarioId") Integer usuarioId);
+
 }
 

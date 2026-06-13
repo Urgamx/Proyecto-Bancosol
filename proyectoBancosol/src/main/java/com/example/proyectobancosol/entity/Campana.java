@@ -17,6 +17,10 @@ public class Campana {
     @JoinColumn(name = "id_tipo_campana", nullable = false)
     private TipoDeCampana tipoDeCampana;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
+
     @Column(name = "fecha", nullable = false)
     private Integer fecha;
 
