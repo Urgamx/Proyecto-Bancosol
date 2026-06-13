@@ -24,32 +24,21 @@ public class ResTiendaService {
     private IncidenciaRepository incidenciaRepository;
     private VoluntarioRepository voluntarioRepository;
 
-    /**
-     * Obtener la tienda asignada a un usuario responsable de tienda
-     */
+
     public Tienda obtenerTiendaDelUsuario(Integer idUsuario) {
         return usuarioTiendaRepository.findByUsuarioId(idUsuario)
                 .map(ut -> ut.getTienda())
                 .orElse(null);
     }
 
-    /**
-     * Obtener todas las tiendas del usuario (para responsable tienda siempre será 1)
-     */
     public List<Tienda> obtenerTiendasDelUsuario(Integer idUsuario) {
         return tiendaRepository.findTiendasByUsuarioId(idUsuario);
     }
 
-    /**
-     * Obtener voluntarios (turnos) asignados a una tienda
-     */
     public List<AsignacionTurno> obtenerVoluntariosPorTienda(Integer idTienda) {
         return asignacionTurnoRepository.findAsignacionesByTiendaId(idTienda);
     }
 
-    /**
-     * Registrar una incidencia en un turno
-     */
     public void registrarIncidencia(Integer idAsignacion, String descripcion) {
         AsignacionTurno asignacion = asignacionTurnoRepository.findById(idAsignacion).orElse(null);
         
@@ -64,9 +53,6 @@ public class ResTiendaService {
         }
     }
 
-    /**
-     * Actualizar la descripción de una incidencia existente
-     */
     public void actualizarIncidencia(Integer idAsignacion, String nuevaDescripcion) {
         AsignacionTurno asignacion = asignacionTurnoRepository.findById(idAsignacion).orElse(null);
         
@@ -76,16 +62,10 @@ public class ResTiendaService {
         }
     }
 
-    /**
-     * Obtener tienda por ID
-     */
     public Tienda obtenerTiendaPorId(Integer idTienda) {
         return tiendaRepository.findById(idTienda).orElse(null);
     }
 
-    /**
-     * Obtener voluntario por ID
-     */
     public Voluntario obtenerVoluntarioPorId(Integer idVoluntario) {
         return voluntarioRepository.findById(idVoluntario).orElse(null);
     }

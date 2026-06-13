@@ -28,7 +28,6 @@ public class RespEntidadController {
             return "redirect:/login";
         }
 
-        // Obtener las tiendas asignadas al usuario (generalmente solo 1 para responsable tienda)
         List<Tienda> tiendas = respEntidadService.obtenerTiendasDelUsuario(user.getId());
         model.addAttribute("tiendas", tiendas);
         model.addAttribute("usuario", user);
@@ -44,11 +43,9 @@ public class RespEntidadController {
             return "redirect:/login";
         }
 
-        // Obtener tienda
         Tienda tienda = respEntidadService.obtenerTiendaPorId(idTienda);
         model.addAttribute("tienda", tienda);
 
-        // Obtener voluntarios asignados (turnos)
         List<AsignacionTurno> turnos = respEntidadService.obtenerVoluntariosPorTienda(idTienda);
         model.addAttribute("turnos", turnos);
         model.addAttribute("usuario", user);
@@ -82,10 +79,8 @@ public class RespEntidadController {
             return "redirect:/login";
         }
 
-        // Registrar incidencia a través del servicio
         respEntidadService.registrarIncidencia(idAsignacion, descripcion);
 
-        // Redirigir a la tienda
         return "redirect:/resp-entidad/tienda?id=" + idTienda;
     }
 
@@ -97,11 +92,9 @@ public class RespEntidadController {
             return "redirect:/login";
         }
 
-        // Obtener tienda
         Tienda tienda = respEntidadService.obtenerTiendaPorId(idTienda);
         model.addAttribute("tienda", tienda);
 
-        // Obtener turnos/voluntarios asignados
         List<AsignacionTurno> turnos = respEntidadService.obtenerVoluntariosPorTienda(idTienda);
         model.addAttribute("turnos", turnos);
         model.addAttribute("usuario", user);
@@ -118,7 +111,6 @@ public class RespEntidadController {
             return "redirect:/login";
         }
 
-        // Obtener voluntario por ID
         Voluntario voluntario = respEntidadService.obtenerVoluntarioPorId(idVoluntario);
         model.addAttribute("voluntario", voluntario);
         model.addAttribute("idTienda", idTienda);

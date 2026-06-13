@@ -39,4 +39,10 @@ public interface TiendaRepository extends JpaRepository<Tienda, Integer> {
 
     @Query(value = "select count(*) from asignacion_turnos where id_tienda = :idTienda", nativeQuery = true)
     Long countTurnosByTienda(@Param("idTienda") Integer idTienda);
+
+    @Query("select ut.tienda.nombre from UsuarioTienda ut where ut.usuario.id = :usuarioId order by ut.tienda.nombre")
+    List<String> findNombresTiendasByUsuarioId(@Param("usuarioId") Integer usuarioId);
+
+    @Query("select ut.tienda.id from UsuarioTienda ut where ut.usuario.id = :usuarioId")
+    List<Integer> findIdTiendasByUsuarioId(@Param("usuarioId") Integer usuarioId);
 }
