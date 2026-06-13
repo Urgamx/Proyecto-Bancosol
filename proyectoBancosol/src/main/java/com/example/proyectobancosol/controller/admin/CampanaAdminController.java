@@ -24,6 +24,7 @@ public class CampanaAdminController {
     @GetMapping({"", "/"})
     public String listar(Model model) {
         model.addAttribute("campanas", campanaAdminService.listar());
+        model.addAttribute("tipos", campanaAdminService.listarTipos());
         return "admin/campanas/listado";
     }
 
@@ -35,6 +36,19 @@ public class CampanaAdminController {
     @GetMapping("/editar")
     public String editar(@RequestParam("id") Integer id, Model model) {
         return formulario(model, campanaAdminService.buscarFormulario(id), "Editar");
+    }
+
+    @PostMapping("/filtrar")
+    public String filtrar(@RequestParam(value = "idTipoCampana", required = false) Integer idTipoCampana,
+                          @RequestParam(value = "fechaFormulario", required = false) String fechaFormulario,
+                          @RequestParam(value = "activo", required = false) Integer activo,
+                          Model model) {
+        model.addAttribute("campanas", campanaAdminService.filtrar(idTipoCampana, fechaFormulario, activo));
+        model.addAttribute("tipos", campanaAdminService.listarTipos());
+        model.addAttribute("idTipoCampanaSelected", idTipoCampana);
+        model.addAttribute("fechaSelected", fechaFormulario);
+        model.addAttribute("activoSelected", activo);
+        return "admin/campanas/listado";
     }
 
     @PostMapping("/guardar")

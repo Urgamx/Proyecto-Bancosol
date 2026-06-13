@@ -20,6 +20,23 @@
   <p>${error}</p>
 </c:if>
 
+
+<form action="/admin/coordinadores/filtrar" method="post">
+  <label>Nombre:</label>
+  <input type="text" name="nombre" value="${nombreSelected}">
+
+  <label>Estado:</label>
+  <select name="activo">
+    <option value=""></option>
+    <option value="1" <c:if test="${activoSelected == 1}">selected</c:if>>Activo</option>
+    <option value="0" <c:if test="${activoSelected == 0}">selected</c:if>>Inactivo</option>
+  </select>
+
+  <button type="submit">Filtrar</button>
+</form>
+
+<a href="/admin/coordinadores">Limpiar filtro</a>
+
 <table border="1" cellpadding="8" cellspacing="0">
   <thead>
   <tr>

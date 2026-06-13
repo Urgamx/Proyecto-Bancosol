@@ -22,6 +22,18 @@ public class TiendaAdminController {
     @GetMapping({"", "/"})
     public String listar(Model model) {
         model.addAttribute("tiendas", tiendaAdminService.listar());
+        model.addAttribute("cadenas", tiendaAdminService.listarCadenas());
+        return "admin/tiendas/listado";
+    }
+
+    @PostMapping("/filtrar")
+    public String filtrar(@RequestParam("nombre") String nombre,
+                          @RequestParam(value = "idCadena", required = false) Integer idCadena,
+                          Model model) {
+        model.addAttribute("tiendas", tiendaAdminService.filtrar(nombre, idCadena));
+        model.addAttribute("cadenas", tiendaAdminService.listarCadenas());
+        model.addAttribute("nombreSelected", nombre);
+        model.addAttribute("idCadenaSelected", idCadena);
         return "admin/tiendas/listado";
     }
 

@@ -45,4 +45,16 @@ public interface TiendaRepository extends JpaRepository<Tienda, Integer> {
 
     @Query("select ut.tienda.id from UsuarioTienda ut where ut.usuario.id = :usuarioId")
     List<Integer> findIdTiendasByUsuarioId(@Param("usuarioId") Integer usuarioId);
+
+
+    @Query("""
+        select t
+        from Tienda t
+        join fetch t.idCadena
+        where lower(t.nombre) like lower(concat('%', :nombre, '%'))
+        and (:idCadena is null or t.idCadena.id = :idCadena)
+        order by t.idCadena.nombre, t.nombre
+        """)
+    List<Tienda> findFiltradas(@Param("nombre") String nombre,
+                               @Param("idCadena") Integer idCadena);
 }

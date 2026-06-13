@@ -28,4 +28,12 @@ public interface CadenaRepository extends JpaRepository<Cadena, Integer> {
 
     @Query("select count(cc) from CampanaCadena cc where cc.cadena.id = :idCadena")
     Long countCampanasByCadena(@Param("idCadena") Integer idCadena);
+
+    @Query("""
+        select c
+        from Cadena c
+        where lower(c.nombre) like lower(concat('%', :nombre, '%'))
+        order by c.nombre
+        """)
+    List<Cadena> findByNombre(@Param("nombre") String nombre);
 }

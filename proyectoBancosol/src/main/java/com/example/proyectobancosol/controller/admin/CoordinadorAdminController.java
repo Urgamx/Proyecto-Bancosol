@@ -25,6 +25,16 @@ public class CoordinadorAdminController {
         return "admin/coordinadores/listado";
     }
 
+    @PostMapping("/filtrar")
+    public String filtrar(@RequestParam("nombre") String nombre,
+                          @RequestParam(value = "activo", required = false) Integer activo,
+                          Model model) {
+        model.addAttribute("coordinadores", coordinadorAdminService.filtrar(nombre, activo));
+        model.addAttribute("nombreSelected", nombre);
+        model.addAttribute("activoSelected", activo);
+        return "admin/coordinadores/listado";
+    }
+
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         CoordinadorRequestDTO request = new CoordinadorRequestDTO();

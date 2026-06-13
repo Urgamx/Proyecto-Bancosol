@@ -20,6 +20,33 @@
   <p>${error}</p>
 </c:if>
 
+<form action="/admin/campanas/filtrar" method="post">
+  <label>Tipo:</label>
+  <select name="idTipoCampana">
+    <option value=""></option>
+    <c:forEach var="tipo" items="${tipos}">
+      <option value="${tipo.id}" <c:if test="${idTipoCampanaSelected == tipo.id}">selected</c:if>>
+          ${tipo.nombre}
+      </option>
+    </c:forEach>
+  </select>
+
+  <label>Fecha:</label>
+  <input type="date" name="fechaFormulario" value="${fechaSelected}">
+
+  <label>Estado:</label>
+  <select name="activo">
+    <option value=""></option>
+    <option value="1" <c:if test="${activoSelected == 1}">selected</c:if>>Activa</option>
+    <option value="0" <c:if test="${activoSelected == 0}">selected</c:if>>Inactiva</option>
+  </select>
+
+  <button type="submit">Filtrar</button>
+</form>
+
+<a href="/admin/campanas">Limpiar filtro</a>
+
+
 <table border="1" cellpadding="8" cellspacing="0">
   <thead>
   <tr>

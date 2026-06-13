@@ -52,5 +52,18 @@ public interface CampanaRepository extends JpaRepository<Campana, Integer> {
     @Query("select c.id from Campana c where c.usuario.id = :usuarioId")
     List<Integer> findIdCampanasByUsuarioId(@Param("usuarioId") Integer usuarioId);
 
+    @Query("""
+        select c
+        from Campana c
+        join fetch c.tipoDeCampana
+        where (:idTipoCampana is null or c.tipoDeCampana.id = :idTipoCampana)
+        and (:fecha is null or c.fecha = :fecha)
+        and (:activo is null or c.activo = :activo)
+        order by c.fecha desc
+        """)
+    List<Campana> findFiltradas(@Param("idTipoCampana") Integer idTipoCampana,
+                                @Param("fecha") Integer fecha,
+                                @Param("activo") Integer activo);
+
 }
 

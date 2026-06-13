@@ -48,4 +48,17 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query("select count(uc) from UsuarioColaborador uc where uc.usuario.id = :idUsuario")
     Long countColaboradoresByUsuario(@Param("idUsuario") Integer idUsuario);
 
+
+    @Query("""
+        select u
+        from Usuario u
+        join fetch u.idRol
+        where u.idRol.nombre = 'COORDINADOR'
+        and lower(u.nombreCompleto) like lower(concat('%', :nombre, '%'))
+        and (:activo is null or u.activo = :activo)
+        order by u.nombreCompleto
+        """)
+    List<Usuario> findCoordinadoresFiltrados(@Param("nombre") String nombre,
+                                             @Param("activo") Integer activo);
+
 }

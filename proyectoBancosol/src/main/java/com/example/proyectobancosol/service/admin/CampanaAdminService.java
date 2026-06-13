@@ -78,6 +78,15 @@ public class CampanaAdminService {
         return null;
     }
 
+    @Transactional(readOnly = true)
+    public List<CampanaResponseDTO> filtrar(Integer idTipoCampana, String fechaFormulario, Integer activo) {
+        Integer fecha = campanaAdminMapper.convertirFechaFormularioAEntero(fechaFormulario);
+
+        return campanaRepository.findFiltradas(idTipoCampana, fecha, activo).stream()
+                .map(this::toResponseDTO)
+                .toList();
+    }
+
     @Transactional
     public String eliminar(Integer id) {
         if (!campanaRepository.existsById(id)) {

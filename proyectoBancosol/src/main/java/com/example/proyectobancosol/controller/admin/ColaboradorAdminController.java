@@ -1,6 +1,7 @@
 package com.example.proyectobancosol.controller.admin;
 
 import com.example.proyectobancosol.dto.request.ColaboradorRequestDTO;
+import com.example.proyectobancosol.dto.response.ColaboradorResponseDTO;
 import com.example.proyectobancosol.service.admin.ColaboradorAdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,6 +26,22 @@ public class ColaboradorAdminController {
         model.addAttribute("pendientes", colaboradorAdminService.listarPendientes());
         model.addAttribute("activos", colaboradorAdminService.listarActivos());
         model.addAttribute("inactivos", colaboradorAdminService.listarInactivos());
+        return "admin/colaboradores/listado";
+    }
+
+    @PostMapping("/filtrar")
+    public String filtrar(@RequestParam("nombre") String nombre,
+                          @RequestParam(value = "estado", required = false) Integer estado,
+                          Model model) {
+        List<ColaboradorResponseDTO> colaboradores = colaboradorAdminService.filtrar(nombre, estado);
+
+        model.addAttribute("pendientes", estado == null || estado == 2 ? colaboradores.stream().filter(c -> "Pendiente".equals(c.getEstado())).toList() : List.of());
+        model.addAttribute("activos", estado == null || estado == 1 ? colaboradores.stream().filter(c -> "Activo".equals(c.getEstado())).toList() : List.of());
+        model.addAttribute("inactivos", estado == null || estado == 0 ? colaboradores.stream().filter(c -> "Inactivo".equals(c.getEstado())).toList() : List.of());
+
+        model.addAttribute("nombreSelected", nombre);
+        model.addAttribute("estadoSelected", estado);
+
         return "admin/colaboradores/listado";
     }
 

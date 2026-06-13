@@ -43,6 +43,13 @@ public class ColaboradorAdminService {
         return colaboradorAdminMapper.toRequestDTO(colaboradorRepository.findById(id).orElseThrow());
     }
 
+    @Transactional(readOnly = true)
+    public List<ColaboradorResponseDTO> filtrar(String nombre, Integer estado) {
+        return colaboradorRepository.findFiltrados(nombre, estado).stream()
+                .map(this::toResponseDTO)
+                .toList();
+    }
+
     @Transactional
     public String guardar(ColaboradorRequestDTO request) {
         String error = validar(request);

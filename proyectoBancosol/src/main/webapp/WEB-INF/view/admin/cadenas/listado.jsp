@@ -20,6 +20,13 @@
     <p>${error}</p>
 </c:if>
 
+<form action="/admin/cadenas/filtrar" method="post">
+    <label>Nombre:</label>
+    <input type="text" name="nombre" value="${nombreSelected}">
+    <button type="submit">Filtrar</button>
+</form>
+
+<a href="/admin/cadenas">Limpiar filtro</a>
 <table border="1" cellpadding="8" cellspacing="0">
     <thead>
     <tr>

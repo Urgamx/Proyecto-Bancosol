@@ -31,6 +31,13 @@ public class CoordinadorAdminService {
     }
 
     @Transactional(readOnly = true)
+    public List<CoordinadorResponseDTO> filtrar(String nombre, Integer activo) {
+        return usuarioRepository.findCoordinadoresFiltrados(nombre, activo).stream()
+                .map(this::toResponseDTO)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public CoordinadorRequestDTO buscarFormulario(Integer id) {
         return coordinadorAdminMapper.toRequestDTO(usuarioRepository.findById(id).orElseThrow());
     }

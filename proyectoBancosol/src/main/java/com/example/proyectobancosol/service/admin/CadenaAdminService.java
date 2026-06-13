@@ -24,6 +24,11 @@ public class CadenaAdminService {
     }
 
     @Transactional(readOnly = true)
+    public List<CadenaResponseDTO> filtrar(String nombre) {
+        return cadenaAdminMapper.toDTOList(cadenaRepository.findByNombre(nombre));
+    }
+
+    @Transactional(readOnly = true)
     public CadenaRequestDTO buscarFormulario(Integer id) {
         return cadenaAdminMapper.toRequestDTO(cadenaRepository.findById(id).orElseThrow());
     }

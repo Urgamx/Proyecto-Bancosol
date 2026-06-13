@@ -25,6 +25,13 @@ public class CadenaAdminController {
         return "admin/cadenas/listado";
     }
 
+    @PostMapping("/filtrar")
+    public String filtrar(@RequestParam("nombre") String nombre, Model model) {
+        model.addAttribute("cadenas", cadenaAdminService.filtrar(nombre));
+        model.addAttribute("nombreSelected", nombre);
+        return "admin/cadenas/listado";
+    }
+
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         return formulario(model, new CadenaRequestDTO(), "Crear");

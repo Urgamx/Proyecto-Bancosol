@@ -30,6 +30,11 @@ public class TiendaAdminService {
     }
 
     @Transactional(readOnly = true)
+    public List<TiendaResponseDTO> filtrar(String nombre, Integer idCadena) {
+        return tiendaAdminMapper.toDTOList(tiendaRepository.findFiltradas(nombre, idCadena));
+    }
+
+    @Transactional(readOnly = true)
     public List<CadenaResponseDTO> listarCadenas() {
         return cadenaAdminMapper.toDTOList(cadenaRepository.findAllByOrderByNombreAsc());
     }

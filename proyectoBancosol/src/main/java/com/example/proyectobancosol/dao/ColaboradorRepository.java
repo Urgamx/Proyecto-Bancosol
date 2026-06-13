@@ -37,4 +37,15 @@ public interface ColaboradorRepository extends JpaRepository<Colaborador, Intege
 
     @Query("select count(uc) from UsuarioColaborador uc where uc.colaborador.id = :idColaborador")
     Long countUsuariosByColaborador(@Param("idColaborador") Integer idColaborador);
+
+
+    @Query("""
+        select c
+        from Colaborador c
+        where lower(c.nombreEntidad) like lower(concat('%', :nombre, '%'))
+        and (:estado is null or c.estado = :estado)
+        order by c.nombreEntidad
+        """)
+    List<Colaborador> findFiltrados(@Param("nombre") String nombre,
+                                    @Param("estado") Integer estado);
 }

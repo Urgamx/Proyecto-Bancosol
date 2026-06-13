@@ -20,6 +20,25 @@
     <p>${error}</p>
 </c:if>
 
+<form action="/admin/tiendas/filtrar" method="post">
+    <label>Nombre:</label>
+    <input type="text" name="nombre" value="${nombreSelected}">
+
+    <label>Cadena:</label>
+    <select name="idCadena">
+        <option value=""></option>
+        <c:forEach var="cadena" items="${cadenas}">
+            <option value="${cadena.id}" <c:if test="${idCadenaSelected == cadena.id}">selected</c:if>>
+                    ${cadena.nombre}
+            </option>
+        </c:forEach>
+    </select>
+
+    <button type="submit">Filtrar</button>
+</form>
+
+<a href="/admin/tiendas">Limpiar filtro</a>
+
 <table border="1" cellpadding="8" cellspacing="0">
     <thead>
     <tr>
