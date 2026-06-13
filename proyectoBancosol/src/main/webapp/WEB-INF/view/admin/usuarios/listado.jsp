@@ -1,6 +1,7 @@
 <%@ page import="com.example.proyectobancosol.entity.Usuario" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.proyectobancosol.dto.response.UsuarioDTO" %><%--
+<%@ page import="com.example.proyectobancosol.dto.response.UsuarioDTO" %>
+<%@ page import="com.example.proyectobancosol.dto.response.RolResponseDTO" %><%--
   Created by IntelliJ IDEA.
   User: USUARIO
   Date: 12/06/2026
@@ -13,6 +14,9 @@
 <%
     Usuario user = (Usuario) session.getAttribute("usuario");
     List<UsuarioDTO> usuarios = (List<UsuarioDTO>) request.getAttribute("usuarios");
+    List<RolResponseDTO> roles = (List<RolResponseDTO>) request.getAttribute("roles");
+    String nombreSelected = (String) request.getAttribute("nombreSelected") ;
+    Integer rolSelected = (Integer) request.getAttribute("rolSelected");
     String[] nombres = {"ADMIN", "RESP_ENTIDAD", "COORDINADOR", "RESP_TIENDA", "CAPITAN"};
 %>
 <head>
@@ -31,6 +35,19 @@
         </div>
     </div>
 
+    <form action="/admin/usuarios/filtrar" method="post">
+        <label>Nombre:</label>
+        <input type="text" name="nombre" value="<%=nombreSelected != null ? nombreSelected : ""%>"><br>
+        <label>Rol:</label>
+        <select name="rolId">
+            <option value=""></option>
+            <%for (RolResponseDTO rol : roles) {%>
+            <option value="<%=rol.getId()%>" <%=rolSelected != null && rolSelected.equals(rol.getId()) ? "selected" : ""%>><%=rol.getNombre()%>
+            <%}%>
+        </select><br>
+        <button type="submit">Filtrar</button>
+    </form>
+    <a href="/admin/usuarios">Limpiar Filtro</a>
     <table border="1" class="table-striped">
         <tr>
             <th>ID</th>
@@ -66,7 +83,7 @@
     </table>
 
     <div class="mt-3">
-        <a href="/admin/usuarios/nuevo" class="btn btn-primary">Añadir Colaborador</a>
+        <a href="/admin/usuarios/nuevo" class="btn btn-primary">Añadir Usuario</a>
     </div>
     <div class="mt-3">
         <a href="/admin/" class="btn btn-secondary">Volver</a>

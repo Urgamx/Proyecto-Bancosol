@@ -2,7 +2,6 @@ package com.example.proyectobancosol.service.admin;
 
 import com.example.proyectobancosol.dao.RolRepository;
 import com.example.proyectobancosol.dto.response.RolResponseDTO;
-import com.example.proyectobancosol.entity.Rol;
 import com.example.proyectobancosol.mapper.admin.RolAdminMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

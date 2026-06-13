@@ -2,11 +2,8 @@ package com.example.proyectobancosol.service.coordinador;
 
 import com.example.proyectobancosol.dao.RolRepository;
 import com.example.proyectobancosol.dao.UsuarioRepository;
-import com.example.proyectobancosol.dto.request.CoordinadorRequestDTO;
-import com.example.proyectobancosol.dto.response.CoordinadorResponseDTO;
 import com.example.proyectobancosol.dto.response.UsuarioDTO;
 import com.example.proyectobancosol.entity.Usuario;
-import com.example.proyectobancosol.mapper.admin.CoordinadorAdminMapper;
 import com.example.proyectobancosol.mapper.coordinador.UsuarioMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,6 +32,14 @@ public class UsuarioService {
 
     public List<UsuarioDTO> findCapitan() {
         return usuarioMapper.toDTOList(this.usuarioRepository.findCapitan());
+    }
+
+    public List<UsuarioDTO> findByNombreRol(Integer rolId, String nombre) {
+        return usuarioMapper.toDTOList(this.usuarioRepository.findByNombreRol(rolId,nombre));
+    }
+
+    public List<UsuarioDTO> findByNombre(String nombre) {
+        return usuarioMapper.toDTOList(this.usuarioRepository.findByNombre(nombre));
     }
 
     public void save(UsuarioDTO dto) {
