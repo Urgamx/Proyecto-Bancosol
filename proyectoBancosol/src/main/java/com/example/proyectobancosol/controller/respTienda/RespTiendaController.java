@@ -28,7 +28,6 @@ public class RespTiendaController {
             return "redirect:/login";
         }
 
-        // Obtener las tiendas asignadas al usuario (generalmente solo 1 para responsable tienda)
         List<Tienda> tiendas = resTiendaService.obtenerTiendasDelUsuario(user.getId());
         model.addAttribute("tiendas", tiendas);
         model.addAttribute("usuario", user);
@@ -44,50 +43,16 @@ public class RespTiendaController {
             return "redirect:/login";
         }
 
-        // Obtener tienda
         Tienda tienda = resTiendaService.obtenerTiendaPorId(idTienda);
         model.addAttribute("tienda", tienda);
 
-        // Obtener voluntarios asignados (turnos)
         List<AsignacionTurno> turnos = resTiendaService.obtenerVoluntariosPorTienda(idTienda);
         model.addAttribute("turnos", turnos);
         model.addAttribute("usuario", user);
 
         return "respTienda/tienda_detalles";
     }
-
-    @GetMapping("/registrar-incidencia")
-    public String mostrarFormularioIncidencia(@SessionAttribute(name = "usuario", required = false) Usuario user,
-                                              @RequestParam("id") Integer idAsignacion,
-                                              @RequestParam("tienda") Integer idTienda,
-                                              Model model, HttpSession session) {
-        if (user == null) {
-            return "redirect:/login";
-        }
-
-        model.addAttribute("idAsignacion", idAsignacion);
-        model.addAttribute("idTienda", idTienda);
-        model.addAttribute("usuario", user);
-
-        return "respTienda/registrar_incidencia";
-    }
-
-    @PostMapping("/registrarIncidencia")
-    public String registrarIncidencia(@SessionAttribute(name = "usuario", required = false) Usuario user,
-                                      @RequestParam("idAsignacion") Integer idAsignacion,
-                                      @RequestParam("idTienda") Integer idTienda,
-                                      @RequestParam("descripcion") String descripcion,
-                                      Model model, HttpSession session) {
-        if (user == null) {
-            return "redirect:/login";
-        }
-
-        // Registrar incidencia a través del servicio
-        resTiendaService.registrarIncidencia(idAsignacion, descripcion);
-
-        // Redirigir a la tienda
-        return "redirect:/resp-tienda/tienda?id=" + idTienda;
-    }
+    
 
     @GetMapping("/voluntarios")
     public String listarVoluntarios(@SessionAttribute(name = "usuario", required = false) Usuario user,
@@ -97,11 +62,9 @@ public class RespTiendaController {
             return "redirect:/login";
         }
 
-        // Obtener tienda
         Tienda tienda = resTiendaService.obtenerTiendaPorId(idTienda);
         model.addAttribute("tienda", tienda);
 
-        // Obtener turnos/voluntarios asignados
         List<AsignacionTurno> turnos = resTiendaService.obtenerVoluntariosPorTienda(idTienda);
         model.addAttribute("turnos", turnos);
         model.addAttribute("usuario", user);
@@ -118,7 +81,6 @@ public class RespTiendaController {
             return "redirect:/login";
         }
 
-        // Obtener voluntario por ID
         Voluntario voluntario = resTiendaService.obtenerVoluntarioPorId(idVoluntario);
         model.addAttribute("voluntario", voluntario);
         model.addAttribute("idTienda", idTienda);
