@@ -52,7 +52,7 @@ public class RespTiendaController {
 
         return "respTienda/tienda_detalles";
     }
-    
+
 
     @GetMapping("/voluntarios")
     public String listarVoluntarios(@SessionAttribute(name = "usuario", required = false) Usuario user,

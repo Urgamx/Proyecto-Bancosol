@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="com.example.proyectobancosol.entity.Usuario" %>
-<%@ page import="com.example.proyectobancosol.entity.Tienda" %>
+<%@ page import="com.example.proyectobancosol.dto.response.TiendaResponseDTO" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -18,7 +18,7 @@
 
     <%
         Usuario user = (Usuario) session.getAttribute("usuario");
-        List<Tienda> tiendas = (List<Tienda>) request.getAttribute("tiendas");
+        List<TiendaResponseDTO> tiendas = (List<TiendaResponseDTO>) request.getAttribute("tiendas");
     %>
 
     <div class="user-info">
@@ -42,7 +42,7 @@
         </tr>
         </thead>
         <tbody>
-        <%for(Tienda tienda : tiendas){%>
+        <%for(TiendaResponseDTO tienda : tiendas){%>
         <tr>
             <td><%=tienda.getNombre()%></td>
             <td><%=tienda.getDireccion()%></td>
