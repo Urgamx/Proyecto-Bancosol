@@ -27,6 +27,7 @@
         <th>Cadena</th>
         <th>Nombre</th>
         <th>Direccion</th>
+        <th>Localidad</th>
         <th>Codigo postal</th>
         <th>Acciones</th>
     </tr>
@@ -38,6 +39,7 @@
             <td>${tienda.cadena}</td>
             <td>${tienda.nombre}</td>
             <td>${tienda.direccion}</td>
+            <td>${tienda.localidad}</td>
             <td>${tienda.codPostal}</td>
             <td>
                 <a href="/admin/tiendas/editar?id=${tienda.id}">Editar</a>

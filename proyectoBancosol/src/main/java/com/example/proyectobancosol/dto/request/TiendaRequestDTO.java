@@ -13,5 +13,6 @@ public class TiendaRequestDTO {
     private Integer idCadena;
     private String nombre;
     private String direccion;
+    private String localidad;
     private String codPostal;
 }

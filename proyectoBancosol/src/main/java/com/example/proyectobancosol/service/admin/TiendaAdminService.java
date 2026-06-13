@@ -48,8 +48,7 @@ public class TiendaAdminService {
         }
 
         Cadena cadena = cadenaRepository.findById(request.getIdCadena()).orElseThrow();
-        Tienda tienda = request.getId() == null ? nuevaTienda() : tiendaRepository.findById(request.getId()).orElseThrow();
-        tiendaAdminMapper.aplicarRequest(request, tienda, cadena);
+        Tienda tienda = request.getId() == null ? new Tienda() : tiendaRepository.findById(request.getId()).orElseThrow();        tiendaAdminMapper.aplicarRequest(request, tienda, cadena);
         tiendaRepository.save(tienda);
         return null;
     }
@@ -95,6 +94,14 @@ public class TiendaAdminService {
             return "El codigo postal es obligatorio";
         }
 
+        if (vacio(request.getLocalidad())) {
+            return "La localidad es obligatoria";
+        }
+
+        if (largo(request.getLocalidad(), 255)) {
+            return "No hay ninguna ciudad tan larga, te la has inventado";
+        }
+
         if (!request.getCodPostal().trim().matches("\\d{5}")) {
             return "El codigo postal debe valido";
         }
@@ -116,11 +123,7 @@ public class TiendaAdminService {
                 : null;
     }
 
-    private Tienda nuevaTienda() {
-        Tienda tienda = new Tienda();
-        tienda.setId(tiendaRepository.findMaxId() + 1);
-        return tienda;
-    }
+
 
     private boolean vacio(String valor) {
         return valor == null || valor.trim().isEmpty();

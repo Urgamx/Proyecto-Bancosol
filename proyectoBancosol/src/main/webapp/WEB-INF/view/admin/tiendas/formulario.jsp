@@ -40,6 +40,11 @@
     </p>
 
     <p>
+        <label>Localidad</label><br>
+        <input type="text" name="localidad" value="${tienda.localidad}" required maxlength="255">
+    </p>
+
+    <p>
         <label>Codigo postal</label><br>
         <input type="text" name="codPostal" value="${tienda.codPostal}" required maxlength="5">
     </p>

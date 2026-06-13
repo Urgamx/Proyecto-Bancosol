@@ -17,6 +17,7 @@ public class TiendaAdminMapper extends MapperDTO<TiendaResponseDTO, Tienda> {
                 tienda.getIdCadena().getNombre(),
                 tienda.getNombre(),
                 tienda.getDireccion(),
+                tienda.getLocalidad(),
                 tienda.getCodPostal()
         );
     }
@@ -27,6 +28,7 @@ public class TiendaAdminMapper extends MapperDTO<TiendaResponseDTO, Tienda> {
                 tienda.getIdCadena().getId(),
                 tienda.getNombre(),
                 tienda.getDireccion(),
+                tienda.getLocalidad(),
                 tienda.getCodPostal()
         );
     }
@@ -35,6 +37,7 @@ public class TiendaAdminMapper extends MapperDTO<TiendaResponseDTO, Tienda> {
         tienda.setIdCadena(cadena);
         tienda.setNombre(request.getNombre().trim());
         tienda.setDireccion(request.getDireccion().trim());
+        tienda.setLocalidad(request.getLocalidad().trim());
         tienda.setCodPostal(request.getCodPostal().trim());
     }
 }

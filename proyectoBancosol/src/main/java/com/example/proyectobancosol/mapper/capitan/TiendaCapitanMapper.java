@@ -14,6 +14,7 @@ public class TiendaCapitanMapper extends MapperDTO<TiendaResponseDTO, Tienda> {
                 tienda.getIdCadena().getNombre(),
                 tienda.getNombre(),
                 tienda.getDireccion(),
+                tienda.getLocalidad(),
                 tienda.getCodPostal()
         );
     }

@@ -36,8 +36,7 @@ public class CadenaAdminService {
             return error;
         }
 
-        Cadena cadena = request.getId() == null ? nuevaCadena() : cadenaRepository.findById(request.getId()).orElseThrow();
-        cadenaAdminMapper.aplicarRequest(request, cadena);
+        Cadena cadena = request.getId() == null ? new Cadena() : cadenaRepository.findById(request.getId()).orElseThrow();        cadenaAdminMapper.aplicarRequest(request, cadena);
         cadenaRepository.save(cadena);
         return null;
     }
@@ -70,11 +69,6 @@ public class CadenaAdminService {
                 : null;
     }
 
-    private Cadena nuevaCadena() {
-        Cadena cadena = new Cadena();
-        cadena.setId(cadenaRepository.findMaxId() + 1);
-        return cadena;
-    }
 
     private boolean vacio(String valor) {
         return valor == null || valor.trim().isEmpty();
