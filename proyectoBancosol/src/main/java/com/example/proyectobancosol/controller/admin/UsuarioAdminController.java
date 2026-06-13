@@ -32,8 +32,31 @@ public class UsuarioAdminController {
                          HttpSession session){
 
         List<UsuarioDTO> usuarios = this.usuarioService.findAll();
+        List<RolResponseDTO> roles = this.rolAdminService.findAll();
 
+        model.addAttribute("roles", roles);
         model.addAttribute("usuarios", usuarios);
+
+        return "admin/usuarios/listado";
+    }
+
+    @PostMapping("/filtrar")
+    public String filtrar(@RequestParam(value = "rolId", required = false) Integer rolId,
+                          @RequestParam("nombre") String nombre,
+                          Model model) {
+
+        List<UsuarioDTO> usuarios = null;
+        if (rolId == null) {
+            usuarios = this.usuarioService.findByNombre(nombre);
+        } else {
+            usuarios = this.usuarioService.findByNombreRol(rolId,nombre);
+        }
+        List<RolResponseDTO> roles = this.rolAdminService.findAll();
+
+        model.addAttribute("roles", roles);
+        model.addAttribute("usuarios", usuarios);
+        model.addAttribute("nombreSelected", nombre);
+        model.addAttribute("rolSelected", rolId);
 
         return "admin/usuarios/listado";
     }
@@ -59,7 +82,6 @@ public class UsuarioAdminController {
 
         return "admin/usuarios/formulario";
     }
-
 
     @PostMapping("/guardar")
     public String guardar(@RequestParam(value = "id" ,required = false) Integer id,

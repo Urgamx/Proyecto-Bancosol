@@ -9,6 +9,7 @@ import com.example.proyectobancosol.entity.Usuario;
 import com.example.proyectobancosol.mapper.admin.CoordinadorAdminMapper;
 import com.example.proyectobancosol.mapper.coordinador.UsuarioMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +36,14 @@ public class UsuarioService {
 
     public List<UsuarioDTO> findCapitan() {
         return usuarioMapper.toDTOList(this.usuarioRepository.findCapitan());
+    }
+
+    public List<UsuarioDTO> findByNombreRol(Integer rolId, String nombre) {
+        return usuarioMapper.toDTOList(this.usuarioRepository.findByNombreRol(rolId,nombre));
+    }
+
+    public List<UsuarioDTO> findByNombre(String nombre) {
+        return usuarioMapper.toDTOList(this.usuarioRepository.findByNombre(nombre));
     }
 
     public void save(UsuarioDTO dto) {
