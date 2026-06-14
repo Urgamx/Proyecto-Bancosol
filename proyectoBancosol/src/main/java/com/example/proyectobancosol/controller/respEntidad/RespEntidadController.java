@@ -1,3 +1,7 @@
+/*
+Marta Vegas: 100%
+ */
+
 package com.example.proyectobancosol.controller.respEntidad;
 
 import com.example.proyectobancosol.dto.response.AsignacionTurnoResponseDTO;

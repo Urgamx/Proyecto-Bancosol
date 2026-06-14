@@ -1,52 +1,66 @@
+/*
+Marta Vegas: 100%
+ */
+
 package com.example.proyectobancosol.controller.admin;
 
-import com.example.proyectobancosol.dao.UsuarioRepository;
-import com.example.proyectobancosol.entity.Usuario;
-import lombok.AllArgsConstructor;
+import com.example.proyectobancosol.dto.request.UsuarioRequestDTO;
+import com.example.proyectobancosol.service.admin.AdminRespTiendaService;
+import com.example.proyectobancosol.service.admin.AdminRespTiendaService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/admin/resp-tienda")
-@AllArgsConstructor
 public class RespTiendaAdminController {
 
-    private final UsuarioRepository usuarioRepository;
+    private final AdminRespTiendaService respTiendaAdminService;
 
     @GetMapping({"", "/"})
     public String listar(Model model) {
-        model.addAttribute("responsables", usuarioRepository.findByRolNombre("RESP_TIENDA"));
+        model.addAttribute("responsables", respTiendaAdminService.listarPorRol("RESP_TIENDA"));
         return "admin/respTienda/listado";
     }
 
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
-        model.addAttribute("responsable", new Usuario());
-        model.addAttribute("modo", "Crear");
-        return "admin/respTienda/formulario";
+        return formulario(model, new UsuarioRequestDTO(), "Crear");
     }
 
     @GetMapping("/editar")
     public String editar(@RequestParam("id") Integer id, Model model) {
-        model.addAttribute("responsable", usuarioRepository.findById(id).orElse(new Usuario()));
-        model.addAttribute("modo", "Editar");
-        return "admin/respTienda/formulario";
+        return formulario(model, respTiendaAdminService.buscarFormulario(id), "Editar");
     }
 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute("responsable") Usuario usuario, RedirectAttributes redirectAttributes) {
-        // Aquí podrías añadir lógica para asignar el rol "RESP_TIENDA" si es nuevo
-        usuarioRepository.save(usuario);
+    public String guardar(@ModelAttribute("responsable") UsuarioRequestDTO request,
+                          Model model,
+                          RedirectAttributes redirectAttributes) {
+        String error = respTiendaAdminService.guardar(request, "RESP_TIENDA");
+
+        if (error != null) {
+            model.addAttribute("error", error);
+            return formulario(model, request, request.getId() == null ? "Crear" : "Editar");
+        }
+
         redirectAttributes.addFlashAttribute("mensaje", "Responsable guardado correctamente");
         return "redirect:/admin/resp-tienda";
     }
 
     @PostMapping("/eliminar")
     public String eliminar(@RequestParam("id") Integer id, RedirectAttributes redirectAttributes) {
-        usuarioRepository.deleteById(id);
+        respTiendaAdminService.eliminar(id);
         redirectAttributes.addFlashAttribute("mensaje", "Responsable eliminado correctamente");
         return "redirect:/admin/resp-tienda";
+    }
+
+    private String formulario(Model model, UsuarioRequestDTO request, String modo) {
+        model.addAttribute("responsable", request);
+        model.addAttribute("modo", modo);
+        return "admin/respTienda/formulario";
     }
 }

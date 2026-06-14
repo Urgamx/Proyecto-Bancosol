@@ -1,3 +1,6 @@
+/*
+Marta Vegas: 100%
+ */
 package com.example.proyectobancosol.service.respEntidad;
 
 import com.example.proyectobancosol.dao.AsignacionTurnoRepository;

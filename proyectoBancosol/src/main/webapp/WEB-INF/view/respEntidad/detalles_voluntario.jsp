@@ -1,3 +1,8 @@
+<%--
+Marta Vegas: 70%
+IA: 30%
+--%>
+
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="com.example.proyectobancosol.dto.response.UsuarioSesionDTO" %>
 <%@ page import="com.example.proyectobancosol.dto.response.VoluntarioResponseDTO" %>

@@ -1,6 +1,9 @@
+/*
+Marta Vegas: 100%
+ */
+
 package com.example.proyectobancosol.controller.respTienda;
 
-// Importamos los DTOs
 import com.example.proyectobancosol.dto.response.AsignacionTurnoResponseDTO;
 import com.example.proyectobancosol.dto.response.TiendaResponseDTO;
 import com.example.proyectobancosol.dto.response.UsuarioSesionDTO;
@@ -74,8 +77,8 @@ public class RespTiendaController {
         model.addAttribute("voluntarios", voluntarios);
 
         TiendaResponseDTO tienda = resTiendaService.obtenerTiendaPorId(idTienda);
-        model.addAttribute("tienda", tienda);
 
+        model.addAttribute("tienda", tienda);
         model.addAttribute("usuario", user);
         
         return "respTienda/voluntarios"; 

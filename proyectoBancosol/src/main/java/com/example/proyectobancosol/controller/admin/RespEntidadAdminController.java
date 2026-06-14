@@ -1,51 +1,65 @@
+/*
+Marta Vegas: 100%
+ */
+
 package com.example.proyectobancosol.controller.admin;
 
-import com.example.proyectobancosol.dao.UsuarioRepository;
-import com.example.proyectobancosol.entity.Usuario;
-import lombok.AllArgsConstructor;
+import com.example.proyectobancosol.dto.request.UsuarioRequestDTO;
+import com.example.proyectobancosol.service.admin.AdminRespEntidadService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/admin/resp-entidad")
-@AllArgsConstructor
 public class RespEntidadAdminController {
 
-    private final UsuarioRepository usuarioRepository;
+    private final AdminRespEntidadService adminRespEntidadService;
 
     @GetMapping({"", "/"})
     public String listar(Model model) {
-        model.addAttribute("responsables", usuarioRepository.findByRolNombre("RESP_ENTIDAD"));
+        model.addAttribute("responsables", adminRespEntidadService.listarPorRol("RESP_ENTIDAD"));
         return "admin/respEntidad/listado";
     }
 
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
-        model.addAttribute("responsable", new Usuario());
-        model.addAttribute("modo", "Crear");
-        return "admin/respEntidad/formulario";
+        return formulario(model, new UsuarioRequestDTO(), "Crear");
     }
 
     @GetMapping("/editar")
     public String editar(@RequestParam("id") Integer id, Model model) {
-        model.addAttribute("responsable", usuarioRepository.findById(id).orElse(new Usuario()));
-        model.addAttribute("modo", "Editar");
-        return "admin/respEntidad/formulario";
+        return formulario(model, adminRespEntidadService.buscarFormulario(id), "Editar");
     }
 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute("responsable") Usuario usuario, RedirectAttributes redirectAttributes) {
-        usuarioRepository.save(usuario);
-        redirectAttributes.addFlashAttribute("mensaje", "Responsable de entidad guardado correctamente");
+    public String guardar(@ModelAttribute("responsable") UsuarioRequestDTO request,
+                          Model model,
+                          RedirectAttributes redirectAttributes) {
+        String error = adminRespEntidadService.guardar(request, "RESP_ENTIDAD");
+
+        if (error != null) {
+            model.addAttribute("error", error);
+            return formulario(model, request, request.getId() == null ? "Crear" : "Editar");
+        }
+
+        redirectAttributes.addFlashAttribute("mensaje", "Responsable guardado correctamente");
         return "redirect:/admin/resp-entidad";
     }
 
     @PostMapping("/eliminar")
     public String eliminar(@RequestParam("id") Integer id, RedirectAttributes redirectAttributes) {
-        usuarioRepository.deleteById(id);
-        redirectAttributes.addFlashAttribute("mensaje", "Responsable de entidad eliminado correctamente");
+        adminRespEntidadService.eliminar(id);
+        redirectAttributes.addFlashAttribute("mensaje", "Responsable eliminado correctamente");
         return "redirect:/admin/resp-entidad";
+    }
+
+    private String formulario(Model model, UsuarioRequestDTO request, String modo) {
+        model.addAttribute("responsable", request);
+        model.addAttribute("modo", modo);
+        return "admin/respEntidad/formulario";
     }
 }
