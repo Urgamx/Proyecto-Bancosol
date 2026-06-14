@@ -6,13 +6,12 @@
     <h1>${modo} Responsable de Entidad</h1>
     <form method="post" action="/admin/resp-entidad/guardar">
         <input type="hidden" name="id" value="${responsable.id}">
-        <p><label>Nombre:</label><br><input type="text" name="nombreCompleto" value="${responsable.nombreCompleto}" required></p>
-        <p><label>Email:</label><br><input type="email" name="email" value="${responsable.email}" required></p>
-        <p><label>Estado:</label><br>
-           <select name="activo">
-               <option value="1" <c:if test="${responsable.activo == 1}">selected</c:if>>Activo</option>
-               <option value="0" <c:if test="${responsable.activo != 1}">selected</c:if>>Inactivo</option>
-           </select></p>
+        <p>
+            <label>Nombre:</label><br><input type="text" name="nombre" value="${responsable.nombre}" required>
+        </p>
+        <p>
+            <label>Email:</label><br><input type="email" name="email" value="${responsable.email}" required>
+        </p>
         <button type="submit">Guardar</button>
         <a href="/admin/resp-entidad">Cancelar</a>
     </form>
