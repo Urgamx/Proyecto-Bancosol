@@ -15,6 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Clase que representa la clase UsuarioTiendaService.
+ *
+ * Autores:
+ * - IA Generatiova: 50%
+ * - David Vilaseca Pareja: 50%
+ *
+ */
+
 @Service
 @AllArgsConstructor
 public class UsuarioTiendaService {

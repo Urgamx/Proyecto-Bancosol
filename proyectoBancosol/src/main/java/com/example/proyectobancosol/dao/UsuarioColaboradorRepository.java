@@ -10,6 +10,16 @@ import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.List;
 
+/**
+ * Clase que representa el repositorio de UsuarioColaborador.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 33%
+ *
+ */
+
+
+
 public interface UsuarioColaboradorRepository extends JpaRepository<UsuarioColaborador, UsuarioColaboradorId> {
 
     @Query(" select c from UsuarioColaborador uc join uc.colaborador c join uc.usuario u where lower(c.localidad) like lower(concat('%', :localidad, '%')) and lower(c.zonaGeografica) like lower(concat('%', :zonaGeo, '%')) and c.estado = 1")

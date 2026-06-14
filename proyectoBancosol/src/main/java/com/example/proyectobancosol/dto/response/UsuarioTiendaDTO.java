@@ -6,6 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Clase que representa la clase UsuarioTiendaDTO.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 100%
+ *
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

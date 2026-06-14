@@ -3,13 +3,20 @@ package com.example.proyectobancosol.service.capitan;
 import com.example.proyectobancosol.dao.TiendaRepository;
 import com.example.proyectobancosol.dto.request.TiendaRequestDTO;
 import com.example.proyectobancosol.dto.response.TiendaResponseDTO;
-import com.example.proyectobancosol.entity.Tienda;
 import com.example.proyectobancosol.mapper.admin.TiendaAdminMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+/**
+ * Clase que representa la clase TiendaService.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 50%
+ *
+ */
 
 @Service
 @AllArgsConstructor

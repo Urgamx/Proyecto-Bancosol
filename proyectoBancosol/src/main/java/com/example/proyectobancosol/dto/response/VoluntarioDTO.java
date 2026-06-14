@@ -1,9 +1,16 @@
 package com.example.proyectobancosol.dto.response;
 
-import com.example.proyectobancosol.entity.Colaborador;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+/**
+ * Clase que representa la clase VoluntarioDTO.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 100%
+ *
+ */
 
 @Data
 @AllArgsConstructor

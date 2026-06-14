@@ -7,6 +7,14 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * Clase que representa el repositorio de Voluntario.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 100%
+ *
+ */
+
 public interface VoluntarioRepository extends JpaRepository<Voluntario,Integer> {
 
     @Query("select v from Voluntario v where v.id = :id")

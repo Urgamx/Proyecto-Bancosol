@@ -8,6 +8,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Clase que representa la clase RolAdminService.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 100%
+ *
+ */
+
 @Service
 @AllArgsConstructor
 public class RolAdminService {

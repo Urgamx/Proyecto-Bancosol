@@ -14,6 +14,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Clase que representa la clase AsignacionTurnoService.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 100%
+ *
+ *
+ */
+
 @Service
 @AllArgsConstructor
 public class UsuarioColaboradorService {

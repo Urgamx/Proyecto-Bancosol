@@ -8,6 +8,14 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Clase que representa el repositorio de Usuario.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 30%
+ *
+ */
+
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Optional<Usuario> findByEmailAndActivo(String email, Integer activo);
