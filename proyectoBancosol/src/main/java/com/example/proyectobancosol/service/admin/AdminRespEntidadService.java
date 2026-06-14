@@ -45,12 +45,21 @@ public class AdminRespEntidadService {
 
     @Transactional
     public String guardar(UsuarioRequestDTO request, String nombreRol) {
-        Usuario usuario = (request.getId() != null)
-                ? usuarioRepository.findById(request.getId()).orElse(new Usuario())
-                : new Usuario();
+        Usuario usuario;
+
+        if (request.getId() != null) {
+            usuario = usuarioRepository.findById(request.getId()).orElse(new Usuario());
+        } else {
+            usuario = new Usuario();
+            usuario.setActivo(1);
+        }
 
         usuario.setNombreCompleto(request.getNombre());
         usuario.setEmail(request.getEmail());
+
+        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+            usuario.setPassword(request.getPassword().trim());
+        }
 
         Rol rol = rolRepository.findByNombre(nombreRol)
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado: " + nombreRol));
