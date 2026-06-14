@@ -1,3 +1,8 @@
+<%--
+Marta Vegas: 70%
+IA: 30%
+--%>
+
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -11,6 +16,10 @@
         </p>
         <p>
             <label>Email:</label><br><input type="email" name="email" value="${responsable.email}" required>
+        </p>
+        <p>
+            <label>Contraseña</label><br>
+            <input type="password" name="password" placeholder="Dejar en blanco para no cambiar">
         </p>
         <button type="submit">Guardar</button>
         <a href="/admin/resp-entidad">Cancelar</a>

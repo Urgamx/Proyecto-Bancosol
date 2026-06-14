@@ -1,3 +1,8 @@
+<%--
+Marta Vegas: 70%
+IA: 30%
+--%>
+
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="es">
