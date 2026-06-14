@@ -32,7 +32,6 @@ Autores:
 <body>
 <div class="container">
     <div class="user-info">
-        <div class="user-avatar"><%=user.getNombreCompleto().charAt(0)%></div>
         <div class="user-details">
             <h3><%=user.getNombreCompleto()%></h3>
             <p><%=user.getIdRol().getNombre()%></p>
