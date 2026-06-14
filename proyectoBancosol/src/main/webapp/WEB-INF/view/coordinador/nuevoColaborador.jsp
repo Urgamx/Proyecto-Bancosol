@@ -17,6 +17,7 @@ Autores:
 <html>
 <head>
     <title>Añadir Colaborador</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 

@@ -26,4 +26,6 @@ public class AsignacionTurnoDTO {
     private TiendaRequestDTO tiendaResponseDTO;
 
     private ColaboradorRequestDTO colaboradorRequestDTO;
+
+
 }

@@ -8,6 +8,7 @@ import com.example.proyectobancosol.entity.Voluntario;
 import com.example.proyectobancosol.mapper.capitan.AsignacionTurnoCapitanMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
  * Autores:
  * - IA Generatiova: 50%
  * - David Vilaseca Pareja: 25%
+ * - Jesus Moreno Carmona: 10%
  *
  */
 
@@ -110,6 +112,12 @@ public class AsignacionTurnoService {
 
     public List<AsignacionTurnoDTO> findByLocalidad(String localidad) {
         return asignacionTurnoCapitanMapper.toDTOList(this.asignacionTurnoRepository.findByLocalidad(localidad));
+    }
+
+    @Transactional
+    public void deleteById(Integer id) {
+        this.incidenciaRepository.deleteByAsignacionId(id);
+        this.asignacionTurnoRepository.deleteById(id);
     }
 
 }

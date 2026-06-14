@@ -1,12 +1,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.proyectobancosol.dto.response.RolResponseDTO" %>
 <%@ page import="com.example.proyectobancosol.dto.response.UsuarioDTO" %><%--
-  Created by IntelliJ IDEA.
-  User: USUARIO
-  Date: 12/06/2026
-  Time: 15:37
-  To change this template use File | Settings | File Templates.
---%>
 <%--
 Página JSP que muestra el listado de usuarios.
 
@@ -25,7 +19,7 @@ Autores:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listado de Usuarios</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 <div class="container">

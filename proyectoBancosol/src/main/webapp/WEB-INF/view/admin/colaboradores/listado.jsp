@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Colaboradores</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 

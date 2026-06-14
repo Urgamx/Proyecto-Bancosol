@@ -23,6 +23,7 @@ Autores:
 <html lang="es">
 <%
     Usuario user = (Usuario) session.getAttribute("usuario");
+    boolean esAdmin = user != null && user.getIdRol() != null && "ADMIN".equals(user.getIdRol().getNombre());
     List<AsignacionTurnoDTO> turnos = (List<AsignacionTurnoDTO>) request.getAttribute("turnos");
     List<UsuarioTiendaDTO> relaciones = (List<UsuarioTiendaDTO>) request.getAttribute("relaciones");
     List<CadenaResponseDTO> cadenas = (List<CadenaResponseDTO>) request.getAttribute("cadenas");
@@ -34,7 +35,7 @@ Autores:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asignación de Voluntarios</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 <div class="container">
@@ -94,7 +95,15 @@ Autores:
         <td><%=turno.getColaboradorRequestDTO().getNombreEntidad()%> - <%=turno.getColaboradorRequestDTO().getContactoNom()%> (<%=turno.getColaboradorRequestDTO().getContactoTlf()%>)</td>
         <td><%=turno.getVoluntarioDTO().getNombre()%> (<%=turno.getVoluntarioDTO().getTelefono()%>)</td>
         <td><%=turno.getColaboradorRequestDTO().getObservaciones()%></td>
-        <td><a href="/coordinador/asignacionSeleccion?id=<%=turno.getIdAsignacion()%>">Editar</a></td>
+        <td><a href="/coordinador/asignacionSeleccion?id=<%=turno.getIdAsignacion()%>">Editar</a>
+            <% if (esAdmin) { %>
+            <form method="post" action="/coordinador/eliminarTurno" style="display:inline">
+                <input type="hidden" name="id" value="<%=turno.getIdAsignacion()%>">
+                <button type="submit" onclick="return confirm('Seguro que quieres eliminar este turno?')">Eliminar</button>
+            </form>
+            <% } %>
+
+        </td>
     </tr>
     <%}%>
 </table>

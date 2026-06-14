@@ -6,7 +6,10 @@ IA: 30%
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="es">
-<head><meta charset="UTF-8"><title>Responsables de Entidad</title></head>
+<head><meta charset="UTF-8"><title>Responsables de Entidad</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
 <body>
 <h1>Responsables de Entidad</h1>
 
