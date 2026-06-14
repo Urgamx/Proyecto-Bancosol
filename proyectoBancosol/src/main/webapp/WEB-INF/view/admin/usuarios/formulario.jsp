@@ -62,10 +62,11 @@ Autores:
         </tr>
     </table>
 
-
+<br>
     <div class="mt-3">
         <button type="submit" class="btn btn-primary">Guardar</button>
     </div>
+    <br>
     <div class="mt-3">
         <a href="/admin/usuarios/" class="btn btn-secondary">Volver</a>
     </div>
