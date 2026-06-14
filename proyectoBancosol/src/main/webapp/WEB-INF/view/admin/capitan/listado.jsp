@@ -10,7 +10,6 @@
 
 <h1>Capitanes</h1>
 
-<p><a href="/admin">Volver al panel</a></p>
 <p><a href="/admin/capitanes/nuevo">Nuevo Capitan</a></p>
 
 <c:if test="${not empty mensaje}">
@@ -112,5 +111,6 @@
     </tbody>
 </table>
 
+<p><a href="/admin">Volver al panel</a></p>
 </body>
 </html>
