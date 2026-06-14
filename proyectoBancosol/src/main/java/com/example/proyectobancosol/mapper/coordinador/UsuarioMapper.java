@@ -4,6 +4,13 @@ import com.example.proyectobancosol.dto.response.UsuarioDTO;
 import com.example.proyectobancosol.entity.Usuario;
 import com.example.proyectobancosol.mapper.MapperDTO;
 import org.springframework.stereotype.Component;
+/**
+ * Clase que representa la clase UsuarioMapper.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 100%
+ *
+ */
 
 @Component
 public class UsuarioMapper extends MapperDTO<UsuarioDTO, Usuario> {

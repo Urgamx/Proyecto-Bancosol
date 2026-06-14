@@ -7,6 +7,16 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * Clase que representa el repositorio de Colaborador.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 20%
+ *
+ */
+
+
+
 public interface ColaboradorRepository extends JpaRepository<Colaborador, Integer> {
 
     @Query("select c from Colaborador c where c.estado = 1")

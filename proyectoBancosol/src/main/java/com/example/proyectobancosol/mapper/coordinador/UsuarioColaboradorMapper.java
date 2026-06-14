@@ -5,6 +5,14 @@ import com.example.proyectobancosol.entity.UsuarioColaborador;
 import com.example.proyectobancosol.mapper.MapperDTO;
 import org.springframework.stereotype.Component;
 
+/**
+ * Clase que representa la clase UsuarioColaboradorMapper.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 100%
+ *
+ */
+
 @Component
 public class UsuarioColaboradorMapper extends MapperDTO<UsuarioColaboradorDTO, UsuarioColaborador> {
 

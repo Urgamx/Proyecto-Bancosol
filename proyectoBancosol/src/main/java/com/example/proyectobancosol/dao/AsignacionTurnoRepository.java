@@ -6,6 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+/**
+ * Clase que representa el repositorio de AsignacionTurno.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 66%
+ * -
+ */
+
 
 public interface AsignacionTurnoRepository extends JpaRepository<AsignacionTurno,Integer> {
     @Query("SELECT a FROM AsignacionTurno a WHERE a.idTienda.id = :idTienda")

@@ -17,6 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+/**
+ * Clase que se encarga del crud de usuarios.
+ *
+ * Autores:
+ * - David Vilaseca Pareja 100%
+ */
+
 @Controller
 @AllArgsConstructor
 @RequestMapping("/admin/usuarios")

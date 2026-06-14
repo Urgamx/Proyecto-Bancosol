@@ -1,3 +1,11 @@
+<%--
+Página JSP que muestra el formulario de creación y edición de Capitanes.
+
+Autores:
+- Carlos Sánchez Sánchez: 70%
+- IA Generativa: 30%
+
+--%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>
@@ -54,12 +62,13 @@
                    name="idCampanasSeleccionadas"
                    value="${campana.id}"
                    class="checkbox-campana"
+                   data-cadena="${campana.cadenasParticipantes}"
                    onchange="filtrarTiendas()"
             <c:forEach var="idAsignado" items="${capitan.idCampanasSeleccionadas}">
                    <c:if test="${campana.id == idAsignado}">checked</c:if>
             </c:forEach>
             >
-            ${campana.tipoDeCampana.nombre}
+            ${campana.tipoCampana} (${campana.fecha})
             <br>
         </c:forEach>
         <c:if test="${empty todasCampanas}">
@@ -71,7 +80,7 @@
         <label>Tiendas Gestionadas:</label>
         <br>
         <c:forEach var="tienda" items="${todasTiendas}">
-            <div class="contenedor-tienda" data-campana="${tienda.idCadena.id}">
+            <div class="contenedor-tienda" data-cadena="${tienda.cadena}">
                 <input type="checkbox"
                        name="idTiendasSeleccionadas"
                        value="${tienda.id}"
@@ -79,7 +88,7 @@
                        <c:if test="${tienda.id == idAsignado}">checked</c:if>
                 </c:forEach>
                 >
-                    ${tienda.nombre}
+                    ${tienda.nombre} (${tienda.cadena})
             </div>
         </c:forEach>
         <c:if test="${empty todasTiendas}">
@@ -97,17 +106,18 @@
 
 <script>
     function filtrarTiendas() {
-        const campanasMarcadas = Array.from(document.querySelectorAll('.checkbox-campana:checked'))
-            .map(cb => cb.value);
+        const checkboxsMarcados = Array.from(document.querySelectorAll('.checkbox-campana:checked'));
+
+        const cadenasPermitidas = checkboxsMarcados.map(cb => cb.getAttribute('data-cadena')).join(', ');
 
         const tiendas = document.querySelectorAll('.contenedor-tienda');
 
         tiendas.forEach(tienda => {
-            const idCampanaTienda = tienda.getAttribute('data-campana');
+            const cadenaTienda = tienda.getAttribute('data-cadena');
 
-            if (campanasMarcadas.length === 0) {
+            if (checkboxsMarcados.length === 0) {
                 tienda.style.display = 'block';
-            } else if (campanasMarcadas.includes(idCampanaTienda)) {
+            } else if (cadenasPermitidas.includes(cadenaTienda)) {
                 tienda.style.display = 'block';
             } else {
                 tienda.style.display = 'none';

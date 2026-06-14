@@ -6,6 +6,14 @@ import com.example.proyectobancosol.entity.Voluntario;
 import com.example.proyectobancosol.mapper.MapperDTO;
 import org.springframework.stereotype.Component;
 
+/**
+ * Clase que representa la clase VoluntarioMapper.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 50%
+ *
+ */
+
 @Component
 public class VoluntarioMapper extends MapperDTO<VoluntarioDTO, Voluntario> {
 

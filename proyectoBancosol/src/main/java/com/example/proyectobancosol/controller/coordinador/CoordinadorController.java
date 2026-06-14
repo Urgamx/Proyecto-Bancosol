@@ -17,6 +17,16 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * Clase que controla la funcionalidad del rol coordinador.
+ *
+ * Autores:
+ * - IA Generativa: 15%
+ * - David Vilaseca Pareja: 85%
+ */
+
+
+
 @Controller
 @AllArgsConstructor
 @RequestMapping("/coordinador")
@@ -158,8 +168,16 @@ public class CoordinadorController {
 
         if (id == null) {
             UsuarioColaboradorDTO relacion = new UsuarioColaboradorDTO();
+
+            // Inicializamos la clave compuesta necesaria para evitar errores en UsuarioColaboradorService
+            com.example.proyectobancosol.entity.UsuarioColaboradorId claveCompuesta = new com.example.proyectobancosol.entity.UsuarioColaboradorId();
+            claveCompuesta.setIdUsuario(user.getId());
+            claveCompuesta.setIdColaborador(colaborador.getId()); // ¡Ahora ya no es null!
+
+            relacion.setId(claveCompuesta);
             relacion.setColaboradorId(colaborador.getId());
             relacion.setUsuarioId(user.getId());
+
             this.usuarioColaboradorService.save(relacion);
         }
 

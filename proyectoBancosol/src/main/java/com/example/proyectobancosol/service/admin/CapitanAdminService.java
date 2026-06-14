@@ -172,5 +172,13 @@ public class CapitanAdminService {
         return valor != null && valor.trim().length() > maximo;
     }
 
+    @Transactional(readOnly = true)
+    public List<CapitanResponseDTO> listarConFiltros(String texto, Integer idCampana, Integer idTienda) {
+        String textoFiltrado = (texto != null && !texto.trim().isEmpty()) ? texto.trim() : null;
+
+        return usuarioRepository.findByRolAndFiltros(ROL_CAPITAN, textoFiltrado, idCampana, idTienda).stream()
+                .map(this::toResponseDTO)
+                .toList();
+    }
 
 }

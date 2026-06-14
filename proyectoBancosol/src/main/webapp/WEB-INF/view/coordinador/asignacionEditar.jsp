@@ -3,6 +3,15 @@
 <%@ page import="com.example.proyectobancosol.dto.response.VoluntarioDTO" %>
 <%@ page import="com.example.proyectobancosol.dto.request.ColaboradorRequestDTO" %>
 <%@ page import="com.example.proyectobancosol.dto.response.AsignacionTurnoDTO" %>
+<%--
+Página JSP que muestra el editar de AsignacionTurnos.
+
+Autores:
+- David Vilaseca Pareja: 85%
+- IA Generativa: 15%
+
+--%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="es">

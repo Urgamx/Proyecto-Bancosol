@@ -7,6 +7,16 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * Clase que representa el repositorio de Campaña.
+ *
+ * Autores:
+ * - David Vilaseca: 10%
+ *
+ */
+
+
+
 public interface CampanaRepository extends JpaRepository<Campana, Integer> {
 
     @Query("select cc.campana from CampanaCadena cc where cc.cadena.id = :cadenaId")

@@ -12,6 +12,15 @@ import org.springframework.stereotype.Service;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * Clase que representa la clase AsignacionTurnoService.
+ *
+ * Autores:
+ * - IA Generatiova: 50%
+ * - David Vilaseca Pareja: 25%
+ *
+ */
+
 @Service
 @AllArgsConstructor
 public class AsignacionTurnoService {
