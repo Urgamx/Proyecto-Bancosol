@@ -107,9 +107,12 @@ Autores:
     </tr>
     <%}%>
 </table>
+    <br>
 <div class="mt-3">
     <a href="/coordinador/nuevoTurno" class="btn btn-primary">Añadir Turno</a>
 </div>
+    <br>
+    <br>
 <div class="mt-3">
     <%if (user.getIdRol().getId().equals(3)) {%>
     <a href="/coordinador/" class="btn btn-secondary">Volver</a>

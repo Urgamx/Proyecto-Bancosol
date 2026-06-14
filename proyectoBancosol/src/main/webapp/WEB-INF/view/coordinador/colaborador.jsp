@@ -109,9 +109,13 @@ Autores:
     </tbody>
 </table>
 
+    <br>
+
     <div class="mt-3">
         <a href="/coordinador/nuevoColaborador" class="btn btn-primary">Añadir Colaborador</a>
     </div>
+    <br>
+    <br>
     <div class="mt-3">
         <a href="/coordinador/" class="btn btn-secondary">Volver</a>
     </div>

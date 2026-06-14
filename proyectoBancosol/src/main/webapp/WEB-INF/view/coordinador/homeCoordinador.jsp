@@ -36,7 +36,6 @@ Autores:
         </div>
         <div class="card-body">
             <div class="user-info">
-                <div class="user-avatar"><%=user.getNombreCompleto().charAt(0)%></div>
                 <div class="user-details">
                     <h3><%=user.getNombreCompleto()%></h3>
                     <p>Coordinador</p>
@@ -48,13 +47,15 @@ Autores:
                 <li class="list-group-item">
                     <a href="colaborador" class="btn btn-primary btn-sm">Lista de Colaboradores</a>
                 </li>
+                <br>
+                <br>
                 <li class="list-group-item">
                     <a href="asignacionVoluntarios" class="btn btn-secondary btn-sm">Asignación de Voluntarios</a>
                 </li>
             </ul>
         </div>
     </div>
-    
+    <br>
     <div class="card mt-3">
         <div class="card-body text-center">
             <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>

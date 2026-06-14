@@ -74,12 +74,12 @@ Autores:
                     <label for="contactoTlf">Teléfono:</label>
                     <input type="text" id="contactoTlf" name="contactoTlf" value="<%=colaborador.getContactoTlf() != null ? colaborador.getContactoTlf() : ""%>" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" value="<%=colaborador.getEmail() != null ? colaborador.getEmail() : ""%>" required>
                 </div>
-                
+                <br>
                 <div class="mt-3">
                     <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     <a href="/coordinador/colaborador" class="btn btn-secondary">Cancelar</a>

@@ -70,8 +70,9 @@ Autores:
             <td><textarea name="observaciones" cols="45" rows="10"></textarea></td>
         </tr>
     </table>
-    <button type="submit">Guardar</button>
+    <br>
+    <button type="submit" class="btn btn-primary">Guardar</button>
 </form>
-<a href="/coordinador/colaborador">Cancelar</a>
+<a href="/coordinador/colaborador" class="btn btn-secondary">Cancelar</a>
 </body>
 </html>
