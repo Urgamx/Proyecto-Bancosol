@@ -3,7 +3,9 @@ package com.example.proyectobancosol.controller.admin;
 import com.example.proyectobancosol.dao.CampanaRepository;
 import com.example.proyectobancosol.dao.TiendaRepository;
 import com.example.proyectobancosol.dto.request.CapitanRequestDTO;
+import com.example.proyectobancosol.service.admin.CampanaAdminService;
 import com.example.proyectobancosol.service.admin.CapitanAdminService;
+import com.example.proyectobancosol.service.admin.TiendaAdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,12 +22,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CapitanAdminController {
 
     private final CapitanAdminService capitanAdminService;
-    private final CampanaRepository campanaRepository;
-    private final TiendaRepository tiendaRepository;
+    private final CampanaAdminService  campanaAdminService;
+    private final TiendaAdminService  tiendaAdminService;
 
     @GetMapping({"", "/"})
-    public String listar(Model model) {
-        model.addAttribute("capitanes", capitanAdminService.listar());
+    public String listar(@RequestParam(value = "texto", required = false) String texto,
+                         @RequestParam(value = "idCampana", required = false) Integer idCampana,
+                         @RequestParam(value = "idTienda", required = false) Integer idTienda,
+                         Model model) {
+
+        model.addAttribute("capitanes", capitanAdminService.listarConFiltros(texto, idCampana, idTienda));
+
+        model.addAttribute("texto", texto);
+        model.addAttribute("idCampanaSeleccionada", idCampana);
+        model.addAttribute("idTiendaSeleccionada", idTienda);
+
+        model.addAttribute("todasCampanas", campanaAdminService.listar());
+        model.addAttribute("todasTiendas", tiendaAdminService.listar());
+
         return "admin/capitan/listado";
     }
 
@@ -66,8 +80,8 @@ public class CapitanAdminController {
     private String formulario(Model model, CapitanRequestDTO request, String modo) {
         model.addAttribute("capitan", request);
         model.addAttribute("modo", modo);
-        model.addAttribute("todasCampanas", campanaRepository.findAllConTipo());
-        model.addAttribute("todasTiendas", tiendaRepository.findAllConCadena());
+        model.addAttribute("todasCampanas", campanaAdminService.listar());
+        model.addAttribute("todasTiendas", tiendaAdminService.listar());
         return "admin/capitan/formulario";
     }
 }

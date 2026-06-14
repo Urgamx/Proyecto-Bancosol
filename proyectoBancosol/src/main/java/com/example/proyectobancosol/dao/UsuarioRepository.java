@@ -61,4 +61,18 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> findCoordinadoresFiltrados(@Param("nombre") String nombre,
                                              @Param("activo") Integer activo);
 
+    @Query("""
+    select distinct u from Usuario u 
+    left join u.campanas c 
+    left join u.tiendas t 
+    where u.idRol.nombre = :rolNombre
+    and (:texto is null or lower(u.nombreCompleto) like lower(concat('%', :texto, '%')) or lower(u.email) like lower(concat('%', :texto, '%')))
+    and (:idCampana is null or c.id = :idCampana)
+    and (:idTienda is null or t.id = :idTienda)
+    """)
+    List<Usuario> findByRolAndFiltros(@Param("rolNombre") String rolNombre,
+                                      @Param("texto") String texto,
+                                      @Param("idCampana") Integer idCampana,
+                                      @Param("idTienda") Integer idTienda);
+
 }

@@ -20,6 +20,35 @@
     <p>${error}</p>
 </c:if>
 
+<form method="get" action="/admin/capitanes" style="margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; background-color: #f9f9f9;">
+
+    <label for="texto">Buscar Capitan:</label>
+    <input type="text" id="texto" name="texto" value="${texto}" placeholder="Nombre o email...">
+
+    <label for="idCampana">Campana:</label>
+    <select id="idCampana" name="idCampana">
+        <option value=""></option>
+        <c:forEach var="campana" items="${todasCampanas}">
+            <option value="${campana.id}" ${campana.id == idCampanaSeleccionada ? 'selected' : ''}>
+                    ${campana.tipoCampana} (${campana.fecha})
+            </option>
+        </c:forEach>
+    </select>
+
+    <label for="idTienda">Tienda:</label>
+    <select id="idTienda" name="idTienda">
+        <option value=""></option>
+        <c:forEach var="tienda" items="${todasTiendas}">
+            <option value="${tienda.id}" ${tienda.id == idTiendaSeleccionada ? 'selected' : ''}>
+                    ${tienda.nombre}
+            </option>
+        </c:forEach>
+    </select>
+
+    <button type="submit">Filtrar</button>
+    <a href="/admin/capitanes">Limpiar Filtros</a>
+</form>
+
 <h2>Capitanes</h2>
 
 <table border="1" cellpadding="8" cellspacing="0">
