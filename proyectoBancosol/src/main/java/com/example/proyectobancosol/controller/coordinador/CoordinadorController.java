@@ -170,10 +170,9 @@ public class CoordinadorController {
         if (id == null) {
             UsuarioColaboradorDTO relacion = new UsuarioColaboradorDTO();
 
-            // Inicializamos la clave compuesta necesaria para evitar errores en UsuarioColaboradorService
             com.example.proyectobancosol.entity.UsuarioColaboradorId claveCompuesta = new com.example.proyectobancosol.entity.UsuarioColaboradorId();
             claveCompuesta.setIdUsuario(user.getId());
-            claveCompuesta.setIdColaborador(colaborador.getId()); // ¡Ahora ya no es null!
+            claveCompuesta.setIdColaborador(colaborador.getId());
 
             relacion.setId(claveCompuesta);
             relacion.setColaboradorId(colaborador.getId());
