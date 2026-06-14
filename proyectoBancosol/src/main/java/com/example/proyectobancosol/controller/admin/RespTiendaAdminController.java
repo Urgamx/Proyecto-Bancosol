@@ -6,7 +6,6 @@ package com.example.proyectobancosol.controller.admin;
 
 import com.example.proyectobancosol.dto.request.UsuarioRequestDTO;
 import com.example.proyectobancosol.service.admin.AdminRespTiendaService;
-import com.example.proyectobancosol.service.admin.AdminRespTiendaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

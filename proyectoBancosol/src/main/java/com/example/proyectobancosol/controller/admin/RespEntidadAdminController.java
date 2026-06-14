@@ -4,6 +4,7 @@ Marta Vegas: 100%
 
 package com.example.proyectobancosol.controller.admin;
 
+import com.example.proyectobancosol.dao.RolRepository;
 import com.example.proyectobancosol.dto.request.UsuarioRequestDTO;
 import com.example.proyectobancosol.service.admin.AdminRespEntidadService;
 import lombok.RequiredArgsConstructor;

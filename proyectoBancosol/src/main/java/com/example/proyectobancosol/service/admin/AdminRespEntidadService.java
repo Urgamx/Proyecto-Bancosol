@@ -54,6 +54,7 @@ public class AdminRespEntidadService {
 
         Rol rol = rolRepository.findByNombre(nombreRol)
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado: " + nombreRol));
+
         usuario.setIdRol(rol);
 
         usuarioRepository.save(usuario);

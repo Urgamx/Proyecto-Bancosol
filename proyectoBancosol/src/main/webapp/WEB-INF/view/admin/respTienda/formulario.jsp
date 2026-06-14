@@ -14,7 +14,7 @@
 
     <p>
         <label>Nombre Completo</label><br>
-        <input type="text" name="nombreCompleto" value="${responsable.nombreCompleto}" required>
+        <input type="text" name="nombre" value="${responsable.nombre}" required>
     </p>
 
     <p>
@@ -25,14 +25,6 @@
     <p>
         <label>Contraseña</label><br>
         <input type="password" name="password" placeholder="Dejar en blanco para no cambiar">
-    </p>
-
-    <p>
-        <label>Estado</label><br>
-        <select name="activo">
-            <option value="1" <c:if test="${responsable.activo == 1}">selected</c:if>>Activo</option>
-            <option value="0" <c:if test="${responsable.activo != 1}">selected</c:if>>Inactivo</option>
-        </select>
     </p>
 
     <button type="submit">Guardar</button>
