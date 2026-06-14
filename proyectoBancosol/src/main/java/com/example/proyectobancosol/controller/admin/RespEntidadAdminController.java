@@ -58,6 +58,13 @@ public class RespEntidadAdminController {
         return "redirect:/admin/resp-entidad";
     }
 
+    @GetMapping({"", "/"})
+    public String listar(@RequestParam(value = "filtro", required = false) String filtro, Model model) {
+        model.addAttribute("responsables", adminRespEntidadService.listarPorRolYNombre("RESP_ENTIDAD", filtro));
+        model.addAttribute("filtro", filtro);
+        return "admin/respEntidad/listado";
+    }
+
     private String formulario(Model model, UsuarioRequestDTO request, String modo) {
         model.addAttribute("responsable", request);
         model.addAttribute("modo", modo);

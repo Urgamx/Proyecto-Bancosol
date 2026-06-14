@@ -61,4 +61,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> findCoordinadoresFiltrados(@Param("nombre") String nombre,
                                              @Param("activo") Integer activo);
 
+    @Query("SELECT u FROM Usuario u WHERE u.idRol.nombre = :nombreRol AND u.nombreCompleto LIKE concat('%', :nombre, '%')")
+    List<Usuario> findByRolNombreAndNombreContaining(@Param("nombreRol") String nombreRol, @Param("nombre") String nombre);
 }

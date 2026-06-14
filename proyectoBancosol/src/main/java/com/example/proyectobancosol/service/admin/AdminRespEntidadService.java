@@ -93,6 +93,15 @@ public class AdminRespEntidadService {
         return validacionAdminMapper.toDTO("Tiendas", "Tiendas asignadas", elementos);
     }
 
+    @Transactional(readOnly = true)
+    public List<Usuario> listarPorRolYNombre(String nombreRol, String nombre) {
+        if (nombre == null || nombre.isBlank()) {
+            return usuarioRepository.findByRolNombre(nombreRol);
+        }
+
+        return usuarioRepository.findByRolNombreAndNombreContaining(nombreRol, nombre);
+    }
+
     private ValidacionBasicaResponseDTO validarVoluntariosAsignados(Integer idUsuario) {
         List<Tienda> tiendas = tiendaRepository.findTiendasByUsuarioId(idUsuario);
         List<String> elementos = tiendas.stream()
