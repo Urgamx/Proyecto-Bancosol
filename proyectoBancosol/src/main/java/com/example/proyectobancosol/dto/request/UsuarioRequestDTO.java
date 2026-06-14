@@ -1,4 +1,5 @@
 /*
+Clase que representa la clase UsuarioRequestDTO.
 Marta Vegas: 100%
  */
 

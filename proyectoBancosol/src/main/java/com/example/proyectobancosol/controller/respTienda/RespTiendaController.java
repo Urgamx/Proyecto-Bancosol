@@ -1,4 +1,5 @@
 /*
+Clase que controla la funcionalidad del rol resp tienda
 Marta Vegas: 100%
  */
 

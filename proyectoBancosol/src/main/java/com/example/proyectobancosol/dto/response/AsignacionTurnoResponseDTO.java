@@ -1,3 +1,8 @@
+/*
+Clase que representa la clase AsignacionTurnoResponseDTO.
+Marta Vegas: 100%
+ */
+
 package com.example.proyectobancosol.dto.response;
 
 import lombok.AllArgsConstructor;

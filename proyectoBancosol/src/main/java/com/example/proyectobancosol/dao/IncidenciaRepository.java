@@ -1,3 +1,8 @@
+/*
+Clase que controla la funcionalidad del rol coordinador.
+Marta Vegas: 50%
+ */
+
 package com.example.proyectobancosol.dao;
 
 import com.example.proyectobancosol.entity.Incidencia;

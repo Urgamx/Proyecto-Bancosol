@@ -1,4 +1,5 @@
 /*
+Clase que se encarga del crud de resp tienda
 Marta Vegas: 100%
  */
 

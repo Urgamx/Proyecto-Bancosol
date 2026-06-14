@@ -13,6 +13,7 @@ import java.util.Optional;
  *
  * Autores:
  * - David Vilaseca Pareja: 30%
+ * - Marta Vegas: 5%
  *
  */
 
