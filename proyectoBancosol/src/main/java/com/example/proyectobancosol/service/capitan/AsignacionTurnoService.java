@@ -32,7 +32,6 @@ public class AsignacionTurnoService {
     private final AsignacionTurnoCapitanMapper asignacionTurnoCapitanMapper;
     private final IncidenciaRepository incidenciaRepository;
     private final TiendaRepository tiendaRepository;
-    private final ColaboradorRepository colaboradorRepository;
     private final VoluntarioRepository voluntarioRepository;
 
     public List<AsignacionTurnoDTO> ListarAsignacionTurnos(){

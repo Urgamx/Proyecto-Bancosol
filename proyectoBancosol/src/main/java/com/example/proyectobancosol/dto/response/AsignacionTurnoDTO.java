@@ -7,6 +7,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Clase que representa la clase AsignacionTurnoDTO.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 20%
+ *
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
