@@ -40,7 +40,12 @@ Autores:
 <body>
 <div class="container">
 <h1>Asignacion de voluntarios</h1>
-<label>Usuario: <%=user.getNombreCompleto()%></label><br>
+    <div class="user-info">
+        <div class="user-details">
+            <h3><%=user.getNombreCompleto()%></h3>
+            <p><%=user.getIdRol().getNombre()%></p>
+        </div>
+    </div>
 <form action="/coordinador/filtrarAsignacionTurnos" method="post">
     <label>CADENA:</label>
     <select name="cadenaId">
