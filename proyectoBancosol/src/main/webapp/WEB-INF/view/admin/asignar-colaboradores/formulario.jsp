@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Asignar colaboradores</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 

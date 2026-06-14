@@ -13,6 +13,7 @@ Autores:
 <head>
     <meta charset="UTF-8">
     <title>${modo} Capitan</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 

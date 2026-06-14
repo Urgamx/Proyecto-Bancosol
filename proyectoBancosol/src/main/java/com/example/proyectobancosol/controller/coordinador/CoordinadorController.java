@@ -21,8 +21,9 @@ import java.util.List;
  * Clase que controla la funcionalidad del rol coordinador.
  *
  * Autores:
- * - IA Generativa: 15%
- * - David Vilaseca Pareja: 85%
+ * - IA Generativa: 12%
+ * - David Vilaseca Pareja: 82%
+ * - Jesus Moreno Carmona: 6%
  */
 
 
@@ -411,6 +412,25 @@ public class CoordinadorController {
         this.usuarioTiendaService.save(relacion);
 
         return "redirect:/coordinador/asignacionVoluntarios";
+    }
+
+    @PostMapping("/eliminarTurno")
+    public String eliminarTurno(@RequestParam("id") Integer id,
+                                @SessionAttribute(name = "usuario", required = false) Usuario user) {
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        if (!esAdmin(user)) {
+            return "redirect:/coordinador/asignacionVoluntarios";
+        }
+
+        this.asignacionTurnoService.deleteById(id);
+        return "redirect:/coordinador/asignacionVoluntarios";
+    }
+
+    private boolean esAdmin(Usuario user) {
+        return user.getIdRol() != null && "ADMIN".equals(user.getIdRol().getNombre());
     }
 
 }

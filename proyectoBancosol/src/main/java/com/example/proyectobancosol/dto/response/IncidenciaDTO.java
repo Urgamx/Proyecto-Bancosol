@@ -5,6 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Clase que representa la clase IncidenciaDTO.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 33%
+ *
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

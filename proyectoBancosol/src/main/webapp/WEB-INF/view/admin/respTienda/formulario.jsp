@@ -9,6 +9,7 @@ IA: 30%
 <head>
     <meta charset="UTF-8">
     <title>${modo} Responsable</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 

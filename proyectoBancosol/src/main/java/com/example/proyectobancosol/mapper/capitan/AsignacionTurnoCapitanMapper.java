@@ -11,6 +11,14 @@ import com.example.proyectobancosol.mapper.admin.TiendaAdminMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * Clase que representa la clase AsignacionTurnoCapitanMapper.
+ *
+ * Autores:
+ * - David Vilaseca Pareja: 20%
+ *
+ */
+
 @Component
 @RequiredArgsConstructor
 public class AsignacionTurnoCapitanMapper extends MapperDTO<AsignacionTurnoDTO, AsignacionTurno> {

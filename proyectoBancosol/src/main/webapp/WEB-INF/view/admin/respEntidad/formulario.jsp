@@ -6,7 +6,10 @@ IA: 30%
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="es">
-<head><meta charset="UTF-8"><title>${modo} Responsable</title></head>
+<head><meta charset="UTF-8"><title>${modo} Responsable</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
 <body>
     <h1>${modo} Responsable de Entidad</h1>
     <form method="post" action="/admin/resp-entidad/guardar">
