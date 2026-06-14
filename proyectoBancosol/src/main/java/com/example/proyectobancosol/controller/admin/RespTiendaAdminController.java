@@ -20,8 +20,9 @@ public class RespTiendaAdminController {
     private final AdminRespTiendaService respTiendaAdminService;
 
     @GetMapping({"", "/"})
-    public String listar(Model model) {
-        model.addAttribute("responsables", respTiendaAdminService.listarPorRol("RESP_TIENDA"));
+    public String listar(@RequestParam(value = "filtro", required = false) String filtro, Model model) {
+        model.addAttribute("responsables", respTiendaAdminService.listarPorRolYNombre("RESP_TIENDA", filtro));
+        model.addAttribute("filtro", filtro);
         return "admin/respTienda/listado";
     }
 

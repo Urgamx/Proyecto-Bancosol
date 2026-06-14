@@ -14,10 +14,16 @@ IA: 30%
 
 <h1>Responsables de Tienda</h1>
 
+<form method="get" action="/admin/resp-tienda" style="margin-bottom: 20px;">
+    <input type="text" name="filtro" value="${filtro}" placeholder="Buscar por nombre o email...">
+    <button type="submit">Filtrar</button>
+    <a href="/admin/resp-tienda">Limpiar</a>
+</form>
+
 <p><a href="/admin/resp-tienda/nuevo">Nuevo responsable</a></p>
 
 <c:if test="${not empty mensaje}">
-    <p>${mensaje}</p>
+    <p style="color: green;">${mensaje}</p>
 </c:if>
 
 <table border="1" cellpadding="8" cellspacing="0">
@@ -47,6 +53,7 @@ IA: 30%
     </tbody>
 </table>
 
+<br>
 <form method="get" action="/admin">
     <button type="submit">Volver al panel</button>
 </form>

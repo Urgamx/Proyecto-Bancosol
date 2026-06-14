@@ -20,12 +20,6 @@ public class RespEntidadAdminController {
 
     private final AdminRespEntidadService adminRespEntidadService;
 
-//    @GetMapping({"", "/"})
-//    public String listar(Model model) {
-//        model.addAttribute("responsables", adminRespEntidadService.listarPorRol("RESP_ENTIDAD"));
-//        return "admin/respEntidad/listado";
-//    }
-
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         return formulario(model, new UsuarioRequestDTO(), "Crear");

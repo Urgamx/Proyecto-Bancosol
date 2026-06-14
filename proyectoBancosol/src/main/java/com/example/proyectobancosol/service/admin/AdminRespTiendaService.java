@@ -62,4 +62,9 @@ public class AdminRespTiendaService {
     public void eliminar(Integer id) {
         usuarioRepository.deleteById(id);
     }
+
+    @Transactional(readOnly = true)
+    public List<Usuario> listarPorRolYNombre(String nombreRol, String nombre) {
+        return usuarioRepository.findByRolAndFiltros(nombreRol, nombre, null, null);
+    }
 }
