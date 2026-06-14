@@ -16,6 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Logica de crud de asignacion de tiendas en el panel admin.
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 75%
+ * - IA: 25%
+ */
+
 @Service
 @RequiredArgsConstructor
 public class AsignacionTiendasAdminService {

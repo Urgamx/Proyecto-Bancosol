@@ -6,6 +6,14 @@ import com.example.proyectobancosol.entity.Cadena;
 import com.example.proyectobancosol.mapper.MapperDTO;
 import org.springframework.stereotype.Component;
 
+/**
+ * Convierte los datos de cadenas entre entidad, formulario y respuesta.
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 75%
+ * - IA: 25%
+ */
+
 @Component
 public class CadenaAdminMapper extends MapperDTO<CadenaResponseDTO, Cadena> {
 

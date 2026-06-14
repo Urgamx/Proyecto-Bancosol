@@ -8,6 +8,14 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+/**
+ * gestiona login logout y creacion de sesion
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 70%
+ * - IA: 30%
+ *
+ */
 
 @Controller
 public class AuthController {

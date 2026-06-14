@@ -8,6 +8,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * gestiona la logica de autenticacion de usuarios
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 70%
+ * - IA: 30%
+ *
+ */
+
 @Service
 public class AuthService {
 

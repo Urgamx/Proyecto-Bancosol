@@ -7,6 +7,14 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * recibe los datos para asignar colaboradores a coord
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 100%
+ *
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

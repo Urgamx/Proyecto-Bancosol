@@ -1,3 +1,10 @@
+<%--
+listado de colaboradores en panel admin
+Autores:
+- Jesus Moreno: 25%
+- IA: 75%
+--%>
+
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>

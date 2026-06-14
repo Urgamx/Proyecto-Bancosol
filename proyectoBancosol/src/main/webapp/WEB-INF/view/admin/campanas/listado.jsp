@@ -1,3 +1,10 @@
+<%--
+listado de camapana en panel admin
+Autores:
+- Jesus Moreno: 25%
+- IA: 75%
+--%>
+
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>
@@ -71,7 +78,6 @@
         <a href="/admin/campanas/editar?id=${campana.id}">Editar</a>
         <form method="post" action="/admin/campanas/eliminar" style="display:inline">
           <input type="hidden" name="id" value="${campana.id}">
-          <button type="submit">Eliminar</button>
         </form>
       </td>
     </tr>

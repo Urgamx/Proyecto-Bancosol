@@ -1,3 +1,11 @@
+<%--
+Panel de admin con un listado de cruds posibles y tareas pendientes.
+
+Autores:
+- Jesus Moreno Carmona: 25%
+- IA Generativa: 75%
+--%>
+
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>

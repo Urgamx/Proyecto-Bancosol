@@ -5,6 +5,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Adapta los datos de validacion
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 75%
+ * - IA: 25%
+ */
 @Component
 public class ValidacionAdminMapper {
 

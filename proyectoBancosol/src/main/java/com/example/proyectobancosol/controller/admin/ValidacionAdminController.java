@@ -7,6 +7,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * controlador del listado de validaciones
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 70%
+ * - IA: 30%
+ *
+ */
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/validaciones")

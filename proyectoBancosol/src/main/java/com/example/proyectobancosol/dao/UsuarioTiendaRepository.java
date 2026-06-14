@@ -10,6 +10,16 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * querys para busqueda de usuarios relacionado con tiendas
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 70%
+ * - IA: 30%
+ *
+ */
+
 public interface UsuarioTiendaRepository extends JpaRepository<UsuarioTienda, UsuarioTiendaId> {
 
     @Query("SELECT ut FROM UsuarioTienda ut WHERE ut.usuario.id = :usuarioId")

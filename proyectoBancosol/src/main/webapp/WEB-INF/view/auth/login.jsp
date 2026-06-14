@@ -1,3 +1,12 @@
+<%--
+Login generico
+
+Autores:
+- Jesus Moreno Carmona: 25%
+- IA Generativa: 75%
+--%>
+
+
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -11,7 +20,7 @@
     <div class="login-container">
         <div class="login-header">
             <h1>BancoSol</h1>
-            <p>Gestion de Voluntarios</p>
+            <p>Inicio de Sesion</p>
         </div>
 
         <c:if test="${not empty error}">

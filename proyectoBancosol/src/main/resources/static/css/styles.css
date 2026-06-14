@@ -1,4 +1,13 @@
 /* RESET VISUAL GLOBAL */
+
+/**
+ * Css de estilos que sobreescribe cualquier estilo previo.
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 20%
+ * - IA: 80%
+ */
+
 * {
     box-sizing: border-box !important;
 }

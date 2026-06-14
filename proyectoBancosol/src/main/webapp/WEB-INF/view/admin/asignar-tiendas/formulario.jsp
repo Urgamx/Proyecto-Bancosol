@@ -1,3 +1,13 @@
+<%--
+Formulario de creacion y edicion de asignacion de tiendas.
+
+Autores:
+- Jesus Moreno Carmona: 25%
+- IA: 75%
+--%>
+
+
+
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>

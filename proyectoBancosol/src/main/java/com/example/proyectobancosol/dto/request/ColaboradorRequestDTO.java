@@ -4,6 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * recibe datos de colaboradores
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 100%
+ *
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

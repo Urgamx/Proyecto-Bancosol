@@ -4,6 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * datos de relacion entre tiendas y coordinadores
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 100%
+ *
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

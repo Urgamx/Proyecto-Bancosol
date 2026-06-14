@@ -1,3 +1,11 @@
+<%--
+formulario del crud de colaboradores
+Autores:
+- Jesus Moreno: 25%
+- IA: 75%
+--%>
+
+
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>

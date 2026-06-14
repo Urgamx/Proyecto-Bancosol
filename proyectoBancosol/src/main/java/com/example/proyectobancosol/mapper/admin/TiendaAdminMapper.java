@@ -6,6 +6,13 @@ import com.example.proyectobancosol.entity.Cadena;
 import com.example.proyectobancosol.entity.Tienda;
 import com.example.proyectobancosol.mapper.MapperDTO;
 import org.springframework.stereotype.Component;
+/**
+ * Convierte tiendas entre entidad y formulario.
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 75%
+ * - IA: 25%
+ */
 
 @Component
 public class TiendaAdminMapper extends MapperDTO<TiendaResponseDTO, Tienda> {

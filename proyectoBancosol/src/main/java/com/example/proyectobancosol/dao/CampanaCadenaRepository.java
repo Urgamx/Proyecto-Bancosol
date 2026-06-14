@@ -9,6 +9,15 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * querys para busqueda de campana relacionado con cadenas
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 70%
+ * - IA: 30%
+ *
+ */
+
 public interface CampanaCadenaRepository extends JpaRepository<CampanaCadena, CampanaCadenaId> {
 
     @Query("select cc from CampanaCadena cc join fetch cc.cadena where cc.campana.id = :idCampana order by cc.cadena.nombre")

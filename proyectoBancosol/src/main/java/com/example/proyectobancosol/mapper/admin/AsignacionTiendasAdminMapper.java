@@ -10,6 +10,13 @@ import com.example.proyectobancosol.mapper.MapperDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+/**
+ * Transforma asignaciones de tiendas entre entidad y DTO.
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 75%
+ * - IA: 25%
+ */
 
 @Component
 public class AsignacionTiendasAdminMapper extends MapperDTO<AsignacionTiendasCoordinadorDTO, Usuario> {

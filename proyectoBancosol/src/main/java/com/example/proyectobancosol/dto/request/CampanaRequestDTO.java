@@ -7,6 +7,14 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * recibe datos de camapaña
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 100%
+ *
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

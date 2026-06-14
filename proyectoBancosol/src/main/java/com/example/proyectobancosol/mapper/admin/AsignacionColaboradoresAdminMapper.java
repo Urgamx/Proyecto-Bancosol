@@ -10,6 +10,13 @@ import com.example.proyectobancosol.mapper.MapperDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+/**
+ * Transforma las asignaciones de colaboradores entre entidad y DTO
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 75%
+ * -IA: 25%
+ */
 
 @Component
 public class AsignacionColaboradoresAdminMapper extends MapperDTO<AsignacionColaboradoresCoordinadorDTO, Usuario> {

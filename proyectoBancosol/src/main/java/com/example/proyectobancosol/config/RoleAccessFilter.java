@@ -13,6 +13,15 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * filtro para el inicio de sesion, asi le manda a su panel segun el rol
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 70%
+ * - IA: 30%
+ *
+ */
+
 @Component
 public class RoleAccessFilter implements Filter {
 

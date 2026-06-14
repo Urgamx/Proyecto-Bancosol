@@ -6,6 +6,14 @@ import com.example.proyectobancosol.entity.Colaborador;
 import com.example.proyectobancosol.mapper.MapperDTO;
 import org.springframework.stereotype.Component;
 
+/**
+ * convierte colaboradores entre entidad, formulario  y respuestas
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 75%
+ * - IA: 25%
+ */
+
 @Component
 public class ColaboradorAdminMapper extends MapperDTO<ColaboradorResponseDTO, Colaborador> {
 

@@ -2,7 +2,16 @@ package com.example.proyectobancosol.mapper;
 
 import java.util.List;
 
+/**
+ * Clase generica para convertir entidades a DTO.
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 75%
+ * - IA: 25%
+ */
+
 public abstract class MapperDTO<DTOClass, EntityClass> {
+
 
     public abstract DTOClass toDTO(EntityClass entityClass);
 

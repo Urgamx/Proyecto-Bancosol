@@ -14,7 +14,8 @@ import java.util.List;
  * Clase que representa el repositorio de UsuarioColaborador.
  *
  * Autores:
- * - David Vilaseca Pareja: 33%
+ * - David Vilaseca Pareja: 40%
+ * - Jesus Moreno: 60%
  *
  */
 

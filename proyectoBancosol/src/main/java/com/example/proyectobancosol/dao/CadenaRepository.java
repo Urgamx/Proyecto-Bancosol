@@ -7,6 +7,15 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * querys para funciones de cadena
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 70%
+ * - IA: 30%
+ *
+ */
+
 public interface CadenaRepository extends JpaRepository<Cadena, Integer> {
 
     List<Cadena> findAllByOrderByNombreAsc();

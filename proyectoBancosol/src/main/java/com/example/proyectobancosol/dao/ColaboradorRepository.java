@@ -12,7 +12,8 @@ import java.util.List;
  *
  * Autores:
  * - David Vilaseca Pareja: 20%
- *
+ * - Jesus Moreno: 40%
+ * - IA: 20%
  */
 
 

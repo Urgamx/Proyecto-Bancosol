@@ -4,6 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * datosde tienda
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 80%%
+ * - Marta Vegas: 20%
+ *
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

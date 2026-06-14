@@ -1,5 +1,13 @@
 package com.example.proyectobancosol.dto.request;
 
+/**
+ * recibe los datos del login (se me paso usar @data)
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 100%
+ *
+ */
+
 public class LoginRequestDTO {    private String email;
     private String password;
 

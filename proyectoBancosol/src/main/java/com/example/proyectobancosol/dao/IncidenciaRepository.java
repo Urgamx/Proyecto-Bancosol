@@ -16,6 +16,15 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+/**
+ * define consulta para borrar la incidencia
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 50%
+ * -IA: 50%
+ *
+ */
+
 public interface IncidenciaRepository extends JpaRepository<Incidencia, Integer> {
 
     @Modifying

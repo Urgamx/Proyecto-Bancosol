@@ -1,3 +1,11 @@
+<%--
+Listado de coordinadores del panel de admin.
+
+Autores:
+- Jesus Moreno Carmona: 25%
+- IA Generativa: 75%
+--%>
+
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>

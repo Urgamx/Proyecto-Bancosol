@@ -5,6 +5,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Lista del panel de admin.
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 75%
+ * - IA: 25%
+ */
+
 @Service
 public class AdminMenuService {
 

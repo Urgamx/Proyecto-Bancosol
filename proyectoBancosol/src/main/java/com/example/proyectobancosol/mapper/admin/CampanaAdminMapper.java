@@ -16,6 +16,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+/**
+ * Convierte campañas entre entidad, formulario y DTO de respuesta
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 75%
+ * - IA: 25%
+ */
+
 @Component
 public class CampanaAdminMapper extends MapperDTO<CampanaResponseDTO, Campana> {
 

@@ -14,6 +14,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+/**
+ * controlador del panel de campana
+ *
+ * Autores:
+ * - Jesus Moreno Carmona: 70%
+ * - IA: 30%
+ *
+ */
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/campanas")
