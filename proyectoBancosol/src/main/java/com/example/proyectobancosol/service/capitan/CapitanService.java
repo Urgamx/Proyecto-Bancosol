@@ -21,6 +21,13 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Servicio encargado de la lógica asociada a las operaciones del rol Capitán.
+ *
+ * Autores:
+ * - Carlos Sánchez: 100%
+ */
+
 @Service
 @AllArgsConstructor
 public class CapitanService {

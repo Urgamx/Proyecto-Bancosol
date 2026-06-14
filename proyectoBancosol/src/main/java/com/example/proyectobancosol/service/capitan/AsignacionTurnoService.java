@@ -20,7 +20,7 @@ import java.util.List;
  * - IA Generatiova: 50%
  * - David Vilaseca Pareja: 25%
  * - Jesus Moreno Carmona: 10%
- *
+ * - Carlos Sánchez: 15%
  */
 
 @Service

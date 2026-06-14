@@ -1,3 +1,10 @@
+<%--
+Página JSP que muestra los datos detallados de una tienda específica seleccionada por el Capitán.
+
+Autores:
+- Carlos Sánchez: 70%
+- IA Generativa: 30%
+--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="com.example.proyectobancosol.dto.response.TiendaResponseDTO" %>
 <%@ page import="com.example.proyectobancosol.dto.response.AsignacionTurnoDTO" %>

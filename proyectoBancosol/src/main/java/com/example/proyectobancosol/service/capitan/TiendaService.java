@@ -15,7 +15,8 @@ import java.util.List;
  *
  * Autores:
  * - David Vilaseca Pareja: 50%
- *
+ * - Carlos Sánchez: 40%
+ * - IA Generativa: 10%
  */
 
 @Service

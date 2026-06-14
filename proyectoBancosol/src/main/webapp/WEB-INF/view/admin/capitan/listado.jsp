@@ -1,3 +1,11 @@
+<%--
+Página JSP que muestra los datos detallados de una tienda específica seleccionada por el Capitán.
+
+Autores:
+- Carlos Sánchez Sánchez: 70%
+- IA Generativa: 30%
+
+--%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <!DOCTYPE html>

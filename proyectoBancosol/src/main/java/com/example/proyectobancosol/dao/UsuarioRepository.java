@@ -14,7 +14,9 @@ import java.util.Optional;
  * Autores:
  * - David Vilaseca Pareja: 30%
  * - Marta Vegas: 5%
- *
+ * - Carlos Sánchez: 5%
+ * - Jesus Moreno Carmona: 50%
+ * - IA Generativa: 10%
  */
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {

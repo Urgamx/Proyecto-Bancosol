@@ -12,7 +12,9 @@ import java.util.List;
  *
  * Autores:
  * - David Vilaseca: 10%
- *
+ * - Carlos Sánchez: 10%
+ * - Jesus Moreno Carmona: 70%
+ * - IA Generativa: 10%
  */
 
 

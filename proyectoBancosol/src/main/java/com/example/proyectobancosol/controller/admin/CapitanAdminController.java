@@ -1,7 +1,6 @@
 package com.example.proyectobancosol.controller.admin;
 
-import com.example.proyectobancosol.dao.CampanaRepository;
-import com.example.proyectobancosol.dao.TiendaRepository;
+
 import com.example.proyectobancosol.dto.request.CapitanRequestDTO;
 import com.example.proyectobancosol.service.admin.CampanaAdminService;
 import com.example.proyectobancosol.service.admin.CapitanAdminService;
@@ -15,6 +14,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+/**
+ * Clase que representa una película dentro del sistema.
+ *
+ * Autores:
+ * - IA Generativa: 20%
+ * - Carlos Sánchez: 80%
+ */
 
 @Controller
 @RequiredArgsConstructor

@@ -16,6 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Servicio principal para la lógica de negocio, ABM y filtrado de Capitanes.
+ *
+ * Autores:
+ * - Carlos Sánchez: 100%
+ */
+
 @Service
 @RequiredArgsConstructor
 public class CapitanAdminService {

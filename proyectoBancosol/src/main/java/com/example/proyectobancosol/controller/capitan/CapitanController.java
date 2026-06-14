@@ -13,6 +13,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controlador para las acciones y vistas del panel de Capitán.
+ *
+ * Autores:
+ * - Carlos Sánchez: 80%
+ * - IA Generativa: 20%
+ */
+
 @Controller
 @AllArgsConstructor
 @RequestMapping("/capitan")

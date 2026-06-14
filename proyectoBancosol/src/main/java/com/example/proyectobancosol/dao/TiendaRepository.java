@@ -7,6 +7,14 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * Repositorio para el acceso a datos y consultas de Tiendas.
+ *
+ * Autores:
+ * - Urgamx: 30%
+ * - Jesus Moreno Carmona: 70%
+ */
+
 public interface TiendaRepository extends JpaRepository<Tienda, Integer> {
 
     @Query("SELECT ut.tienda FROM UsuarioTienda ut WHERE ut.usuario.id = :usuarioId")

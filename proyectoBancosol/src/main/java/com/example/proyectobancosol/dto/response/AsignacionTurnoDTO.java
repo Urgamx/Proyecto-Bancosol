@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
  *
  * Autores:
  * - David Vilaseca Pareja: 20%
- *
+ * - Carlos Sánchez: 80%
  */
 
 @Data

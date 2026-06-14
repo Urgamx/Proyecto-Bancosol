@@ -1,3 +1,10 @@
+<%--
+Página JSP con el formulario de reporte e inserción de incidencias para el Capitán.
+
+Autores:
+- Carlos Sánchez: 80%
+- IA Generativa: 20%
+--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="com.example.proyectobancosol.entity.Usuario" %>
 <!DOCTYPE html>

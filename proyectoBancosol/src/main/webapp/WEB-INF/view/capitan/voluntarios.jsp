@@ -1,3 +1,10 @@
+<%--
+Página JSP que lista todos los voluntarios que participan bajo la tutela del Capitán.
+
+Autores:
+- Carlos Sánchez: 100%
+
+--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="com.example.proyectobancosol.dto.response.TiendaResponseDTO" %>
 <%@ page import="com.example.proyectobancosol.dto.response.AsignacionTurnoDTO" %>

@@ -5,6 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+/**
+ * DTO de respuesta para el listado y visualización de datos de Capitanes.
+ *
+ * Autores:
+ * - Carlos Sánchez: 100%
+ */
 
 @Data
 @NoArgsConstructor

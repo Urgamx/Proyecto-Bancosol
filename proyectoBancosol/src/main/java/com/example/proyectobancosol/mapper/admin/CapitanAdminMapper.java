@@ -10,6 +10,13 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Componente Mapper para convertir entre Usuario y DTOs de Capitán en el panel Admin.
+ *
+ * Autores:
+ * - Carlos Sánchez: 100%
+ */
+
 @Component
 public class CapitanAdminMapper extends MapperDTO<CapitanResponseDTO, Usuario> {
 

@@ -5,6 +5,14 @@ import com.example.proyectobancosol.entity.Tienda;
 import com.example.proyectobancosol.mapper.MapperDTO;
 import org.springframework.stereotype.Component;
 
+/**
+ * Componente Mapper para procesar los datos de las tiendas asignadas al Capitán.
+ *
+ * Autores:
+ * - Carlos Sánchez: 95%
+ * - Jesus Moreno Carmona: 5%
+ */
+
 @Component
 public class TiendaCapitanMapper extends MapperDTO<TiendaResponseDTO, Tienda> {
     @Override

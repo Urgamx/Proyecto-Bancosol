@@ -11,7 +11,7 @@ import java.util.List;
  *
  * Autores:
  * - David Vilaseca Pareja: 66%
- * -
+ * - Carlos Sánchez: 34%
  */
 
 

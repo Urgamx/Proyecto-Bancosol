@@ -1,5 +1,11 @@
+<%--
+Página JSP que muestra la ficha detallada de información de un voluntario.
+
+Autores:
+- Carlos Sánchez: 75%
+- IA Generativa: 25%
+--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="com.example.proyectobancosol.entity.Usuario" %>
 <%@ page import="com.example.proyectobancosol.dto.response.VoluntarioDTO" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -12,7 +18,6 @@
 <body>
 <div class="container">
     <%
-        Usuario user = (Usuario) session.getAttribute("usuario");
         VoluntarioDTO voluntario = (VoluntarioDTO) request.getAttribute("voluntario");
         Integer idTienda = (Integer) request.getAttribute("idTienda");
     %>

@@ -5,7 +5,12 @@ import com.example.proyectobancosol.dto.response.VoluntarioDTO;
 import com.example.proyectobancosol.entity.Voluntario;
 import com.example.proyectobancosol.mapper.MapperDTO;
 import org.springframework.stereotype.Component;
-
+/**
+ * Componente Mapper para procesar la informacion de los voluntarios desde el panel de Admin-Capitan
+ *
+ * Autores:
+ * - Carlos Sánchez: 100%
+ */
 @Component
 public class VoluntarioCapitanMapper extends MapperDTO<VoluntarioDTO, Voluntario> {
 

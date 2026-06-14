@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  *
  * Autores:
  * - David Vilaseca Pareja: 20%
- *
+ * - Carlos Sánchez: 80%
  */
 
 @Component

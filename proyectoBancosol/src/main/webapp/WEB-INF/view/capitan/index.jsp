@@ -1,3 +1,10 @@
+<%--
+Página JSP principal que sirve de panel de control (Dashboard) para el rol de Capitán.
+
+Autores:
+- Urgamx: 65%
+- IA Generativa: 35%
+--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="com.example.proyectobancosol.entity.Usuario" %>
 <%@ page import="com.example.proyectobancosol.dto.response.TiendaResponseDTO" %>

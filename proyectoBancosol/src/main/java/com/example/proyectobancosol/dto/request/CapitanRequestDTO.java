@@ -6,6 +6,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * DTO para la captura de datos de formularios de creación/edición de Capitanes.
+ *
+ * Autores:
+ * - Carlos Sánchez: 100%
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
