@@ -35,9 +35,11 @@ public class RespEntidadService {
     private TiendaResponseDTO mapearTienda(Tienda tienda) {
         if (tienda == null) return null;
         TiendaResponseDTO dto = new TiendaResponseDTO();
-        dto.setId(tienda.getId()); 
+        dto.setId(tienda.getId());
         dto.setNombre(tienda.getNombre());
         dto.setDireccion(tienda.getDireccion());
+        dto.setCadena(tienda.getIdCadena().getNombre());
+        dto.setCodPostal(tienda.getCodPostal());
         return dto;
     }
 
@@ -66,9 +68,10 @@ public class RespEntidadService {
         AsignacionTurnoResponseDTO dto = new AsignacionTurnoResponseDTO();
         dto.setId(asignacion.getId());
         String horarioCompleto = asignacion.getDia() + " - " + asignacion.getFranja();
-        dto.setHorario(horarioCompleto); 
+        dto.setHorario(horarioCompleto);
         dto.setVoluntario(mapearVoluntario(asignacion.getIdVoluntario()));
-        
+        dto.setCampana(asignacion.getIdCampana().getTipoDeCampana().getNombre());
+
         if (asignacion.getIncidencia() != null) {
             dto.setDescripcionIncidencia(asignacion.getIncidencia().getDescripcion());
         }

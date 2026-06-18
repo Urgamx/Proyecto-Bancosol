@@ -38,6 +38,8 @@ public class ResTiendaService {
         dto.setId(tienda.getId());
         dto.setNombre(tienda.getNombre());
         dto.setDireccion(tienda.getDireccion());
+        dto.setCadena(tienda.getIdCadena().getNombre());
+        dto.setCodPostal(tienda.getCodPostal());
         return dto;
     }
 
@@ -68,6 +70,7 @@ public class ResTiendaService {
         String horarioCompleto = asignacion.getDia() + " - " + asignacion.getFranja();
         dto.setHorario(horarioCompleto); 
         dto.setVoluntario(mapearVoluntario(asignacion.getIdVoluntario()));
+        dto.setCampana(asignacion.getIdCampana().getTipoDeCampana().getNombre());
         
         if (asignacion.getIncidencia() != null) {
             dto.setDescripcionIncidencia(asignacion.getIncidencia().getDescripcion());
